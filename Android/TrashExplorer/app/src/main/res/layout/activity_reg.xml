@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
-    tools:context="balint.andor.trashexplorer.MainActivity"
-    android:padding="32dp"
+    tools:context="balint.andor.trashexplorer.RegActivity"
     android:orientation="vertical"
+    android:padding="32dp"
     android:background="@color/background">
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,25 +20,29 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sign_in_title"
+            android:text="@string/sign_up_title"
             android:layout_gravity="center"
             android:textSize="32sp"
-            android:textStyle="bold"/>
-        <ImageView
-            android:layout_width="wrap_content"
+            android:textStyle="bold"
+            android:layout_marginBottom="32dp"/>
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_recycler"
-            android:layout_gravity="center"/>
+            android:hint="@string/username"
+            android:layout_marginBottom="16dp"/>
         <EditText
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/email"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"
+            android:layout_marginBottom="16dp"/>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
             <EditText
                 android:id="@+id/password"
                 android:layout_width="match_parent"
@@ -53,29 +57,41 @@
                 android:contentDescription="@string/show_password"
                 android:layout_alignParentEnd="true"/>
         </RelativeLayout>
-
-        <com.dd.processbutton.iml.ActionProcessButton
-            android:id="@+id/signIn"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="@string/sign_in_title"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+            <EditText
+                android:id="@+id/cpassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/cpassword"
+                android:inputType="textPassword" />
+            <ImageView
+                android:id="@+id/cshowPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_eye"
+                android:contentDescription="@string/show_password"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
+        <com.dd.processbutton.iml.ActionProcessButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sign_up_title"
             android:textColor="@android:color/white"
             android:textSize="18sp"
             custom:pb_colorNormal="@color/blue_normal"
             custom:pb_colorPressed="@color/blue_pressed" />
-
         <TextView
-            android:id="@+id/signUp"
+            android:id="@+id/backLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/sign_up"
+            android:text="@string/sign_in"
             android:textSize="20sp"
             android:textAlignment="center"
-            android:layout_marginTop="64dp"/>
+            android:layout_marginTop="48dp"/>
     </LinearLayout>
-
-</ScrollView>
-
-
+    </ScrollView>
 </LinearLayout>

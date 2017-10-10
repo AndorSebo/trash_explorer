@@ -4,9 +4,12 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="show_password">show password</string>
-    <string name="sign_in">Sign in</string>
+    <string name="sign_in_title">Sign in</string>
     <string name="Success">Success</string>
     <string name="Loading">Loading</string>
-    <string name="sign_up">Don\'t have an account? Sign up</string>
+    <string name="sign_up">Don\'t have an account? <u>Sign up</u></string>
     <string name="network_error">Network not found! Please check your connection</string>
+    <string name="sign_up_title">Sign Up</string>
+    <string name="cpassword">Confirm Password</string>
+    <string name="sign_in">Already have an account? <u>Sign in</u></string>
 </resources>
