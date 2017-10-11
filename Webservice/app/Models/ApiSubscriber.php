@@ -12,8 +12,8 @@ class ApiSubscriber extends Model implements Authenticatable, JWTSubject
     protected $table = 'users';
     protected $primaryKey = 'user_id';
 
-    protected $visible = ['user_id', 'name', 'email', 'permission', 'created_at', 'updated_at'];
-    protected $fillable = ['name', 'email'];
+    protected $visible = ['user_id', 'name', 'email', 'password', 'permission', 'report_number', 'created_at', 'updated_at'];
+    protected $fillable = ['name', 'email', 'password'];
 
     /**
      * @param $value

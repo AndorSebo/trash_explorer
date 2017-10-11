@@ -3,6 +3,7 @@
 use Dingo\Api\Http\Request;
 use Tymon\JWTAuth\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use App\Models\ApiSubscriber;
 
 class AuthenticateController extends Controller
 {
@@ -21,7 +22,7 @@ class AuthenticateController extends Controller
         try {
             // attempt to verify the credentials and create a token for the user
             if (! $token = $this->auth->attempt($credentials)) {
-                return response()->json(['error' => 'invalid_credentials'], 401);
+                return $this->Datareturn(false, 411, [], "invalid_credentials");
             }
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
@@ -29,7 +30,8 @@ class AuthenticateController extends Controller
         }
 
         // all good so return the token
-        return response()->json(compact('token'));
+        $userid = $this->auth->user()->user_id;        
+        return $this->LoginDatareturn(true, 200, compact('token'), $userid, "success_signin");
     }
 
     public function signUp(Request $request){
@@ -39,30 +41,38 @@ class AuthenticateController extends Controller
       $repassword = $request->repassword;
 
       if(count(ApiSubscriber::where('name', $name)->get()) > 0){
-        return $this->Datareturn(false, 412, [], "name_reserved");
+        return $this->Datareturn(false, 401, [], "name_reserved");
       }
-      if ($email == "" || $password == "" || $name == ""){
-        return $this->Datareturn(false, 413, [], "same_parameter_empty");
+      if(count(ApiSubscriber::where('email', $email)->get()) > 0){
+        return $this->Datareturn(false, 401, [], "email_reserved");
+      }
+      if ($email == "" || $password == "" || $name == "" || $repassword == ""){
+        return $this->Datareturn(false, 401, [], "same_parameter_empty");
       }
       if(strlen($password) < 6){
-        return $this->Datareturn(false, 414, [], "password_to_short");
+        return $this->Datareturn(false, 401, [], "password_to_short");
       }
       if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        return $this->Datareturn(false, 415, [], "its_not_email_format");
+        return $this->Datareturn(false, 401, [], "its_not_email_format");
       }
       if(preg_match('/[\'^£$%&*()}{@#~?><>,!|=_+¬-]/', $name) || preg_match('/[\'^£$%&*()!}{@#~?><>,|=_+¬-]/', $password)){
-        return $this->Datareturn(false, 416, [], "special_caracter_on_name_or_password");
+        return $this->Datareturn(false, 401, [], "special_caracter_on_name_or_password");
       }
       if(strlen(trim($name)) == 0 || strlen(trim($password)) == 0){
-        return $this->Datareturn(false, 417, [], "incorrect_name_or_password");
+        return $this->Datareturn(false, 401, [], "incorrect_name_or_password");
+      }
+      if($repassword != $password){
+        return $this->Datareturn(false, 401, [], "password_and_repassword_are_not_match");
       }
 
       ApiSubscriber::create([
           'name' => $name,
           'email' => $email,
           'password' => $password,
+          'report_number' => 0,
+          'permission' => 0,
       ]);
 
-      return $this->Datareturn(true, 200, [], "succes_signup");
+      return $this->Datareturn(true, 200, [], "success_signup");
     }
 }

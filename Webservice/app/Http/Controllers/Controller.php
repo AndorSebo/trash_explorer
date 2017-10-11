@@ -13,4 +13,13 @@ class Controller extends BaseController
           'data' => $data,
       ],$number);
   }
+
+  public function LoginDatareturn($bool, $number, $data1, $data2, $message){
+        return response()->json([
+            'success' => $bool,
+            'message' => $message,
+            'userid' => $data2,
+            'user' => $data1
+        ],$number);
+  }
 }

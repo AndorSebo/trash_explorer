@@ -17,6 +17,7 @@ class CreateApiSubscribersTable extends Migration
             $table->string('name');
             $table->string('email', 255);
             $table->string('password', 255);
+            $table->integer('report_number');
             $table->integer('permission');
             $table->timestamps();
 
@@ -35,6 +36,6 @@ class CreateApiSubscribersTable extends Migration
      */
     public function down()
     {
-        Schema::drop('api_subscribers');
+        Schema::drop('users');
     }
 }

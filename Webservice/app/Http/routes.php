@@ -20,5 +20,6 @@ $api->version('v1', ['middleware' => 'api.auth', 'providers' => 'jwt'], function
 
 // Publicly accessible routes
 $api->version('v1', [], function ($api) {
-    $api->post('/authenticate', 'App\Http\Controllers\AuthenticateController@backend');
+    $api->post('/signin', 'App\Http\Controllers\AuthenticateController@backend');
+    $api->post('/signup', 'App\Http\Controllers\AuthenticateController@signUp');
 });
