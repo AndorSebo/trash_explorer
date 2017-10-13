@@ -14,6 +14,10 @@ import android.widget.EditText;
 
 public class Global {
 
+    public String getBaseUrl() {
+        return "http://www.google.hu/";
+    }
+
     public static boolean isNetwork(Context context){
         ConnectivityManager cm =
                 (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
