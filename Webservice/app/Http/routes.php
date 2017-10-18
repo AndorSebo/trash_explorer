@@ -15,7 +15,8 @@ $api = app('Dingo\Api\Routing\Router');
 
 // JWT Protected routes
 $api->version('v1', ['middleware' => 'api.auth', 'providers' => 'jwt'], function ($api) {
-    $api->get('/index', 'App\Http\Controllers\BackendController@index');
+    //$api->get('/index', 'App\Http\Controllers\BackendController@index');
+    $api->get('/profile', 'App\Http\Controllers\AuthenticateController@getUser');
 });
 
 // Publicly accessible routes

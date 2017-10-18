@@ -22,7 +22,7 @@ class AuthenticateController extends Controller
         try {
             // attempt to verify the credentials and create a token for the user
             if (! $token = $this->auth->attempt($credentials)) {
-                return $this->Datareturn(false, 411, [], "invalid_credentials");
+                return $this->Datareturn(false, 401, [], "invalid_credentials");
             }
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
@@ -30,7 +30,7 @@ class AuthenticateController extends Controller
         }
 
         // all good so return the token
-        $userid = $this->auth->user()->user_id;        
+        $userid = $this->auth->user()->user_id;
         return $this->LoginDatareturn(true, 200, compact('token'), $userid, "success_signin");
     }
 
@@ -42,6 +42,12 @@ class AuthenticateController extends Controller
 
       if(count(ApiSubscriber::where('name', $name)->get()) > 0){
         return $this->Datareturn(false, 401, [], "name_reserved");
+      }
+      if(ctype_digit($name)){
+        return $this->Datareturn(false, 401, [], "name_contains_only_numbers");
+      }
+      if(ctype_digit($name[0])){
+        return $this->Datareturn(false, 401, [], "name_begin_with_number");
       }
       if(count(ApiSubscriber::where('email', $email)->get()) > 0){
         return $this->Datareturn(false, 401, [], "email_reserved");
@@ -74,5 +80,38 @@ class AuthenticateController extends Controller
       ]);
 
       return $this->Datareturn(true, 200, [], "success_signup");
+    }
+
+    public function getUser(Request $request){
+       try{
+           $userid = $request->userid;
+           if((!is_numeric($userid) && $userid != null) || $userid < 0 || $userid == "0"){
+               return $this->Datareturn(false, 420, '', 'user_not_found');
+           }
+            if($userid != null) {
+                $user = ApiSubscriber::where('users.user_id', $userid)->get();
+                if(count($user) == 0 || $user[0]->user_id == null){
+                    return $this->Datareturn(false, 420, '', 'user_not_found');
+                }
+            }else{
+                $user = ApiSubscriber::where('users.user_id', $this->auth->user()->user_id)->get();
+            }
+           if(count($user)!= 0){
+               foreach($user as $u){
+                   $result = [
+                           'user_id' => $u->user_id,
+                           'name' => $u->name,
+                           'email' => $u->email,
+                           'report_number' => $u->report_number,
+                           'created_at' => $u->created_at
+                   ];
+               }
+               return $this->Datareturn(true, 200, $result, 'success_query');
+           }else{
+               return $this->Datareturn(false, 420, '', 'user_not_found');
+           }
+        }catch (TokenExpiredException $exception){
+            return $this->Datareturn(false, 401, '', 'something_bad');
+        }
     }
 }
