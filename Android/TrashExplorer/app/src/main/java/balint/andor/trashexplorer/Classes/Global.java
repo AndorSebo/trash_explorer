@@ -7,6 +7,9 @@ import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.MotionEvent;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import balint.andor.trashexplorer.R;
 
 /**
  * Created by Andor on 2017.10.10..
@@ -14,8 +17,8 @@ import android.widget.EditText;
 
 public class Global {
 
-    public String getBaseUrl() {
-        return "http://www.google.hu/";
+    public static String getBaseUrl() {
+        return "http://trashexplorer.000webhostapp.com/";
     }
 
     public static boolean isNetwork(Context context){
@@ -34,5 +37,9 @@ public class Global {
                 pwET.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                 break;
         }
+    }
+    public static void networkNotFound(Context context){
+        Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show();
+
     }
 }
