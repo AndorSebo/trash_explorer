@@ -17,6 +17,7 @@ $api = app('Dingo\Api\Routing\Router');
 $api->version('v1', ['middleware' => 'api.auth', 'providers' => 'jwt'], function ($api) {
     //$api->get('/index', 'App\Http\Controllers\BackendController@index');
     $api->get('/profile', 'App\Http\Controllers\AuthenticateController@getUser');
+    $api->post('/passwordchange', 'App\Http\Controllers\AuthenticateController@passwordChange');
 });
 
 // Publicly accessible routes

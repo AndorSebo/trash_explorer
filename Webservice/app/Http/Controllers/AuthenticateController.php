@@ -4,6 +4,7 @@ use Dingo\Api\Http\Request;
 use Tymon\JWTAuth\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\Models\ApiSubscriber;
+use Illuminate\Support\Facades\Hash;
 
 class AuthenticateController extends Controller
 {
@@ -113,5 +114,41 @@ class AuthenticateController extends Controller
         }catch (TokenExpiredException $exception){
             return $this->Datareturn(false, 401, '', 'something_bad');
         }
+    }
+
+    public function passwordChange(Request $request){
+        try {
+          $new = $request->new;
+          $confirm_new = $request->confirm_new;
+          $old = $request->old;
+          $userpw = ApiSubscriber::select('password')->where('user_id',$this->auth->user()->user_id)->first();
+          if ($new == '' || $old == '' || $confirm_new == ''){
+              return $this->Datareturn(false, 401, [], "same_parameter_empty");
+          }
+          if (!Hash::check($old, $userpw->password)){
+              return $this->Datareturn(false, 401, [], 'password_not_equal');
+          }
+          if ($new == $old){
+              return $this->Datareturn(false, 401, [], 'new_and_old_password_equal');
+          }
+          if(strlen($new) < 6){
+              return $this->Datareturn(false, 401, [], "password_to_short");
+          }
+          if(preg_match('/[\'^£$%&*()!}{@#~?><>,|=_+¬-]/', $new)){
+              return $this->Datareturn(false, 401, [], "special_caracter_on_name_or_password");
+          }
+          if(strlen(trim($new)) == 0){
+              return $this->Datareturn(false, 401, [], "incorrect_name_or_password");
+          }
+          if($new != $confirm_new){
+            return $this->Datareturn(false, 401, [], 'new_password_and_confirm_new_password_not_equal');
+          }
+          ApiSubscriber::where('user_id', $this->auth->user()->user_id)->update(['password' => Hash::make($new)]);
+          return $this->Datareturn(true, 200, [], 'success_password_change');
+
+        } catch (TokenExpiredException $e) {
+            return $this->Datareturn(false, 401, '', 'something_bad');
+        }
+
     }
 }
