@@ -7,7 +7,7 @@
     tools:context="balint.andor.trashexplorer.MainActivity"
     android:padding="32dp"
     android:orientation="vertical"
-    android:background="@color/background">
+    android:background="@drawable/bg">
 <ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -23,7 +23,8 @@
             android:text="@string/sign_in_title"
             android:layout_gravity="center"
             android:textSize="32sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:textColor="#000000"/>
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -72,7 +73,7 @@
             android:text="@string/sign_up"
             android:textSize="20sp"
             android:textAlignment="center"
-            android:layout_marginTop="64dp"/>
+            android:layout_marginTop="80dp"/>
     </LinearLayout>
 
 </ScrollView>

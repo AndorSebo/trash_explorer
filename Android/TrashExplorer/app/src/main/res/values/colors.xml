@@ -4,5 +4,6 @@
     <color name="colorPrimaryDark">#303030</color>
 
     <!-- My colors -->
-    <color name="background">#E0E0E0</color>
+    <color name="background">#FFE0E0E0</color>
+    <color name="button_background">#55000000</color>
 </resources>

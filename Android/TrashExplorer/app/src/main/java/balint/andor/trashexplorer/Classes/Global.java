@@ -16,9 +16,10 @@ import balint.andor.trashexplorer.R;
  */
 
 public class Global {
+    private static User u;
 
     public static String getBaseUrl() {
-        return "http://trashexplorer.000webhostapp.com/";
+        return "http://trashexplorer.000webhostapp.com";
     }
 
     public static boolean isNetwork(Context context){
@@ -41,5 +42,11 @@ public class Global {
     public static void networkNotFound(Context context){
         Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show();
 
+    }
+    public static void setId(int id) {
+        u.setId(id);
+    }
+    public static void setToken(String token) {
+        u.setToken(token);
     }
 }

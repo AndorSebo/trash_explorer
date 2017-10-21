@@ -7,7 +7,7 @@
     tools:context="balint.andor.trashexplorer.RegActivity"
     android:orientation="vertical"
     android:padding="32dp"
-    android:background="@color/background">
+    android:background="@drawable/bg">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -77,6 +77,7 @@
                 android:layout_alignParentEnd="true"/>
         </RelativeLayout>
         <com.dd.processbutton.iml.ActionProcessButton
+            android:id="@+id/register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/sign_up_title"

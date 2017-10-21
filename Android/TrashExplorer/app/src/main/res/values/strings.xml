@@ -12,4 +12,6 @@
     <string name="sign_up_title">Sign Up</string>
     <string name="cpassword">Confirm Password</string>
     <string name="sign_in">Already have an account? <u>Sign in</u></string>
+    <string name="report">Report</string>
+    <string name="profile">Profile</string>
 </resources>

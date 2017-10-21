@@ -9,15 +9,16 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.dd.processbutton.iml.ActionProcessButton;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -30,6 +31,28 @@ public class MainActivity extends AppCompatActivity {
     RequestQueue reqQueue;
     Response.Listener successResponse;
     Response.ErrorListener failedResponse;
+
+    void initResponses(){
+        successResponse = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    if (response.getBoolean("success")){
+                        Global.setId(response.getInt("userid"));
+                        Global.setToken(response.getJSONObject("user").getString("token"));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        failedResponse = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Global.networkNotFound(MainActivity.this);
+            }
+        };
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+        initResponses();
     }
 
     private void openRegistration() {
@@ -81,9 +105,9 @@ public class MainActivity extends AppCompatActivity {
         overridePendingTransition(R.animator.scale_from_corner, R.animator.scale_to_corner);
     }
 
-    private void logIn(EditText emailET, EditText pwET){
+    void logIn(EditText emailET, EditText pwET){
         reqQueue = Volley.newRequestQueue(this);
-        String url = Global.getBaseUrl()+"signin";
+        String url = Global.getBaseUrl()+"/signin";
         Map<String, String> params = new HashMap<>();
         if(emailET.getText().toString().equals(""))
             emailET.setError("Email field is empty!");
