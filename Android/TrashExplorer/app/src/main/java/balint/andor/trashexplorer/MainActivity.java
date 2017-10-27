@@ -1,5 +1,6 @@
 package balint.andor.trashexplorer;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
                     if (response.getBoolean("success")){
                         Global.setId(response.getInt("userid"));
                         Global.setToken(response.getJSONObject("user").getString("token"));
+                        openMenu(MainActivity.this);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -124,5 +127,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    void openMenu(Context ctx){
+        Intent menu = new Intent(ctx,MenuActivity.class);
+        startActivity(menu);
+        finish();
+    }
 }

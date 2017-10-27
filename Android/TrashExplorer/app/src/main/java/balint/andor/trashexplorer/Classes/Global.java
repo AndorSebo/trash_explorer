@@ -16,7 +16,7 @@ import balint.andor.trashexplorer.R;
  */
 
 public class Global {
-    private static User u;
+    private static User u = new User();
 
     public static String getBaseUrl() {
         return "http://trashexplorer.000webhostapp.com";
@@ -49,4 +49,5 @@ public class Global {
     public static void setToken(String token) {
         u.setToken(token);
     }
+    public static User getUser() { return u;}
 }

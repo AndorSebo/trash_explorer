@@ -14,4 +14,9 @@
     <string name="sign_in">Already have an account? <u>Sign in</u></string>
     <string name="report">Report</string>
     <string name="profile">Profile</string>
+    <string name="menu">MENU</string>
+    <string name="username_tv">Username:</string>
+    <string name="email_tv">Email:</string>
+    <string name="register_date">Register date:</string>
+    <string name="reports">Reports:</string>
 </resources>
