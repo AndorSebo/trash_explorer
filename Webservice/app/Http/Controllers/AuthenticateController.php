@@ -135,10 +135,10 @@ class AuthenticateController extends Controller
               return $this->Datareturn(false, 401, [], "password_to_short");
           }
           if(preg_match('/[\'^£$%&*()!}{@#~?><>,|=_+¬-]/', $new)){
-              return $this->Datareturn(false, 401, [], "special_caracter_on_name_or_password");
+              return $this->Datareturn(false, 401, [], "special_caracter_on_password");
           }
           if(strlen(trim($new)) == 0){
-              return $this->Datareturn(false, 401, [], "incorrect_name_or_password");
+              return $this->Datareturn(false, 401, [], "incorrect_password");
           }
           if($new != $confirm_new){
             return $this->Datareturn(false, 401, [], 'new_password_and_confirm_new_password_not_equal');

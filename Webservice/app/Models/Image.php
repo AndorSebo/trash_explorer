@@ -12,7 +12,7 @@ class Image extends Model implements Authenticatable, JWTSubject
     protected $table = 'images';
     protected $primaryKey = 'image_id';
 
-    protected $visible = ['image_id', 'image', 'mini_image', 'report_id'];
+    protected $visible = ['image_id', 'image', 'mini_image', 'report_id', 'updated_at', 'created_at'];
     protected $fillable = ['image', 'mini_image','report_id'];
     /**
      * @param $value

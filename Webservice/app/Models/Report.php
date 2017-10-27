@@ -13,7 +13,7 @@ class Report extends Model implements Authenticatable, JWTSubject
     protected $primaryKey = 'report_id';
 
     protected $visible = ['report_id', 'user_id', 'latitude', 'longitude', 'description', 'created_at', 'updated_at'];
-    protected $fillable = ['user_id', 'latitude','longitude', 'description'];
+    protected $fillable = ['user_id', 'latitude','longitude', 'description', 'created_at', 'updated_at'];
     /**
      * @param $value
      */
