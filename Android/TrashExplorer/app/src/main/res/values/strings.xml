@@ -19,4 +19,5 @@
     <string name="email_tv">Email:</string>
     <string name="register_date">Register date:</string>
     <string name="reports">Reports:</string>
+    <string name="zero_report">You don\'t have reports.</string>
 </resources>

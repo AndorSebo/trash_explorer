@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <ImageView
+            android:id="@+id/backButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_arrow_back"/>
@@ -87,69 +88,30 @@
                 style="@style/ProfileText"
                 android:textAlignment="textEnd"/>
         </LinearLayout>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/reports"
-            style="@style/ProfileText"
-            android:textStyle="italic|bold"
-            android:layout_marginTop="?attr/actionBarSize"/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1sp"
-            android:background="#55000000"/>
         <LinearLayout
+            android:id="@+id/reports"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center">
-
-            <com.ihsanbal.wiv.AspectRatioLayout
-                android:layout_width="128dp"
-                android:layout_height="128dp"
-                app:aspect_ratio="1"
-                app:dimension_to_adjust="height"
-                android:layout_marginTop="16dp">
-                <com.ihsanbal.wiv.MediaView
-                    android:id="@+id/mediaView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="14dp"
-                    app:background_color="@color/background"
-                    app:corner_radii="15dp"
-                    app:divider_size="2dp"/>
-            </com.ihsanbal.wiv.AspectRatioLayout>
-            <com.ihsanbal.wiv.AspectRatioLayout
-                android:layout_width="128dp"
-                android:layout_height="128dp"
-                android:layout_marginTop="16dp"
-                app:aspect_ratio="1"
-                app:dimension_to_adjust="height">
-            <com.ihsanbal.wiv.MediaView
-                android:id="@+id/mediaView2"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="14dp"
-                app:background_color="@color/background"
-                app:corner_radii="15dp"
-                app:divider_size="2dp"/>
-            </com.ihsanbal.wiv.AspectRatioLayout>
-            <com.ihsanbal.wiv.AspectRatioLayout
-                android:layout_width="128dp"
-                android:layout_height="128dp"
-                android:layout_marginTop="16dp"
-                app:aspect_ratio="1"
-                app:dimension_to_adjust="height">
-            <com.ihsanbal.wiv.MediaView
-                android:id="@+id/mediaView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="14dp"
-                app:background_color="@color/background"
-                app:corner_radii="15dp"
-                app:divider_size="2dp"/>
-            </com.ihsanbal.wiv.AspectRatioLayout>
-
-</LinearLayout>
+                android:text="@string/reports"
+                style="@style/ProfileText"
+                android:textStyle="italic|bold"
+                android:layout_marginTop="?attr/actionBarSize"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1sp"
+                android:background="#55000000"/>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/report_zero"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/zero_report"
+            style="@style/ProfileText"
+            android:textAlignment="center"/>
         </LinearLayout>
 </ScrollView>
