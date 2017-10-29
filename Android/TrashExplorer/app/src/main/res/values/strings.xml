@@ -20,4 +20,5 @@
     <string name="register_date">Register date:</string>
     <string name="reports">Reports:</string>
     <string name="zero_report">You don\'t have reports.</string>
+    <string name="filter">0,1,2,3,4,5,6,7,8,9,aábcdeéfghiíjklmnoóöőpqrstuúüűvwxyzAÁBCDEÉFGHIÍJKLMNOÓÖŐPQRSTUÚÜŰVWXYZ</string>
 </resources>
