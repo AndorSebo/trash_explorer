@@ -1,10 +1,13 @@
 package balint.andor.trashexplorer;
 
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -63,6 +66,7 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         TextView nameTv = (TextView) findViewById(R.id.nameTv);
         TextView emailTv = (TextView) findViewById(R.id.emailTv);
         TextView dateTv = (TextView) findViewById(R.id.dateTv);
@@ -70,6 +74,7 @@ public class ProfileActivity extends AppCompatActivity {
         TextView report_zero = (TextView) findViewById(R.id.report_zero);
         ImageView backButton = (ImageView) findViewById(R.id.backButton);
         LinearLayout reports = (LinearLayout) findViewById(R.id.reports);
+        ImageView pwButton = (ImageView) findViewById(R.id.pwButton);
 
         User u = Global.getUser();
         int id = u.getId();
@@ -83,6 +88,12 @@ public class ProfileActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+        pwButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pwDialog();
+            }
+        });
     }
     void getProfile(int id, String token){
         reqQueue = Volley.newRequestQueue(this);
@@ -93,6 +104,33 @@ public class ProfileActivity extends AppCompatActivity {
         reqQueue.start();
     }
 
+    void pwDialog(){
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogLayout = inflater.inflate(R.layout.password_change, null);
+        final EditText oldPw = dialogLayout.findViewById(R.id.oldPw);
+        final EditText newPw = dialogLayout.findViewById(R.id.newPw);
+        final EditText cPw = dialogLayout.findViewById(R.id.cPw);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogLayout);
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+        dialogLayout.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dialogLayout.findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pwChange(oldPw,newPw,cPw);
+            }
+        });
+    }
+
+    void pwChange(EditText oldPw, EditText newPw, EditText cPw){
+        
+    }
 
     @Override
     public void onBackPressed() {
