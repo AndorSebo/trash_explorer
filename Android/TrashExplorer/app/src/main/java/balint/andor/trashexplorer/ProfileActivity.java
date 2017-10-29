@@ -4,23 +4,30 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import balint.andor.trashexplorer.Classes.Global;
 import balint.andor.trashexplorer.Classes.User;
@@ -31,6 +38,7 @@ public class ProfileActivity extends AppCompatActivity {
     RequestQueue reqQueue;
     Response.Listener successResponse;
     Response.ErrorListener failedResponse;
+    String token;
 
     void initResponses(final TextView nameTv, final TextView emailTv, final TextView dateTv, final TextView reportTv, final LinearLayout reports, final TextView report_zero){
         successResponse = new Response.Listener<JSONObject>() {
@@ -78,7 +86,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         User u = Global.getUser();
         int id = u.getId();
-        String token = u.getToken();
+        token = u.getToken();
         initResponses(nameTv,emailTv,dateTv,reportTv, reports, report_zero);
         getProfile(id,token);
 
@@ -91,7 +99,7 @@ public class ProfileActivity extends AppCompatActivity {
         pwButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pwDialog();
+                pwDialog(token);
             }
         });
     }
@@ -104,7 +112,7 @@ public class ProfileActivity extends AppCompatActivity {
         reqQueue.start();
     }
 
-    void pwDialog(){
+    void pwDialog(final String token){
         LayoutInflater inflater = getLayoutInflater();
         View dialogLayout = inflater.inflate(R.layout.password_change, null);
         final EditText oldPw = dialogLayout.findViewById(R.id.oldPw);
@@ -123,13 +131,74 @@ public class ProfileActivity extends AppCompatActivity {
         dialogLayout.findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pwChange(oldPw,newPw,cPw);
+                pwChange(oldPw,newPw,cPw,token,dialog);
+            }
+        });
+        dialogLayout.findViewById(R.id.soldPassword).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Global.showPassword(motionEvent, oldPw);
+                return true;
+            }
+        });
+        dialogLayout.findViewById(R.id.snewPassword).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Global.showPassword(motionEvent, newPw);
+                return true;
+            }
+        });
+        dialogLayout.findViewById(R.id.scPassword).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Global.showPassword(motionEvent, cPw);
+                return true;
             }
         });
     }
 
-    void pwChange(EditText oldPw, EditText newPw, EditText cPw){
-        
+    void pwChange(EditText oldPw, EditText newPw, EditText cPw, String token, final AlertDialog dialog){
+        final String pass1 = oldPw.getText().toString();
+        final String pass2 = newPw.getText().toString();
+        final String pass3 = cPw.getText().toString();
+        String url = Global.getBaseUrl() + "/passwordchange";
+        if (pass1.equals(pass2))
+            newPw.setError("A régi és az új jelszó ugyanaz");
+        else if (!pass2.equals(pass3))
+            cPw.setError("Nem egyezik a megerősítő jelszó, és az új jelszó.");
+        else{
+            StringRequest postRequest = new StringRequest(Request.Method.POST, url+"?token="+token,
+                    new Response.Listener<String>()
+                    {
+                        @Override
+                        public void onResponse(String response) {
+                            dialog.dismiss();
+                            Toast.makeText(ProfileActivity.this, "Sikeres jelszó változtatás!",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    },
+                    new Response.ErrorListener()
+                    {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(ProfileActivity.this, "Probléma a folyamat során, kérjük próbálja meg később!",
+                                    Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }
+                    }
+            ) {
+                @Override
+                protected Map<String, String> getParams(){
+                    Map<String, String>  params = new HashMap<>();
+                    params.put("old",pass1);
+                    params.put("new",pass2);
+                    params.put("confirm_new",pass3);
+
+                    return params;
+                }
+            };
+            reqQueue.add(postRequest);
+        }
     }
 
     @Override
