@@ -4,6 +4,7 @@ use Dingo\Api\Http\Request;
 use Tymon\JWTAuth\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\Models\ApiSubscriber;
+use App\Models\Report;
 use Illuminate\Support\Facades\Hash;
 
 class AuthenticateController extends Controller
@@ -32,7 +33,8 @@ class AuthenticateController extends Controller
 
         // all good so return the token
         $userid = $this->auth->user()->user_id;
-        return $this->LoginDatareturn(true, 200, compact('token'), $userid, "success_signin");
+        $permission = ApiSubscriber::select('permission')->where('user_id', $userid)->get();
+        return $this->LoginDatareturn(true, 200, compact('token'), $userid, $permission[0]->permission, "success_signin");
     }
 
     public function signUp(Request $request){
@@ -91,11 +93,13 @@ class AuthenticateController extends Controller
            }
             if($userid != null) {
                 $user = ApiSubscriber::where('users.user_id', $userid)->get();
+                $reports = Report::select('report_id')->where('user_id', $userid)->get();
                 if(count($user) == 0 || $user[0]->user_id == null){
                     return $this->Datareturn(false, 420, '', 'user_not_found');
                 }
             }else{
                 $user = ApiSubscriber::where('users.user_id', $this->auth->user()->user_id)->get();
+                $reports = Report::select('report_id')->where('user_id', $this->auth->user()->user_id)->get();
             }
            if(count($user)!= 0){
                foreach($user as $u){
@@ -104,7 +108,8 @@ class AuthenticateController extends Controller
                            'name' => $u->name,
                            'email' => $u->email,
                            'report_number' => $u->report_number,
-                           'created_at' => $u->created_at
+                           'created_at' => $u->created_at,
+                           'reports' => $reports
                    ];
                }
                return $this->Datareturn(true, 200, $result, 'success_query');
@@ -114,6 +119,26 @@ class AuthenticateController extends Controller
         }catch (TokenExpiredException $exception){
             return $this->Datareturn(false, 401, '', 'something_bad');
         }
+    }
+
+    public function getAllUser(){
+      try {
+        $users = ApiSubscriber::select('user_id', 'name')->get();
+        if (count($users) != 0) {
+            foreach ($users as $u) {
+                $result[] = [
+                    'user_id' => $u->user_id,
+                    'name' => $u->name
+                ];
+            }
+            return $this->Datareturn(true, 200, $result, 'success_query');
+        }else{
+            return $this->Datareturn(false, 420, '', '', 'user_not_found');
+        }
+      } catch (Exception $e) {
+          return $this->Datareturn(false, 401, '', 'something_bad');
+      }
+
     }
 
     public function passwordChange(Request $request){

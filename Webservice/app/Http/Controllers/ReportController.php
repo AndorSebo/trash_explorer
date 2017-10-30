@@ -50,7 +50,7 @@ class ReportController extends Controller
         if(preg_match('/[\'^£$%&*()}{@#~?><>.,!|=_+¬-]/', $picnumber)){
           return $this->Datareturn(false, 401, '', 'picnumber_is_not_integer');
         }
-        if($picnumber < 1 || $picnumber > 4){
+        if($picnumber < 0 || $picnumber > 4){
           return $this->Datareturn(false, 401, '', 'picnumber_is_too_small_or_too_large');
         }
 

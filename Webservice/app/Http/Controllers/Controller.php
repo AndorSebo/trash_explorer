@@ -14,12 +14,14 @@ class Controller extends BaseController
       ],$number);
   }
 
-  public function LoginDatareturn($bool, $number, $data1, $data2, $message){
+  public function LoginDatareturn($bool, $number, $data1, $data2, $data3, $message){
         return response()->json([
             'success' => $bool,
             'message' => $message,
             'userid' => $data2,
-            'user' => $data1
+            'user' => $data1,
+            'permission' => $data3
         ],$number);
-  }
+  }  
+
 }
