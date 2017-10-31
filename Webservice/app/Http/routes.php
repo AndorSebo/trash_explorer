@@ -20,6 +20,7 @@ $api->version('v1', ['middleware' => 'api.auth', 'providers' => 'jwt'], function
     $api->post('/passwordchange', 'App\Http\Controllers\AuthenticateController@passwordChange');
     $api->post('/newreport', 'App\Http\Controllers\ReportController@newReport');
     $api->get('/getalluser', 'App\Http\Controllers\AuthenticateController@getAllUser');
+    $api->get('/getreport', 'App\Http\Controllers\ReportController@getReport');
 });
 
 // Publicly accessible routes

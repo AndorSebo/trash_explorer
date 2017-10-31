@@ -20,8 +20,36 @@ class ReportController extends Controller
         $this->auth = $auth;
     }
 
-    public function getReports(Request $request){
-        //
+    public function getReport(Request $request){
+      try {
+          $reportid = $request->reportid;
+          if($reportid == null){
+            return $this->Datareturn(false, 401, '', 'reportid_is_null');
+          }
+          if(!is_numeric($reportid)){
+            return $this->Datareturn(false, 401, '', 'reportid_is_not_numeric');
+          }
+          $report = Report::where('report_id', $reportid)->get();
+          $pictures = Image::select('image_id', 'mini_image')->where('report_id', $reportid)->get();
+          if(count($report) != 0){
+            foreach ($report as $r) {
+              $result[] = [
+                  'report_id' => $r->report_id,
+                  'latitude' => $r->latitude,
+                  'longitude' => $r->longitude,
+                  'description' => $r->description,
+                  'mini_image' => $pictures
+              ];
+            }
+            return $this->Datareturn(true, 200, $result, 'success_query');
+          }else{
+            return $this->Datareturn(false, 420, '', 'report_not_found');
+          }
+
+      } catch (TokenExpiredException $e) {
+          return $this->Datareturn(false, 401, '', 'something_bad');
+      }
+
     }
 
     public function newReport(Request $request){
