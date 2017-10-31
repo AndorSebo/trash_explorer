@@ -21,6 +21,7 @@ $api->version('v1', ['middleware' => 'api.auth', 'providers' => 'jwt'], function
     $api->post('/newreport', 'App\Http\Controllers\ReportController@newReport');
     $api->get('/getalluser', 'App\Http\Controllers\AuthenticateController@getAllUser');
     $api->get('/getreport', 'App\Http\Controllers\ReportController@getReport');
+    $api->post('/deletereport', 'App\Http\Controllers\ReportController@deleteReport');
 });
 
 // Publicly accessible routes

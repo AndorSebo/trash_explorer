@@ -151,7 +151,42 @@ class ReportController extends Controller
     }
 
     public function deleteReport(Request $request){
-      //
+      try {
+        $reportid = $request->reportid;
+        if($reportid == null){
+          return $this->Datareturn(false, 401, '', 'reportid_is_null');
+        }
+        if(!is_numeric($reportid)){
+          return $this->Datareturn(false, 401, '', 'reportid_is_not_numeric');
+        }
+        if($this->auth->user()->permission == 1){
+          if(count(Report::where('report_id', $reportid)->get()) == 0){
+            return $this->Datareturn(false, 401, '', 'report_does_not_exist');
+          }
+          if(count(Image::where('report_id', $reportid)->get()) > 0){
+            Image::where('report_id', $reportid)->delete();
+          }
+          Report::where('report_id', $reportid)->delete();
+
+          return $this->Datareturn(true, 200, '', 'deleting_a_report_is_successful');
+
+        }else{
+
+          if(count(Report::where('report_id', $reportid)->where('user_id', $this->auth->user()->user_id)->get()) == 0){
+            return $this->Datareturn(false, 401, '', 'report_does_not_exist');
+          }
+          if(count(Image::where('report_id', $reportid)->get()) > 0){
+            Image::where('report_id', $reportid)->delete();
+          }
+          Report::where('report_id', $reportid)->delete();
+
+          return $this->Datareturn(true, 200, '', 'deleting_a_report_is_successful');
+        }
+
+      } catch (TokenExpiredException $e) {
+          return $this->Datareturn(false, 401, '', 'something_bad');
+      }
+
     }
 
 }
