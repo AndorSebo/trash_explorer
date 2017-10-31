@@ -1,5 +1,6 @@
 package balint.andor.trashexplorer;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -10,8 +11,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +21,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,7 +41,7 @@ public class ProfileActivity extends AppCompatActivity {
     Response.ErrorListener failedResponse;
     String token;
 
-    void initResponses(final TextView nameTv, final TextView emailTv, final TextView dateTv, final TextView reportTv, final LinearLayout reports, final TextView report_zero){
+    void initResponses(final TextView nameTv, final TextView emailTv, final TextView dateTv, final TextView reportTv){
         successResponse = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -51,10 +52,6 @@ public class ProfileActivity extends AppCompatActivity {
                         emailTv.setText(jsonObject.getString("email"));
                         dateTv.setText(jsonObject.getJSONObject("created_at").getString("date").substring(0,10));
                         reportTv.setText(jsonObject.getString("report_number")+"\n bejelentés");
-                        if (!jsonObject.getString("report_number").equals("0")){
-                            reports.setVisibility(View.VISIBLE);
-                            report_zero.setVisibility(View.GONE);
-                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -79,30 +76,34 @@ public class ProfileActivity extends AppCompatActivity {
         TextView emailTv = (TextView) findViewById(R.id.emailTv);
         TextView dateTv = (TextView) findViewById(R.id.dateTv);
         TextView reportTv = (TextView) findViewById(R.id.report_number);
-        TextView report_zero = (TextView) findViewById(R.id.report_zero);
-        ImageView backButton = (ImageView) findViewById(R.id.backButton);
-        LinearLayout reports = (LinearLayout) findViewById(R.id.reports);
-        ImageView pwButton = (ImageView) findViewById(R.id.pwButton);
+        final FloatingActionsMenu menu = (FloatingActionsMenu) findViewById(R.id.menu);
+
+        FloatingActionButton pwChange = (FloatingActionButton) findViewById(R.id.pwChange);
+        FloatingActionButton logout = (FloatingActionButton) findViewById(R.id.logout);
 
         User u = Global.getUser();
         int id = u.getId();
         token = u.getToken();
-        initResponses(nameTv,emailTv,dateTv,reportTv, reports, report_zero);
+        initResponses(nameTv,emailTv,dateTv,reportTv);
         getProfile(id,token);
 
-        backButton.setOnClickListener(new View.OnClickListener() {
+        logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                logout(ProfileActivity.this);
             }
         });
-        pwButton.setOnClickListener(new View.OnClickListener() {
+
+        pwChange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                menu.collapse();
                 pwDialog(token);
             }
         });
+
     }
+
     void getProfile(int id, String token){
         reqQueue = Volley.newRequestQueue(this);
         String url = Global.getBaseUrl()+"/profile";
@@ -201,12 +202,12 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        Intent menu = new Intent(ProfileActivity.this, MenuActivity.class);
-        startActivity(menu);
+    void logout(Context ctx){
+        Intent logout = new Intent(ctx,MainActivity.class);
+        startActivity(logout);
         finish();
     }
+
     @Override
     public void finish(){
         super.finish();

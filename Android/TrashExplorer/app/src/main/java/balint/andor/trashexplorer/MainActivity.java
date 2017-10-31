@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
                     if (response.getBoolean("success")){
                         Global.setId(response.getInt("userid"));
                         Global.setToken(response.getJSONObject("user").getString("token"));
-                        openMenu(MainActivity.this);
+                        openProfile(MainActivity.this);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -127,9 +127,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    void openMenu(Context ctx){
-        Intent menu = new Intent(ctx,MenuActivity.class);
-        startActivity(menu);
+    void openProfile(Context ctx){
+        Intent profile = new Intent(ctx,ProfileActivity.class);
+        startActivity(profile);
         finish();
     }
 }

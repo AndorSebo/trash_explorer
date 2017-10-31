@@ -1,30 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="balint.andor.trashexplorer.ProfileActivity"
     android:background="@drawable/bg"
-    android:padding="16dp">
+    android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:id="@+id/backButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_arrow_back"/>
-            <ImageView
-                android:id="@+id/pwButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_lock"
-                android:layout_alignParentEnd="true"/>
-        </RelativeLayout>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -97,30 +84,44 @@
                 style="@style/ProfileText"
                 android:textAlignment="textEnd"/>
         </LinearLayout>
-        <LinearLayout
-            android:id="@+id/reports"
-            android:layout_width="match_parent"
+    </LinearLayout>
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        app:fab_labelStyle="@style/menu_labels_style"
+        app:fab_labelsPosition="left">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/report"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/reports"
-                style="@style/ProfileText"
-                android:textStyle="italic|bold"
-                android:layout_marginTop="?attr/actionBarSize"/>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1sp"
-                android:background="#55000000"/>
-        </LinearLayout>
-        <TextView
-            android:id="@+id/report_zero"
-            android:layout_width="match_parent"
+            app:fab_icon="@drawable/ic_report"
+            app:fab_title="@string/report" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/myReports"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/zero_report"
-            style="@style/ProfileText"
-            android:textAlignment="center"/>
-        </LinearLayout>
-</ScrollView>
+            app:fab_icon="@drawable/ic_myreport"
+            app:fab_title="@string/my_reports" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/pwChange"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/ic_lock"
+            app:fab_title="@string/change_your_password" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/ic_logout"
+            app:fab_title="@string/logout" />
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+</RelativeLayout>

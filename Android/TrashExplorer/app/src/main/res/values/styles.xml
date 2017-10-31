@@ -34,7 +34,10 @@
         <item name="android:shadowDy">1.0</item>
         <item name="android:shadowRadius">1.5</item>
     </style>
-
+    <style name="menu_labels_style">
+        <item name="android:background">@drawable/fab_label_background</item>
+        <item name="android:textColor">#FFFFFFFF</item>
+    </style>
 
 
 

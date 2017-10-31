@@ -27,4 +27,7 @@
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="change_your_password">Change your password!</string>
+    <string name="password_change">Change your password</string>
+    <string name="my_reports">My Reports</string>
+    <string name="logout">Logout</string>
 </resources>
