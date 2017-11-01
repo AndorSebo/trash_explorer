@@ -1,9 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    android:orientation="vertical"
+    android:padding="16dp"
     tools:context="balint.andor.trashexplorer.ReportActivity">
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.dd.processbutton.iml.ActionProcessButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="@string/locate_me"
+                android:textColor="@color/background"
+                android:textStyle="bold"
+                android:layout_alignParentStart="true"/>
+
+            <TextView
+                style="@style/ProfileText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/gps_needed"
+                android:textSize="12sp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"/>
+
+            <com.dd.processbutton.iml.ActionProcessButton
+                android:id="@+id/send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/send"
+                android:textColor="@color/background"
+                android:textStyle="bold"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="#FF000000"
+            android:padding="2dp">
+
+            <fragment
+                android:id="@+id/map"
+                class="com.google.android.gms.maps.MapFragment"
+                android:layout_width="450sp"
+                android:layout_height="225sp" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="@string/description"
+            android:inputType="textMultiLine" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="96dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/img0"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:src="@drawable/image_add" />
+
+            <ImageView
+                android:id="@+id/img1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:src="@drawable/image_add" />
+
+            <ImageView
+                android:id="@+id/img2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:src="@drawable/image_add" />
+
+            <ImageView
+                android:id="@+id/img3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:src="@drawable/image_add" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

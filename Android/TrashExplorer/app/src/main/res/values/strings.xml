@@ -30,4 +30,12 @@
     <string name="password_change">Change your password</string>
     <string name="my_reports">My Reports</string>
     <string name="logout">Logout</string>
+    <string name="send_report">Send report!</string>
+    <string name="locate_me">Locate me!</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">
+        AIzaSyCl7H6eYDEwvlo_FkIx_v4hONjhzN2ZDMI
+    </string>
+    <string name="gps_needed">GPS needed.</string>
+    <string name="send">Send</string>
+    <string name="description">Type the Description here!</string>
 </resources>

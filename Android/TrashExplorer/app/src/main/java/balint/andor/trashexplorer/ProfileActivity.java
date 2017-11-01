@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -40,6 +39,7 @@ public class ProfileActivity extends AppCompatActivity {
     Response.Listener successResponse;
     Response.ErrorListener failedResponse;
     String token;
+    AlertDialog dialog;
 
     void initResponses(final TextView nameTv, final TextView emailTv, final TextView dateTv, final TextView reportTv){
         successResponse = new Response.Listener<JSONObject>() {
@@ -80,6 +80,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         FloatingActionButton pwChange = (FloatingActionButton) findViewById(R.id.pwChange);
         FloatingActionButton logout = (FloatingActionButton) findViewById(R.id.logout);
+        FloatingActionButton report = (FloatingActionButton) findViewById(R.id.report);
 
         User u = Global.getUser();
         int id = u.getId();
@@ -99,6 +100,12 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View view) {
                 menu.collapse();
                 pwDialog(token);
+            }
+        });
+        report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                report(ProfileActivity.this);
             }
         });
 
@@ -121,7 +128,7 @@ public class ProfileActivity extends AppCompatActivity {
         final EditText cPw = dialogLayout.findViewById(R.id.cPw);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(dialogLayout);
-        final AlertDialog dialog = builder.create();
+        dialog = builder.create();
         dialog.show();
         dialogLayout.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -206,6 +213,20 @@ public class ProfileActivity extends AppCompatActivity {
         Intent logout = new Intent(ctx,MainActivity.class);
         startActivity(logout);
         finish();
+    }
+
+    void report(Context ctx){
+        Intent report = new Intent(ctx, ReportActivity.class);
+        startActivity(report);
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (dialog.isShowing())
+            dialog.dismiss();
+        else
+            logout(ProfileActivity.this);
     }
 
     @Override
