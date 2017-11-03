@@ -39,4 +39,5 @@
     <string name="send">Send</string>
     <string name="description">Type the Description here!</string>
     <string name="check_the_gps_connection">Please check your GPS connection.</string>
+    <string name="selectMode">Select the mode:</string>
 </resources>

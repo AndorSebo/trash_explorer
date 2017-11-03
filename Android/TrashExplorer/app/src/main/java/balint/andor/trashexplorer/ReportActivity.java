@@ -2,11 +2,10 @@ package balint.andor.trashexplorer;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.Location;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -19,6 +18,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.mvc.imagepicker.ImagePicker;
 
 import balint.andor.trashexplorer.Classes.GPStracker;
 import balint.andor.trashexplorer.Classes.Report;
@@ -27,6 +27,7 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
 
     MapFragment mapFragment;
     double latitude, longitude;
+    ImageView selectedImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,10 +58,9 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     void makePicture(ImageView img){
-        openIntent();
-    }
-    void openIntent(){
-        
+        ImagePicker.pickImage(ReportActivity.this,getResources().getString(R.string.selectMode));
+        selectedImageView = img;
+
     }
     void declarateImgs(final ImageView[] imgs){
         for (int i=0; i< imgs.length;i++) {
@@ -114,5 +114,14 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
         LatLng location = new LatLng(getLatitude(), getLongitude());
         googleMap.addMarker(new MarkerOptions().position(location).title("You are here!"));
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(location));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Bitmap bitmap = ImagePicker.getImageFromResult(this, requestCode, resultCode, data);
+        if (bitmap != null){
+            selectedImageView.setImageBitmap(bitmap);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
