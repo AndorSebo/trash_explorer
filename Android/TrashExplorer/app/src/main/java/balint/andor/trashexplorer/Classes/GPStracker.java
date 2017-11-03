@@ -14,14 +14,14 @@ import android.widget.Toast;
  * Created by Andor on 2017.10.11..
  */
 
-class GPStracker implements LocationListener {
+public class GPStracker implements LocationListener {
     private Context context;
 
-    GPStracker(Context c) {
-        context = c;
+    public GPStracker(Context context) {
+        this.context = context;
     }
 
-    Location getLocation(){
+    public Location getLocation(){
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
             Toast.makeText(context, "Permission not Granted", Toast.LENGTH_SHORT).show();
             return null;
@@ -30,7 +30,7 @@ class GPStracker implements LocationListener {
 
         boolean isGPSEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
         if (isGPSEnabled) {
-            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 10,this);
+            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10,this);
             return lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         }
         return null;
