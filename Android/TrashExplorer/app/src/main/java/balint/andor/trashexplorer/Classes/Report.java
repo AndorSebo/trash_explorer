@@ -1,6 +1,7 @@
 package balint.andor.trashexplorer.Classes;
 
 import android.graphics.Bitmap;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 public class Report {
     private double latitude, longitude;
     private String description;
-    private ArrayList<Bitmap> images;
+    private ArrayList<ImageView> images;
     private int picnumber;
 
 
@@ -50,11 +51,11 @@ public class Report {
         this.description = description;
     }
 
-    public ArrayList<Bitmap> getImages() {
+    public ArrayList<ImageView> getImages() {
         return images;
     }
 
-    public void setImages(ArrayList<Bitmap> images) {
+    public void setImages(ArrayList<ImageView> images) {
         this.images = images;
     }
 }

@@ -223,7 +223,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (dialog.isShowing())
+        if (dialog != null && dialog.isShowing())
             dialog.dismiss();
         else
             logout(ProfileActivity.this);
