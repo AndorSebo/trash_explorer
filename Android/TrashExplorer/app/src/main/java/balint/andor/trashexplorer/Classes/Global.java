@@ -3,11 +3,15 @@ package balint.andor.trashexplorer.Classes;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Handler;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 import balint.andor.trashexplorer.R;
 
@@ -50,4 +54,5 @@ public class Global {
         u.setToken(token);
     }
     public static User getUser() { return u;}
+    public static void setReportIds(ArrayList<Integer> reportIds){u.setReportid(reportIds);}
 }

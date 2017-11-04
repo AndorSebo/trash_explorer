@@ -1,5 +1,7 @@
 package balint.andor.trashexplorer.Classes;
 
+import java.util.ArrayList;
+
 /**
  * Created by Andor on 2017.10.21..
  */
@@ -7,6 +9,15 @@ package balint.andor.trashexplorer.Classes;
 public class User {
     int id;
     String token;
+    ArrayList<Integer> reportid;
+
+    public ArrayList<Integer> getReportid() {
+        return reportid;
+    }
+
+    public void setReportid(ArrayList<Integer> reportid) {
+        this.reportid = reportid;
+    }
 
     public int getId() {
         return id;

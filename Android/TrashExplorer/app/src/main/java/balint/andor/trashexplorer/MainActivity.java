@@ -26,6 +26,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import balint.andor.trashexplorer.Classes.Dialogs;
 import balint.andor.trashexplorer.Classes.Global;
 
 public class MainActivity extends AppCompatActivity {
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     RequestQueue reqQueue;
     Response.Listener successResponse;
     Response.ErrorListener failedResponse;
+    Dialogs dialogs;
 
     void initResponses(){
         successResponse = new Response.Listener<JSONObject>() {
@@ -52,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         failedResponse = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Global.networkNotFound(MainActivity.this);
+                dialogs.showErrorDialog(getString(R.string.wrong));
             }
         };
     }
@@ -70,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         ActionProcessButton signInButton = (ActionProcessButton) findViewById(R.id.signIn);
         final EditText pwET = (EditText) findViewById(R.id.password);
         final EditText emailET = (EditText) findViewById(R.id.email);
-
+        dialogs = new Dialogs(MainActivity.this);
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -124,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
                     successResponse, failedResponse);
             reqQueue.add(request);
             reqQueue.start();
+            dialogs.showLoadingDialog();
         }
     }
 

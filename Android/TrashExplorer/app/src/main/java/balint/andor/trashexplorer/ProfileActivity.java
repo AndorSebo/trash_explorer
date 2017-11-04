@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,12 +24,15 @@ import com.android.volley.toolbox.Volley;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import balint.andor.trashexplorer.Classes.Dialogs;
 import balint.andor.trashexplorer.Classes.Global;
 import balint.andor.trashexplorer.Classes.User;
 
@@ -40,6 +44,7 @@ public class ProfileActivity extends AppCompatActivity {
     Response.ErrorListener failedResponse;
     String token;
     AlertDialog dialog;
+    Dialogs dialogs;
 
     void initResponses(final TextView nameTv, final TextView emailTv, final TextView dateTv, final TextView reportTv){
         successResponse = new Response.Listener<JSONObject>() {
@@ -48,10 +53,16 @@ public class ProfileActivity extends AppCompatActivity {
                 try {
                     if (response.getBoolean("success")){
                         JSONObject jsonObject = response.getJSONObject("data");
+                        ArrayList<Integer> reportIds = new ArrayList<>();
+                        JSONArray jsonArray = jsonObject.getJSONArray("reports");
                         nameTv.setText(jsonObject.getString("name"));
                         emailTv.setText(jsonObject.getString("email"));
                         dateTv.setText(jsonObject.getJSONObject("created_at").getString("date").substring(0,10));
                         reportTv.setText(jsonObject.getString("report_number")+"\n bejelentés");
+                        for (int i=0; i< jsonArray.length();i++)
+                            reportIds.add(jsonArray.getJSONObject(i).getInt("report_id"));
+                        Global.setReportIds(reportIds);
+                        dialogs.hideAlertDialog();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -77,6 +88,7 @@ public class ProfileActivity extends AppCompatActivity {
         TextView dateTv = (TextView) findViewById(R.id.dateTv);
         TextView reportTv = (TextView) findViewById(R.id.report_number);
         final FloatingActionsMenu menu = (FloatingActionsMenu) findViewById(R.id.menu);
+        dialogs = new Dialogs(ProfileActivity.this);
 
         FloatingActionButton pwChange = (FloatingActionButton) findViewById(R.id.pwChange);
         FloatingActionButton logout = (FloatingActionButton) findViewById(R.id.logout);
@@ -110,7 +122,6 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
     }
-
     void getProfile(int id, String token){
         reqQueue = Volley.newRequestQueue(this);
         String url = Global.getBaseUrl()+"/profile";
@@ -118,8 +129,8 @@ public class ProfileActivity extends AppCompatActivity {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url+bonus,new JSONObject(),successResponse, failedResponse);
         reqQueue.add(request);
         reqQueue.start();
+        dialogs.showLoadingDialog();
     }
-
     void pwDialog(final String token){
         LayoutInflater inflater = getLayoutInflater();
         View dialogLayout = inflater.inflate(R.layout.password_change, null);
@@ -164,7 +175,6 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
-
     void pwChange(EditText oldPw, EditText newPw, EditText cPw, String token, final AlertDialog dialog){
         final String pass1 = oldPw.getText().toString();
         final String pass2 = newPw.getText().toString();
@@ -175,23 +185,21 @@ public class ProfileActivity extends AppCompatActivity {
         else if (!pass2.equals(pass3))
             cPw.setError("Nem egyezik a megerősítő jelszó, és az új jelszó.");
         else{
+            dialogs.showLoadingDialog();
             StringRequest postRequest = new StringRequest(Request.Method.POST, url+"?token="+token,
                     new Response.Listener<String>()
                     {
                         @Override
                         public void onResponse(String response) {
                             dialog.dismiss();
-                            Toast.makeText(ProfileActivity.this, "Sikeres jelszó változtatás!",
-                                    Toast.LENGTH_SHORT).show();
+                            dialogs.showSuccessDialog();
                         }
                     },
                     new Response.ErrorListener()
                     {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(ProfileActivity.this, "Probléma a folyamat során, kérjük próbálja meg később!",
-                                    Toast.LENGTH_SHORT).show();
-                            dialog.dismiss();
+                            dialogs.showErrorDialog(getString(R.string.wrong));
                         }
                     }
             ) {
@@ -208,19 +216,16 @@ public class ProfileActivity extends AppCompatActivity {
             reqQueue.add(postRequest);
         }
     }
-
     void logout(Context ctx){
         Intent logout = new Intent(ctx,MainActivity.class);
         startActivity(logout);
         finish();
     }
-
     void report(Context ctx){
         Intent report = new Intent(ctx, ReportActivity.class);
         startActivity(report);
         finish();
     }
-
     @Override
     public void onBackPressed() {
         if (dialog != null && dialog.isShowing())
@@ -228,7 +233,6 @@ public class ProfileActivity extends AppCompatActivity {
         else
             logout(ProfileActivity.this);
     }
-
     @Override
     public void finish(){
         super.finish();

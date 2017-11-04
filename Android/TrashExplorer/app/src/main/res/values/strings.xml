@@ -40,4 +40,9 @@
     <string name="description">Type the Description here!</string>
     <string name="check_the_gps_connection">Please check your GPS connection.</string>
     <string name="selectMode">Select the mode:</string>
+    <!--Dialog text's-->
+    <string name="wait">Please wait…</string>
+    <string name="success">Success</string>
+    <string name="oops">Oops…</string>
+    <string name="wrong">Sorry, something went wrong! \n Please try again later…</string>
 </resources>

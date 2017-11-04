@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import balint.andor.trashexplorer.Classes.Dialogs;
 import balint.andor.trashexplorer.Classes.GPStracker;
 import balint.andor.trashexplorer.Classes.Global;
 import balint.andor.trashexplorer.Classes.Report;
@@ -48,6 +49,7 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
     ImageView selectedImageView;
     EditText description;
     RequestQueue reqQueue;
+    Dialogs dialogs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,7 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
         ActionProcessButton send = (ActionProcessButton) findViewById(R.id.send);
         final ImageView[] imgs = new ImageView[4];
         description = (EditText) findViewById(R.id.description);
+        dialogs = new Dialogs(ReportActivity.this);
 
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         declarateImgs(imgs);
@@ -118,6 +121,7 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
             report.setImages(list);
             report.setLatitude(latitude);
             report.setLongitude(longitude);
+            dialogs.showLoadingDialog();
         }else{
             description.setError("Kötelező leírást megadni!");
         }
@@ -163,7 +167,6 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
     void sendData(final Report report){
         String url = Global.getBaseUrl()+"/newreport";
         String token = Global.getUser().getToken();
@@ -173,6 +176,7 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
                     @Override
                     public void onResponse(String response) {
                         Log.d("Response", response);
+                        dialogs.showSuccessDialog();
                     }
                 },
                 new Response.ErrorListener()
@@ -180,6 +184,7 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Response", error.toString());
+                        dialogs.showErrorDialog(getString(R.string.wrong));
                     }
                 }
         ) {
@@ -191,27 +196,8 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
                 params.put("longitude",String.valueOf(report.getLongitude()));
                 params.put("description",report.getDescription());
                 params.put("picnumber",String.valueOf(picnumber));
-                switch(picnumber){
-                    case 1:
-                        params.put("picture1", convertToBase64(((BitmapDrawable)report.getImages().get(0).getDrawable()).getBitmap()));
-                        break;
-                    case 2:
-                        params.put("picture1", convertToBase64(((BitmapDrawable)report.getImages().get(0).getDrawable()).getBitmap()));
-                        params.put("picture2", convertToBase64(((BitmapDrawable)report.getImages().get(1).getDrawable()).getBitmap()));
-                        break;
-                    case 3:
-                        params.put("picture1", convertToBase64(((BitmapDrawable)report.getImages().get(0).getDrawable()).getBitmap()));
-                        params.put("picture2", convertToBase64(((BitmapDrawable)report.getImages().get(1).getDrawable()).getBitmap()));
-                        params.put("picture3", convertToBase64(((BitmapDrawable)report.getImages().get(2).getDrawable()).getBitmap()));
-                        break;
-                    case 4:
-                        params.put("picture1", convertToBase64(((BitmapDrawable)report.getImages().get(0).getDrawable()).getBitmap()));
-                        params.put("picture2", convertToBase64(((BitmapDrawable)report.getImages().get(1).getDrawable()).getBitmap()));
-                        params.put("picture3", convertToBase64(((BitmapDrawable)report.getImages().get(2).getDrawable()).getBitmap()));
-                        params.put("picture4", convertToBase64(((BitmapDrawable)report.getImages().get(3).getDrawable()).getBitmap()));
-                        break;
-                    default:
-                        break;
+                for(int i=0; i< picnumber; i++){
+                    params.put("picture"+(i+1), convertToBase64(((BitmapDrawable)report.getImages().get(i).getDrawable()).getBitmap()));
                 }
                 Log.d("Params",params.toString());
                 return params;

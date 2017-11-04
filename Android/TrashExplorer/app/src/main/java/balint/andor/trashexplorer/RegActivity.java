@@ -25,11 +25,13 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import balint.andor.trashexplorer.Classes.Dialogs;
 import balint.andor.trashexplorer.Classes.Global;
 
 public class RegActivity extends AppCompatActivity {
 
     RequestQueue reqQueue;
+    Dialogs dialogs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class RegActivity extends AppCompatActivity {
         ActionProcessButton regButton = (ActionProcessButton) findViewById(R.id.register);
         final EditText username = (EditText) findViewById(R.id.username);
         final EditText email = (EditText) findViewById(R.id.email);
+        dialogs = new Dialogs(RegActivity.this);
 
         reqQueue = Volley.newRequestQueue(this);
         reqQueue.start();
@@ -60,6 +63,7 @@ public class RegActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 registration(username, email, pwET, cpwET);
+                dialogs.showLoadingDialog();
             }
         });
 
@@ -95,6 +99,7 @@ public class RegActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         Log.d("Response", response);
+                        dialogs.showSuccessDialog();
                     }
                 },
                 new Response.ErrorListener()
@@ -102,6 +107,7 @@ public class RegActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Response", error.toString());
+                        dialogs.showErrorDialog(getString(R.string.wrong));
                     }
                 }
         ) {
