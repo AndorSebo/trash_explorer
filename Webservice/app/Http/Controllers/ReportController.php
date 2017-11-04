@@ -5,6 +5,7 @@ use Tymon\JWTAuth\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\Models\Report;
 use App\Models\Image;
+use App\Models\ApiSubscriber;
 use Faker\Provider\File;
 use Dingo\Api\Auth\Auth;
 use Illuminate\Support\Facades\Input;
@@ -88,6 +89,10 @@ class ReportController extends Controller
           'longitude' => $longitude,
           'description' => $description
         ]);
+
+        $repnumber = $this->auth->user()->report_number;
+        $repnumber++;
+        ApiSubscriber::where('user_id', $this->auth->user()->user_id)->update(['report_number' => $repnumber]);
 
         $reportid = Report::select('report_id')->orderBy('report_id', 'desc')->first();
 
