@@ -25,10 +25,10 @@ class ReportController extends Controller
       try {
           $reportid = $request->reportid;
           if($reportid == null){
-            return $this->Datareturn(false, 401, '', 'reportid_is_null');
+            return $this->Datareturn(false, 474, '', 'reportid_is_null');
           }
           if(!is_numeric($reportid)){
-            return $this->Datareturn(false, 401, '', 'reportid_is_not_numeric');
+            return $this->Datareturn(false, 475, '', 'reportid_is_not_numeric');
           }
           $report = Report::where('report_id', $reportid)->get();
           $pictures = Image::select('image_id', 'mini_image')->where('report_id', $reportid)->get();
@@ -44,11 +44,11 @@ class ReportController extends Controller
             }
             return $this->Datareturn(true, 200, $result, 'success_query');
           }else{
-            return $this->Datareturn(false, 420, '', 'report_not_found');
+            return $this->Datareturn(false, 476, '', 'report_not_found');
           }
 
       } catch (TokenExpiredException $e) {
-          return $this->Datareturn(false, 401, '', 'something_bad');
+          return $this->Datareturn(false, 490, '', 'something_bad');
       }
 
     }
@@ -62,25 +62,25 @@ class ReportController extends Controller
         $pictures = [];
 
         if($latitude == null || $longitude == null || $description == null || $picnumber == null){
-          return $this->Datareturn(false, 401, '', 'same_parameter_empty');
+          return $this->Datareturn(false, 460, '', 'some_parameter_empty');
         }
         if(!doubleval($latitude)){
-          return $this->Datareturn(false, 401, '', 'latitude_is_not_double');
+          return $this->Datareturn(false, 477, '', 'latitude_is_not_double');
         }
         if(!doubleval($longitude)){
-          return $this->Datareturn(false, 401, '', 'longitude_is_not_double');
+          return $this->Datareturn(false, 477, '', 'longitude_is_not_double');
         }
         if(strlen($description) > 250){
-          return $this->Datareturn(false, 401, '', 'description_is_too_long');
+          return $this->Datareturn(false, 478, '', 'description_is_too_long');
         }
         if(!is_numeric($picnumber)){
-          return $this->Datareturn(false, 401, '', 'picnumber_is_not_numeric');
+          return $this->Datareturn(false, 475, '', 'picnumber_is_not_numeric');
         }
         if(preg_match('/[\'^£$%&*()}{@#~?><>.,!|=_+¬-]/', $picnumber)){
-          return $this->Datareturn(false, 401, '', 'picnumber_is_not_integer');
+          return $this->Datareturn(false, 479, '', 'picnumber_is_not_integer');
         }
         if($picnumber < 0 || $picnumber > 4){
-          return $this->Datareturn(false, 401, '', 'picnumber_is_too_small_or_too_large');
+          return $this->Datareturn(false, 480, '', 'picnumber_is_too_small_or_too_large');
         }
 
         Report::create([
@@ -146,7 +146,7 @@ class ReportController extends Controller
         return $this->Datareturn(true, 200, '', 'new_report_created_is_success');
 
       } catch (TokenExpiredException $e) {
-          return $this->Datareturn(false, 401, '', 'something_bad');
+          return $this->Datareturn(false, 490, '', 'something_bad');
       }
 
     }
@@ -159,14 +159,14 @@ class ReportController extends Controller
       try {
         $reportid = $request->reportid;
         if($reportid == null){
-          return $this->Datareturn(false, 401, '', 'reportid_is_null');
+          return $this->Datareturn(false, 474, '', 'reportid_is_null');
         }
         if(!is_numeric($reportid)){
-          return $this->Datareturn(false, 401, '', 'reportid_is_not_numeric');
+          return $this->Datareturn(false, 475, '', 'reportid_is_not_numeric');
         }
         if($this->auth->user()->permission == 1){
           if(count(Report::where('report_id', $reportid)->get()) == 0){
-            return $this->Datareturn(false, 401, '', 'report_does_not_exist');
+            return $this->Datareturn(false, 482, '', 'report_does_not_exist');
           }
           if(count(Image::where('report_id', $reportid)->get()) > 0){
             Image::where('report_id', $reportid)->delete();
@@ -178,7 +178,7 @@ class ReportController extends Controller
         }else{
 
           if(count(Report::where('report_id', $reportid)->where('user_id', $this->auth->user()->user_id)->get()) == 0){
-            return $this->Datareturn(false, 401, '', 'report_does_not_exist');
+            return $this->Datareturn(false, 482, '', 'report_does_not_exist');
           }
           if(count(Image::where('report_id', $reportid)->get()) > 0){
             Image::where('report_id', $reportid)->delete();
@@ -189,7 +189,7 @@ class ReportController extends Controller
         }
 
       } catch (TokenExpiredException $e) {
-          return $this->Datareturn(false, 401, '', 'something_bad');
+          return $this->Datareturn(false, 490, '', 'something_bad');
       }
 
     }
