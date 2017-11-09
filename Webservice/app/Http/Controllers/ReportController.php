@@ -53,6 +53,40 @@ class ReportController extends Controller
 
     }
 
+    public function getUserReports(Request $request){
+      try {
+          $userid = $request->userid;
+
+          if($userid == null){
+            return $this->Datareturn(false, 474, '', 'userid_is_null');
+          }
+          if(!is_numeric($userid)){
+            return $this->Datareturn(false, 475, '', 'userid_is_not_numeric');
+          }
+          if(count(ApiSubscriber::where('user_id', $userid)->get()) == 0){
+            return $this->Datareturn(false, 482, '', 'user_does_not_exist');
+          }
+
+          $userreports = Report::select('report_id', 'description')->where('user_id', $userid)->get();
+
+          if(count($userreports) != 0){
+            foreach ($userreports as $ur) {
+              $result[] = [
+                  'report_id' => $ur->report_id,
+                  'description' => $ur->description
+              ];
+            }
+            return $this->Datareturn(true, 200, $result, 'success_query');
+          }else{
+            return $this->Datareturn(false, 476, '', 'user_has_not_reports');
+          }
+
+      } catch (TokenExpiredException $e) {
+          return $this->Datareturn(false, 490, '', 'something_bad');
+      }
+
+    }
+
     public function newReport(Request $request){
       try {
         $latitude = $request->latitude;
@@ -149,10 +183,6 @@ class ReportController extends Controller
           return $this->Datareturn(false, 490, '', 'something_bad');
       }
 
-    }
-
-    public function editReport(Request $request){
-      //
     }
 
     public function deleteReport(Request $request){
