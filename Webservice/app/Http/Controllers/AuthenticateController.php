@@ -37,6 +37,19 @@ class AuthenticateController extends Controller
         return $this->LoginDatareturn(true, 200, compact('token'), $userid, $permission[0]->permission, "success_signin");
     }
 
+    public function logout(Request $request){
+      try {
+
+        $this->auth->invalidate($this->auth->getToken());
+
+        return $this->Datareturn(true, 200, '', 'logout_is_success');
+
+      } catch (Exception $e) {
+        return $this->Datareturn(false, 490, '', 'something_bad');
+      }
+
+    }
+
     public function signUp(Request $request){
       $name = $request->name;
       $email = $request->email;
