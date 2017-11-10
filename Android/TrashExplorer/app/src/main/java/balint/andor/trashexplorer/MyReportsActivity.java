@@ -1,6 +1,7 @@
 package balint.andor.trashexplorer;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -53,7 +54,8 @@ public class MyReportsActivity extends AppCompatActivity {
         reportList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(MyReportsActivity.this, String.valueOf(descriptions.get(i).getReport_id()), Toast.LENGTH_SHORT).show();
+                openReport(MyReportsActivity.this, descriptions.get(i).getReport_id());
+
             }
         });
     }
@@ -99,6 +101,14 @@ public class MyReportsActivity extends AppCompatActivity {
                 }
         );
         queue.add(getRequest);
+    }
+    void openReport(Context ctx, int id){
+        Intent report = new Intent(ctx, SingleReportActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("id",id);
+        report.putExtras(bundle);
+        startActivity(report);
+        finish();
     }
 
     @Override
