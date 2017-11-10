@@ -7,9 +7,17 @@ import java.util.ArrayList;
  */
 
 public class User {
-    int id;
+    int id, permission;
     String token;
     ArrayList<Integer> reportid;
+
+    public int getPermission() {
+        return permission;
+    }
+
+    public void setPermission(int permission) {
+        this.permission = permission;
+    }
 
     public ArrayList<Integer> getReportid() {
         return reportid;

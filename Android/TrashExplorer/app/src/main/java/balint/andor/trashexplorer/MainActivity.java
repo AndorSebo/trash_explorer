@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
                     if (response.getBoolean("success")){
                         Global.setId(response.getInt("userid"));
                         Global.setToken(response.getJSONObject("user").getString("token"));
+                        Global.setPermission(response.getInt("permission"));
                         Global.openProfile(MainActivity.this);
                     }
                 } catch (JSONException e) {

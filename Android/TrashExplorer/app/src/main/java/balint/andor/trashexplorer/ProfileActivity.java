@@ -59,7 +59,7 @@ public class ProfileActivity extends AppCompatActivity {
                         nameTv.setText(jsonObject.getString("name"));
                         emailTv.setText(jsonObject.getString("email"));
                         dateTv.setText(jsonObject.getJSONObject("created_at").getString("date").substring(0,10));
-                        reportTv.setText(jsonObject.getString("report_number")+"\n bejelentés");
+                        reportTv.setText(jsonObject.getString("report_number")+"\nbejelentést\ntettél eddig");
                         for (int i=0; i< jsonArray.length();i++)
                             reportIds.add(jsonArray.getJSONObject(i).getInt("report_id"));
                         Global.setReportIds(reportIds);
@@ -94,18 +94,22 @@ public class ProfileActivity extends AppCompatActivity {
         FloatingActionButton pwChange = (FloatingActionButton) findViewById(R.id.pwChange);
         FloatingActionButton logout = (FloatingActionButton) findViewById(R.id.logout);
         FloatingActionButton report = (FloatingActionButton) findViewById(R.id.report);
-        final FloatingActionButton myReports = (FloatingActionButton) findViewById(R.id.myReports);
-
+        FloatingActionButton myReports = (FloatingActionButton) findViewById(R.id.myReports);
+        FloatingActionButton users = (FloatingActionButton) findViewById(R.id.users);
         User u = Global.getUser();
         int id = u.getId();
         token = u.getToken();
+        int permission = u.getPermission();
+        if (permission == 1){
+            users.setVisibility(View.VISIBLE);
+        }
         initResponses(nameTv,emailTv,dateTv,reportTv);
         getProfile(id,token);
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                logout(ProfileActivity.this);
+                serverLogout();
             }
         });
 
@@ -234,6 +238,27 @@ public class ProfileActivity extends AppCompatActivity {
         startActivity(logout);
         finish();
     }
+    void serverLogout(){
+        String url = Global.getBaseUrl()+"/logout";
+        dialogs.showLoadingDialog();
+        StringRequest postRequest = new StringRequest(Request.Method.GET, url+"?token="+token,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response) {
+                        logout(ProfileActivity.this);
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        dialogs.showErrorDialog(getString(R.string.wrong));
+                    }
+                }
+        );
+        reqQueue.add(postRequest);
+    }
     void report(Context ctx){
         Intent report = new Intent(ctx, ReportActivity.class);
         startActivity(report);
@@ -249,7 +274,7 @@ public class ProfileActivity extends AppCompatActivity {
         if (dialog != null && dialog.isShowing())
             dialog.dismiss();
         else
-            logout(ProfileActivity.this);
+            serverLogout();
     }
     @Override
     public void finish(){

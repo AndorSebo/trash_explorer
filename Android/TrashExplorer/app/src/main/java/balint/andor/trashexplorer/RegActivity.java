@@ -10,7 +10,6 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -19,8 +18,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.dd.processbutton.iml.ActionProcessButton;
-
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -92,18 +89,16 @@ public class RegActivity extends AppCompatActivity {
     }
 
     void registration(final EditText username, final EditText email, final EditText password, final EditText repassword) {
-        String url = Global.getBaseUrl()+"/signup";
+        String url = Global.getBaseUrl() + "/signup";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>()
-                {
+                new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         Log.d("Response", response);
                         dialogs.showSuccessDialog();
                     }
                 },
-                new Response.ErrorListener()
-                {
+                new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Response", error.toString());
@@ -112,12 +107,12 @@ public class RegActivity extends AppCompatActivity {
                 }
         ) {
             @Override
-            protected Map<String, String> getParams(){
-                Map<String, String>  params = new HashMap<>();
-                params.put("name",username.getText().toString());
-                params.put("email",email.getText().toString());
-                params.put("password",password.getText().toString());
-                params.put("repassword",repassword.getText().toString());
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("name", username.getText().toString());
+                params.put("email", email.getText().toString());
+                params.put("password", password.getText().toString());
+                params.put("repassword", repassword.getText().toString());
 
                 return params;
             }

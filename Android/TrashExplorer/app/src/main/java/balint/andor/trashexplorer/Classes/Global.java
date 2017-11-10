@@ -63,4 +63,8 @@ public class Global {
         ctx.startActivity(profile);
         ((Activity) ctx).finish();
     }
+    public static void setPermission(int permission){
+        u.setPermission(permission);
+    }
+
 }
