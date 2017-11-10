@@ -23,6 +23,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
 import balint.andor.trashexplorer.Classes.Global;
 import balint.andor.trashexplorer.Classes.Report;
 import balint.andor.trashexplorer.Classes.ReportAdapter;
@@ -73,6 +76,12 @@ public class MyReportsActivity extends AppCompatActivity {
                                     r.setReport_id(jsonObject.getInt("report_id"));
                                     descriptions.add(r);
                                 }
+                                Collections.sort(descriptions, new Comparator<Report>() {
+                                    @Override
+                                    public int compare(Report report, Report t1) {
+                                            return report.getDescription().compareTo(t1.getDescription());
+                                    }
+                                });
                                 reportsAdapter = new ReportAdapter(ctx,descriptions);
                                 reportList.setAdapter(reportsAdapter);
                             }

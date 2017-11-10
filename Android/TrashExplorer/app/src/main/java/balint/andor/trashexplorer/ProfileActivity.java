@@ -100,11 +100,18 @@ public class ProfileActivity extends AppCompatActivity {
         int id = u.getId();
         token = u.getToken();
         int permission = u.getPermission();
-        if (permission == 1){
+        if (permission == 0){
             users.setVisibility(View.VISIBLE);
         }
         initResponses(nameTv,emailTv,dateTv,reportTv);
         getProfile(id,token);
+
+        users.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                users(ProfileActivity.this);
+            }
+        });
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -267,6 +274,11 @@ public class ProfileActivity extends AppCompatActivity {
     void myReports(Context ctx){
         Intent myReports = new Intent(ctx, MyReportsActivity.class);
         startActivity(myReports);
+        finish();
+    }
+    void users(Context ctx){
+        Intent users = new Intent(ctx, UsersActivity.class);
+        startActivity(users);
         finish();
     }
     @Override
