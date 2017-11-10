@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
                     if (response.getBoolean("success")){
                         Global.setId(response.getInt("userid"));
                         Global.setToken(response.getJSONObject("user").getString("token"));
-                        openProfile(MainActivity.this);
+                        Global.openProfile(MainActivity.this);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -124,15 +125,14 @@ public class MainActivity extends AppCompatActivity {
             JSONObject js = new JSONObject(params);
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, js,
                     successResponse, failedResponse);
+            request.setRetryPolicy(new DefaultRetryPolicy(
+                    30000,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             reqQueue.add(request);
             reqQueue.start();
             dialogs.showLoadingDialog();
         }
     }
 
-    void openProfile(Context ctx){
-        Intent profile = new Intent(ctx,ProfileActivity.class);
-        startActivity(profile);
-        finish();
-    }
 }

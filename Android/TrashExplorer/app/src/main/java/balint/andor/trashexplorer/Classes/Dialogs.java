@@ -3,6 +3,7 @@ package balint.andor.trashexplorer.Classes;
 import android.app.Activity;
 import android.content.Context;
 
+import balint.andor.trashexplorer.MyReportsActivity;
 import balint.andor.trashexplorer.R;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -46,4 +47,5 @@ public class Dialogs {
         sweetAlertDialog = new SweetAlertDialog(ctx, SweetAlertDialog.ERROR_TYPE);
         sweetAlertDialog.setTitleText(ctx.getString(R.string.oops)).setContentText(message).show();
     }
+
 }

@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -93,6 +94,7 @@ public class ProfileActivity extends AppCompatActivity {
         FloatingActionButton pwChange = (FloatingActionButton) findViewById(R.id.pwChange);
         FloatingActionButton logout = (FloatingActionButton) findViewById(R.id.logout);
         FloatingActionButton report = (FloatingActionButton) findViewById(R.id.report);
+        final FloatingActionButton myReports = (FloatingActionButton) findViewById(R.id.myReports);
 
         User u = Global.getUser();
         int id = u.getId();
@@ -114,6 +116,13 @@ public class ProfileActivity extends AppCompatActivity {
                 pwDialog(token);
             }
         });
+
+        myReports.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {myReports(ProfileActivity.this);
+            }
+        });
+
         report.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -127,6 +136,10 @@ public class ProfileActivity extends AppCompatActivity {
         String url = Global.getBaseUrl()+"/profile";
         String bonus = "?token="+token+"&userid="+id;
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url+bonus,new JSONObject(),successResponse, failedResponse);
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                30000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         reqQueue.add(request);
         reqQueue.start();
         dialogs.showLoadingDialog();
@@ -224,6 +237,11 @@ public class ProfileActivity extends AppCompatActivity {
     void report(Context ctx){
         Intent report = new Intent(ctx, ReportActivity.class);
         startActivity(report);
+        finish();
+    }
+    void myReports(Context ctx){
+        Intent myReports = new Intent(ctx, MyReportsActivity.class);
+        startActivity(myReports);
         finish();
     }
     @Override

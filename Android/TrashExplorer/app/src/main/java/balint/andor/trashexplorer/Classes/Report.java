@@ -1,6 +1,5 @@
 package balint.andor.trashexplorer.Classes;
 
-import android.graphics.Bitmap;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
@@ -10,22 +9,29 @@ import java.util.ArrayList;
  */
 
 public class Report {
+    private int report_id, image_id;
     private double latitude, longitude;
     private String description;
     private ArrayList<ImageView> images;
-    private int picnumber;
+    private ArrayList<String> mini_url;
 
+    public int getReport_id() {
+        return report_id;
+    }
+
+    public ArrayList<String> getMini_url() {
+        return mini_url;
+    }
+
+    public void setMini_url(ArrayList<String> mini_url) {
+        this.mini_url = mini_url;
+    }
+
+    public void setReport_id(int report_id) {
+        this.report_id = report_id;
+    }
 
     public Report() {}
-
-    public int getPicnumber() {
-        return picnumber;
-    }
-
-    public void setPicnumber(int picnumber) {
-        this.picnumber = picnumber;
-    }
-
 
     public double getLatitude() {
         return latitude;

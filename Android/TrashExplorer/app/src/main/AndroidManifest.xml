@@ -28,10 +28,15 @@
         <activity
             android:name=".RegActivity"
             android:configChanges="orientation|screenSize" />
-        <activity android:name=".ProfileActivity"
-            android:configChanges="orientation|screenSize"/>
-        <activity android:name=".ReportActivity"
-            android:configChanges="orientation|screenSize"/>
+        <activity
+            android:name=".ProfileActivity"
+            android:configChanges="orientation|screenSize" />
+        <activity
+            android:name=".ReportActivity"
+            android:configChanges="orientation|screenSize" />
+        <activity
+            android:name=".MyReportsActivity"
+            android:configChanges="orientation|screenSize" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />

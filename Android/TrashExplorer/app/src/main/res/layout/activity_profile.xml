@@ -96,6 +96,14 @@
         app:fab_labelsPosition="left">
 
         <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/users"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/ic_users"
+            app:fab_title="@string/users"
+            android:visibility="gone"/>
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/report"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

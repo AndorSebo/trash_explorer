@@ -1,6 +1,8 @@
 package balint.andor.trashexplorer.Classes;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import balint.andor.trashexplorer.ProfileActivity;
 import balint.andor.trashexplorer.R;
 
 /**
@@ -23,7 +26,7 @@ public class Global {
     private static User u = new User();
 
     public static String getBaseUrl() {
-        return "http://trashexplorer.000webhostapp.com";
+        return "http://www.trashexplorer.nhely.hu";
     }
 
     public static boolean isNetwork(Context context){
@@ -55,4 +58,9 @@ public class Global {
     }
     public static User getUser() { return u;}
     public static void setReportIds(ArrayList<Integer> reportIds){u.setReportid(reportIds);}
+    public static void openProfile(Context ctx){
+        Intent profile = new Intent(ctx, ProfileActivity.class);
+        ctx.startActivity(profile);
+        ((Activity) ctx).finish();
+    }
 }

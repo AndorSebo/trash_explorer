@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -127,11 +128,6 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
         }
         return report;
     }
-    void openProfile(Context ctx){
-        Intent profile = new Intent(ctx, ProfileActivity.class);
-        startActivity(profile);
-        finish();
-    }
     void locateMe(Context ctx){
         Location location;
         GPStracker gps = new GPStracker(ctx);
@@ -150,7 +146,7 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
     double getLongitude(){ return longitude;}
     @Override
     public void onBackPressed() {
-        openProfile(ReportActivity.this);
+        Global.openProfile(ReportActivity.this);
     }
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -203,6 +199,11 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
                 return params;
             }
         };
+        postRequest.setRetryPolicy(new DefaultRetryPolicy(
+                30000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
         reqQueue.add(postRequest);
     }
     String convertToBase64(Bitmap bitmap){
