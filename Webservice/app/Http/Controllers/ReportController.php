@@ -7,6 +7,7 @@ use App\Models\Report;
 use App\Models\Image;
 use App\Models\ApiSubscriber;
 use Faker\Provider\File;
+use Illuminate\Support\Facades\File as LumenFile;
 use Dingo\Api\Auth\Auth;
 use Illuminate\Support\Facades\Input;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
@@ -211,6 +212,16 @@ class ReportController extends Controller
             return $this->Datareturn(false, 482, '', 'report_does_not_exist');
           }
           if(count(Image::where('report_id', $reportid)->get()) > 0){
+
+            $minifnames = Image::select('mini_image')->where('report_id', $reportid)->get();
+            $fullfnames = Image::select('image')->where('report_id', $reportid)->get();
+            foreach ($fullfnames as $fn) {
+              LumenFile::delete($fn->image);
+            }
+            foreach ($minifnames as $mfn) {
+              LumenFile::delete($mfn->mini_image);
+            }
+
             Image::where('report_id', $reportid)->delete();
           }
           Report::where('report_id', $reportid)->delete();
