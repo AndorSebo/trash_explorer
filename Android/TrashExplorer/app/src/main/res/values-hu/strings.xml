@@ -1,0 +1,57 @@
+<resources>
+    <string name="app_name">Trash Explorer</string>
+    <string name="username">Felhasználónév</string>
+    <string name="email">Email</string>
+    <string name="password">Jelszó</string>
+    <string name="show_password">Jelszó mutatása</string>
+    <string name="sign_in_title">Bejelentkezés</string>
+    <string name="Success">Sikeres folyamat</string>
+    <string name="Loading">Betöltés…</string>
+    <string name="sign_up">Még nincs fiókja? <u>Regisztrálj!</u></string>
+    <string name="network_error">Nem található hálózat, ellenőrizze az internet kapcsolatát!</string>
+    <string name="sign_up_title">Regisztráció</string>
+    <string name="cpassword">Jelszó megerősítése</string>
+    <string name="sign_in">Már rendelkezik felhasználói fiókkal? <u>Belépés!</u></string>
+    <string name="report">Bejelentés</string>
+    <string name="profile">Profil</string>
+    <string name="menu">MENÜ</string>
+    <string name="username_tv">Felhasználónév:</string>
+    <string name="email_tv">Email:</string>
+    <string name="register_date">Regisztráció dátuma:</string>
+    <string name="reports">Bejelentések:</string>
+    <string name="zero_report">Még nincsenek bejelentései.</string>
+    <string name="filter">0,1,2,3,4,5,6,7,8,9,aábcdeéfghiíjklmnoóöőpqrstuúüűvwxyzAÁBCDEÉFGHIÍJKLMNOÓÖŐPQRSTUÚÜŰVWXYZ</string>
+    <string name="old_pw">Régi jelszó</string>
+    <string name="new_pw">Új jelszó</string>
+    <string name="confirm_new_pw">Új jelszó, újra</string>
+    <string name="save">Mentés</string>
+    <string name="cancel">Mégse</string>
+    <string name="change_your_password">Változtad meg a jelszavadat!</string>
+    <string name="password_change">Jelszó változtatás</string>
+    <string name="my_reports">Bejelentéseim</string>
+    <string name="logout">Kilépés</string>
+    <string name="send_report">Bejelentés küldése</string>
+    <string name="locate_me">Koordináták lekérése</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">
+        AIzaSyCl7H6eYDEwvlo_FkIx_v4hONjhzN2ZDMI
+    </string>
+    <string name="gps_needed">GPS szükséges.</string>
+    <string name="send">Küldés</string>
+    <string name="description">Írja a leírást ide!</string>
+    <string name="check_the_gps_connection">Kérem ellenőrizze a GPS kapcsolatát</string>
+    <string name="selectMode">Válasszon módot:</string>
+    <string name="users">Felhasználók</string>
+    <string name="del_report">Biztosan törölni szeretné ezt a bejelentést?</string>
+
+
+    <!--Dialog text's-->
+    <string name="wait">Kérem várjon…</string>
+    <string name="success">Sikeres folyamat</string>
+    <string name="oops">Oops…</string>
+    <string name="wrong">Hiba történt, kérem próbálja újra kérsőbb…</string>
+    <string name="warning">Figyelem!</string>
+    <string name="yes">Igen</string>
+    <string name="no_coord">Nem érkeztek koordináták ehhez a bejelentéshez.</string>
+    <string name="save_data">Belépési adatok mentése</string>
+
+</resources>
