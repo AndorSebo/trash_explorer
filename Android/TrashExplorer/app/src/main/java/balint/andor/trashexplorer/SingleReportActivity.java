@@ -2,12 +2,13 @@ package balint.andor.trashexplorer;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -16,6 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.ceylonlabs.imageviewpopup.ImagePopup;
 import com.dd.processbutton.iml.ActionProcessButton;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -23,18 +25,17 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.ArrayList;
 
 import balint.andor.trashexplorer.Classes.Dialogs;
 import balint.andor.trashexplorer.Classes.Global;
 import balint.andor.trashexplorer.Classes.User;
-import balint.andor.trashexplorer.Classes.UserAdapter;
 
 public class SingleReportActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -44,6 +45,7 @@ public class SingleReportActivity extends AppCompatActivity implements OnMapRead
     User u;
     double latitude, longitude;
     Dialogs dialogs;
+    ArrayList<String> imgUrls;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,43 +62,57 @@ public class SingleReportActivity extends AppCompatActivity implements OnMapRead
         dialogs = new Dialogs(SingleReportActivity.this);
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         u = Global.getUser();
+        ImageView[] imageViews = new ImageView[4];
 
-        getReport(blackMask,coordNotFound,String.valueOf(getIntent().getExtras().getInt("id")),description);
+        for (int i = 0; i < imageViews.length; i++) {
+            int resID = getResources().getIdentifier(("img" + i), "id", getPackageName());
+            imageViews[i] = (ImageView) findViewById(resID);
+        }
+        Context ctx = SingleReportActivity.this;
+
+        if (Global.isNetwork(ctx))
+            getReport(blackMask, coordNotFound, String.valueOf(getIntent().getExtras().getInt("id")), description, imageViews);
+        else
+            Global.networkNotFound(ctx);
+
         send.setVisibility(View.GONE);
         locate.setVisibility(View.GONE);
         gpsNeed.setVisibility(View.GONE);
     }
 
-    void getReport(final View blackMask, final TextView coordNotFound, String reportid, final EditText description){
+    void getReport(final View blackMask, final TextView coordNotFound,
+                   String reportid, final EditText description, final ImageView[] imageViews) {
         dialogs.showLoadingDialog();
-        description.setEnabled(false);
+        description.setFocusable(false);
+        description.setClickable(true);
+        description.setLongClickable(false);
         reqQueue = Volley.newRequestQueue(this);
         String url = Global.getBaseUrl() + "/getreport";
-        String token = "?token="+u.getToken();
-        reportid ="&reportid="+reportid;
-        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url+token+reportid, null,
-                new Response.Listener<JSONObject>()
-                {
+        String token = "?token=" + u.getToken();
+        reportid = "&reportid=" + reportid;
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url + token + reportid, null,
+                new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            if(response.getBoolean("success")){
+                            if (response.getBoolean("success")) {
+                                imgUrls = new ArrayList<>();
                                 JSONArray jsonArray = response.getJSONArray("data");
                                 JSONObject jsonObject = jsonArray.getJSONObject(0);
                                 latitude = jsonObject.getDouble("latitude");
                                 longitude = jsonObject.getDouble("longitude");
-                                hideMap(blackMask,coordNotFound,latitude,longitude);
+                                hideMap(blackMask, coordNotFound, latitude, longitude);
                                 description.setText(jsonObject.getString("description"));
+                                jsonArray = jsonObject.getJSONArray("mini_image");
+                                getImgs(jsonArray, imageViews);
                                 dialogs.hideAlertDialog();
-
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
                 },
-                new Response.ErrorListener()
-                {
+                new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Error.Response", String.valueOf(error));
@@ -108,11 +124,35 @@ public class SingleReportActivity extends AppCompatActivity implements OnMapRead
         reqQueue.start();
     }
 
-    void hideMap(View blackMask, TextView coordNotFound, double latitude, double longitude){
-        if (latitude == 1 && longitude == 1){
+    void getImgs(JSONArray jsonArray, final ImageView[] imgViews) throws JSONException {
+        final Context ctx = SingleReportActivity.this;
+        final ImagePopup imagePopup = new ImagePopup(ctx);
+        imagePopup.setBackgroundColor(getResources().getColor(R.color.button_background));
+        imagePopup.setFullScreen(true);
+        imagePopup.setImageOnClickClose(true);  // Optional
+        imagePopup.setHideCloseIcon(true);
+        for (int i = 0; i < jsonArray.length(); i++) {
+            final String url = jsonArray.getJSONObject(i).getString("mini_image");
+            imgUrls.add(Global.getBaseUrl() + "/" + url);
+            Picasso.with(ctx).load(imgUrls.get(i)).into(imgViews[i]);
+            imgViews[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String[] urlArray = url.split("/");
+                    String normalURL = urlArray[0]+"/normal/"+urlArray[2];
+                    imagePopup.initiatePopupWithPicasso(Global.getBaseUrl()+"/"+normalURL);
+                    imagePopup.viewPopup();
+                }
+            });
+        }
+
+    }
+
+    void hideMap(View blackMask, TextView coordNotFound, double latitude, double longitude) {
+        if (latitude == 1 && longitude == 1) {
             blackMask.setVisibility(View.VISIBLE);
             coordNotFound.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             mapFragment.getMapAsync(SingleReportActivity.this);
         }
     }
@@ -124,7 +164,8 @@ public class SingleReportActivity extends AppCompatActivity implements OnMapRead
         googleMap.addMarker(new MarkerOptions().position(location).title("You are here!"));
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(location));
     }
-    void openMyReports(Context ctx){
+
+    void openMyReports(Context ctx) {
         Intent myReports = new Intent(ctx, MyReportsActivity.class);
         startActivity(myReports);
         finish();

@@ -1,5 +1,6 @@
 package balint.andor.trashexplorer;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -50,6 +51,7 @@ public class RegActivity extends AppCompatActivity {
         ActionProcessButton regButton = (ActionProcessButton) findViewById(R.id.register);
         final EditText username = (EditText) findViewById(R.id.username);
         final EditText email = (EditText) findViewById(R.id.email);
+        final Context ctx = RegActivity.this;
         dialogs = new Dialogs(RegActivity.this);
 
         reqQueue = Volley.newRequestQueue(this);
@@ -59,8 +61,13 @@ public class RegActivity extends AppCompatActivity {
         regButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                registration(username, email, pwET, cpwET);
-                dialogs.showLoadingDialog();
+                if (Global.isNetwork(ctx)){
+                    registration(username, email, pwET, cpwET);
+                    dialogs.showLoadingDialog();
+                }
+                else{
+                    Global.networkNotFound(ctx);
+                }
             }
         });
 

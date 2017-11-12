@@ -50,7 +50,12 @@ public class MyReportsActivity extends AppCompatActivity {
         queue = Volley.newRequestQueue(this);
         u = Global.getUser();
         reportList = (ListView) findViewById(R.id.myReports);
-        getReports(this, u.getId());
+        Context ctx = MyReportsActivity.this;
+        if (Global.isNetwork(ctx))
+            getReports(this, u.getId());
+        else
+            Global.networkNotFound(ctx);
+
         reportList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

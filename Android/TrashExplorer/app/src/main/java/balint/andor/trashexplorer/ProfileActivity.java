@@ -96,6 +96,7 @@ public class ProfileActivity extends AppCompatActivity {
         FloatingActionButton report = (FloatingActionButton) findViewById(R.id.report);
         FloatingActionButton myReports = (FloatingActionButton) findViewById(R.id.myReports);
         FloatingActionButton users = (FloatingActionButton) findViewById(R.id.users);
+
         User u = Global.getUser();
         int id = u.getId();
         token = u.getToken();
@@ -104,7 +105,11 @@ public class ProfileActivity extends AppCompatActivity {
             users.setVisibility(View.VISIBLE);
         }
         initResponses(nameTv,emailTv,dateTv,reportTv);
-        getProfile(id,token);
+        Context ctx = ProfileActivity.this;
+        if (Global.isNetwork(ctx))
+            getProfile(id,token);
+        else
+            Global.networkNotFound(ctx);
 
         users.setOnClickListener(new View.OnClickListener() {
             @Override

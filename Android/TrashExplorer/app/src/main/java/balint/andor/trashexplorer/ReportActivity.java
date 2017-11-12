@@ -62,6 +62,7 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
         ActionProcessButton locate = (ActionProcessButton) findViewById(R.id.locate);
         ActionProcessButton send = (ActionProcessButton) findViewById(R.id.send);
         final ImageView[] imgs = new ImageView[4];
+        final Context ctx = ReportActivity.this;
         description = (EditText) findViewById(R.id.description);
         dialogs = new Dialogs(ReportActivity.this);
 
@@ -78,9 +79,10 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
             @Override
             public void onClick(View view) {
                 Report report = send(imgs);
-                if (!report.getDescription().equals("")){
+                if (Global.isNetwork(ctx))
                     sendData(report);
-                }
+                else
+                    Global.networkNotFound(ctx);
             }
         });
         reqQueue = Volley.newRequestQueue(this);
@@ -117,15 +119,15 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
 
         }
 
-        if (!description.getText().toString().equals("")){
+        if (!description.getText().toString().equals(""))
             report.setDescription(description.getText().toString());
-            report.setImages(list);
-            report.setLatitude(latitude);
-            report.setLongitude(longitude);
-            dialogs.showLoadingDialog();
-        }else{
-            description.setError("Kötelező leírást megadni!");
-        }
+        else
+            report.setDescription("Nem érkezett leírás.");
+
+        report.setImages(list);
+        report.setLatitude(latitude);
+        report.setLongitude(longitude);
+        dialogs.showLoadingDialog();
         return report;
     }
     void locateMe(Context ctx){
