@@ -1,11 +1,15 @@
 package balint.andor.trashexplorer;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
     Response.Listener successResponse;
     Response.ErrorListener failedResponse;
     Dialogs dialogs;
+    CheckBox dataCB;
+    EditText pwET;
+    EditText emailET;
+    SharedPreferences sharedPref;
 
     void initResponses(){
         successResponse = new Response.Listener<JSONObject>() {
@@ -41,6 +49,12 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(JSONObject response) {
                 try {
                     if (response.getBoolean("success")){
+                        if (dataCB.isChecked()){
+                            SharedPreferences.Editor editor = sharedPref.edit();
+                            editor.putString("email", emailET.getText().toString());
+                            editor.putString("password", pwET.getText().toString());
+                            editor.apply();
+                        }
                         Global.setId(response.getInt("userid"));
                         Global.setToken(response.getJSONObject("user").getString("token"));
                         Global.setPermission(response.getInt("permission"));
@@ -70,9 +84,14 @@ public class MainActivity extends AppCompatActivity {
         ImageView eye = (ImageView) findViewById(R.id.showPassword);
         TextView signUp = (TextView) findViewById(R.id.signUp);
         ActionProcessButton signInButton = (ActionProcessButton) findViewById(R.id.signIn);
-        final EditText pwET = (EditText) findViewById(R.id.password);
-        final EditText emailET = (EditText) findViewById(R.id.email);
+        final Context ctx = MainActivity.this;
+        pwET = (EditText) findViewById(R.id.password);
+        emailET = (EditText) findViewById(R.id.email);
+        dataCB = (CheckBox) findViewById(R.id.dataCB);
         dialogs = new Dialogs(MainActivity.this);
+        sharedPref = ((Activity)ctx).getPreferences(Context.MODE_PRIVATE);
+        emailET.setText(sharedPref.getString("email", ""));
+        pwET.setText(sharedPref.getString("password", ""));
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,10 +101,10 @@ public class MainActivity extends AppCompatActivity {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Global.isNetwork(MainActivity.this))
+                if (Global.isNetwork(ctx))
                     logIn(emailET,pwET);
                 else
-                    Global.networkNotFound(MainActivity.this);
+                    Global.networkNotFound(ctx);
             }
         });
         eye.setOnTouchListener(new View.OnTouchListener() {

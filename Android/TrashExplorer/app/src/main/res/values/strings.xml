@@ -52,5 +52,6 @@
     <string name="warning">Attention!</string>
     <string name="yes">Yes</string>
     <string name="no_coord">There was no GPS coordinate for the announcement.</string>
+    <string name="save_data">Belépési adatok mentése</string>
 
 </resources>

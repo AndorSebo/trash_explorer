@@ -1,6 +1,8 @@
 package balint.andor.trashexplorer.Classes;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import balint.andor.trashexplorer.MyReportsActivity;
 import balint.andor.trashexplorer.R;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -38,7 +41,7 @@ public class ReportAdapter extends ArrayAdapter<Report> {
     public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater reportInflater = LayoutInflater.from(getContext());
         View reportView = reportInflater.inflate(R.layout.report_item, parent, false);
-        String description = getItem(position).getDescription();
+        final String description = getItem(position).getDescription();
         ImageView delete = reportView.findViewById(R.id.delete);
         TextView descriptionTV = reportView.findViewById(R.id.description);
         queue = Volley.newRequestQueue(getContext());
@@ -87,7 +90,9 @@ public class ReportAdapter extends ArrayAdapter<Report> {
                     @Override
                     public void onResponse(String response) {
                         Log.d("Response", response);
-                        dialogs.showSuccessDialog();
+                        Intent refresh = new Intent (getContext(),MyReportsActivity.class);
+                        (getContext()).startActivity(refresh);
+                        ((Activity)getContext()).finish();
                     }
                 },
                 new Response.ErrorListener()
@@ -108,4 +113,5 @@ public class ReportAdapter extends ArrayAdapter<Report> {
         };
         queue.add(postRequest);
     }
+
 }

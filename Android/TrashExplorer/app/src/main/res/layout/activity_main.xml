@@ -36,8 +36,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/email"
             android:inputType="textEmailAddress"
-            android:longClickable="false"
-            android:text="andorsebo@gmail.com"/>
+            android:longClickable="false"/>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -48,8 +47,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/password"
                 android:inputType="textPassword"
-                android:longClickable="false"
-                android:text="Andor1997"/>
+                android:longClickable="false"/>
             <ImageView
                 android:id="@+id/showPassword"
                 android:layout_width="wrap_content"
@@ -58,6 +56,11 @@
                 android:contentDescription="@string/show_password"
                 android:layout_alignParentEnd="true"/>
         </RelativeLayout>
+        <CheckBox
+            android:id="@+id/dataCB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/save_data"/>
 
         <com.dd.processbutton.iml.ActionProcessButton
             android:id="@+id/signIn"
