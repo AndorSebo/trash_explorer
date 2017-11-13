@@ -7,7 +7,7 @@
     <string name="sign_in_title">Bejelentkezés</string>
     <string name="Success">Sikeres folyamat</string>
     <string name="Loading">Betöltés…</string>
-    <string name="sign_up">Még nincs fiókja? <u>Regisztrálj!</u></string>
+    <string name="sign_up">Még nincs fiókja? <u>Regisztráció!</u></string>
     <string name="network_error">Nem található hálózat, ellenőrizze az internet kapcsolatát!</string>
     <string name="sign_up_title">Regisztráció</string>
     <string name="cpassword">Jelszó megerősítése</string>
@@ -51,7 +51,7 @@
     <string name="wrong">Hiba történt, kérem próbálja újra kérsőbb…</string>
     <string name="warning">Figyelem!</string>
     <string name="yes">Igen</string>
-    <string name="no_coord">Nem érkeztek koordináták ehhez a bejelentéshez.</string>
+    <string name="no_coord">Nem érkeztek koordináták \n ehhez a bejelentéshez.</string>
     <string name="save_data">Belépési adatok mentése</string>
 
 </resources>

@@ -67,6 +67,7 @@ public class SingleReportActivity extends AppCompatActivity implements OnMapRead
         for (int i = 0; i < imageViews.length; i++) {
             int resID = getResources().getIdentifier(("img" + i), "id", getPackageName());
             imageViews[i] = (ImageView) findViewById(resID);
+            imageViews[i].setImageResource(R.drawable.image_nf);
         }
         Context ctx = SingleReportActivity.this;
 

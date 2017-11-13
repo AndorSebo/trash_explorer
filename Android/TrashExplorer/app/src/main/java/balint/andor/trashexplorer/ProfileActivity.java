@@ -101,7 +101,7 @@ public class ProfileActivity extends AppCompatActivity {
         int id = u.getId();
         token = u.getToken();
         int permission = u.getPermission();
-        if (permission == 0){
+        if (permission == 1){
             users.setVisibility(View.VISIBLE);
         }
         initResponses(nameTv,emailTv,dateTv,reportTv);

@@ -31,7 +31,7 @@ public class Dialogs {
         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
             @Override
             public void onClick(SweetAlertDialog sweetAlertDialog) {
-                if (ctx.toString().equals("balint.andor.trashexplorer.ReportActivity@8d919be"))
+                if (ctx.toString().split("@")[0].equals("balint.andor.trashexplorer.ReportActivity"))
                     ((Activity)ctx).onBackPressed();
                 else
                     hideAlertDialog();

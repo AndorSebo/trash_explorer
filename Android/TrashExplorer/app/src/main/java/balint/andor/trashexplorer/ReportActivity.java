@@ -1,12 +1,15 @@
 package balint.andor.trashexplorer;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -59,6 +62,9 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        ActivityCompat.requestPermissions(ReportActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        ActivityCompat.requestPermissions(ReportActivity.this, new String[]{Manifest.permission.CAMERA}, 2);
+
         ActionProcessButton locate = (ActionProcessButton) findViewById(R.id.locate);
         ActionProcessButton send = (ActionProcessButton) findViewById(R.id.send);
         final ImageView[] imgs = new ImageView[4];
@@ -89,13 +95,13 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
         reqQueue.start();
     }
 
-    void makePicture(ImageView img){
-        ImagePicker.pickImage(ReportActivity.this,getResources().getString(R.string.selectMode));
+    void makePicture(ImageView img) {
+        ImagePicker.pickImage(ReportActivity.this, getResources().getString(R.string.selectMode));
         selectedImageView = img;
-
     }
-    void declarateImgs(final ImageView[] imgs){
-        for (int i=0; i< imgs.length;i++) {
+
+    void declarateImgs(final ImageView[] imgs) {
+        for (int i = 0; i < imgs.length; i++) {
             int resID = getResources().getIdentifier(("img" + i), "id", getPackageName());
             imgs[i] = (ImageView) findViewById(resID);
             final int j = i;
@@ -107,13 +113,14 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
             });
         }
     }
-    Report send(ImageView[] imgs){
+
+    Report send(ImageView[] imgs) {
         Report report = new Report();
         ArrayList<ImageView> list = new ArrayList<>(Arrays.asList(imgs));
-        for (Iterator<ImageView> iterator = list.iterator(); iterator.hasNext();){
+        for (Iterator<ImageView> iterator = list.iterator(); iterator.hasNext(); ) {
             ImageView selected = iterator.next();
             if (selected.getDrawable().getConstantState().equals
-                    (getResources().getDrawable(R.drawable.image_add).getConstantState())){
+                    (getResources().getDrawable(R.drawable.image_add).getConstantState())) {
                 iterator.remove();
             }
 
@@ -130,26 +137,41 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
         dialogs.showLoadingDialog();
         return report;
     }
-    void locateMe(Context ctx){
+
+    void locateMe(Context ctx) {
         Location location;
         GPStracker gps = new GPStracker(ctx);
         location = gps.getLocation();
-        if (location==null){
+        if (location == null) {
             Toast.makeText(ctx, getResources().getString(R.string.check_the_gps_connection), Toast.LENGTH_SHORT).show();
-        }else{
+        } else {
             mapFragment.getMapAsync(ReportActivity.this);
             setLatitude(location.getLatitude());
             setLongitude(location.getLongitude());
         }
     }
-    void setLatitude(double latitude){ this.latitude = latitude; }
-    void setLongitude(double longitude){ this.longitude = longitude; }
-    double getLatitude(){ return latitude;}
-    double getLongitude(){ return longitude;}
+
+    double getLatitude() {
+        return latitude;
+    }
+
+    void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    double getLongitude() {
+        return longitude;
+    }
+
+    void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
     @Override
     public void onBackPressed() {
         Global.openProfile(ReportActivity.this);
     }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         googleMap.clear();
@@ -157,28 +179,28 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
         googleMap.addMarker(new MarkerOptions().position(location).title("You are here!"));
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(location));
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Bitmap bitmap = ImagePicker.getImageFromResult(this, requestCode, resultCode, data);
-        if (bitmap != null){
+        if (bitmap != null) {
             selectedImageView.setImageBitmap(bitmap);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-    void sendData(final Report report){
-        String url = Global.getBaseUrl()+"/newreport";
+
+    void sendData(final Report report) {
+        String url = Global.getBaseUrl() + "/newreport";
         String token = Global.getUser().getToken();
-        StringRequest postRequest = new StringRequest(Request.Method.POST, url+"?token="+token,
-                new Response.Listener<String>()
-                {
+        StringRequest postRequest = new StringRequest(Request.Method.POST, url + "?token=" + token,
+                new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         Log.d("Response", response);
                         dialogs.showSuccessDialog();
                     }
                 },
-                new Response.ErrorListener()
-                {
+                new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Response", error.toString());
@@ -187,31 +209,45 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
                 }
         ) {
             @Override
-            protected Map<String, String> getParams(){
+            protected Map<String, String> getParams() {
                 int picnumber = report.getImages().size();
-                Map<String, String>  params = new HashMap<>();
-                params.put("latitude",String.valueOf(report.getLatitude()));
-                params.put("longitude",String.valueOf(report.getLongitude()));
-                params.put("description",report.getDescription());
-                params.put("picnumber",String.valueOf(picnumber));
-                for(int i=0; i< picnumber; i++){
-                    params.put("picture"+(i+1), convertToBase64(((BitmapDrawable)report.getImages().get(i).getDrawable()).getBitmap()));
+                Map<String, String> params = new HashMap<>();
+                params.put("latitude", String.valueOf(report.getLatitude()));
+                params.put("longitude", String.valueOf(report.getLongitude()));
+                params.put("description", report.getDescription());
+                params.put("picnumber", String.valueOf(picnumber));
+                for (int i = 0; i < picnumber; i++) {
+                    params.put("picture" + (i + 1), convertToBase64(((BitmapDrawable) report.getImages().get(i).getDrawable()).getBitmap()));
                 }
-                Log.d("Params",params.toString());
                 return params;
             }
         };
         postRequest.setRetryPolicy(new DefaultRetryPolicy(
-                30000,
+                60000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         reqQueue.add(postRequest);
     }
-    String convertToBase64(Bitmap bitmap){
+
+    String convertToBase64(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-        byte[] byteArray =  byteArrayOutputStream.toByteArray();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                } else {
+                    Toast.makeText(ReportActivity.this, "Nincs engedélyezve a GPS használata az eszközön.", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
+        }
     }
 }
