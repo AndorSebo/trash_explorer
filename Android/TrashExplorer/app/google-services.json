@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "868826434327",
+    "firebase_url": "https://trashexplorer-ce640.firebaseio.com",
+    "project_id": "trashexplorer-ce640",
+    "storage_bucket": "trashexplorer-ce640.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:868826434327:android:702501d183f177ef",
+        "android_client_info": {
+          "package_name": "balint.andor.trashexplorer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "868826434327-qqa0d29b9d8ti2udajma7knepimoiig1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "balint.andor.trashexplorer",
+            "certificate_hash": "1f880d2ebeffb10b2a84ef247fa70ef5b95e3b7b"
+          }
+        },
+        {
+          "client_id": "868826434327-01su0t660p5ob1vnh3rspdt4m95j6ad6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQm06CQQTl3qa4_x2NdDU1UHt3t4U25nk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "868826434327-01su0t660p5ob1vnh3rspdt4m95j6ad6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

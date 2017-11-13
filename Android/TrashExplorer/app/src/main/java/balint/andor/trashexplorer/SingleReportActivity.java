@@ -2,9 +2,11 @@ package balint.andor.trashexplorer;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -46,6 +48,7 @@ public class SingleReportActivity extends AppCompatActivity implements OnMapRead
     double latitude, longitude;
     Dialogs dialogs;
     ArrayList<String> imgUrls;
+    int width;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,9 +131,12 @@ public class SingleReportActivity extends AppCompatActivity implements OnMapRead
     void getImgs(JSONArray jsonArray, final ImageView[] imgViews) throws JSONException {
         final Context ctx = SingleReportActivity.this;
         final ImagePopup imagePopup = new ImagePopup(ctx);
+        getScreenResolution();
         imagePopup.setBackgroundColor(getResources().getColor(R.color.button_background));
         imagePopup.setFullScreen(true);
-        imagePopup.setImageOnClickClose(true);  // Optional
+        imagePopup.setImageOnClickClose(true);
+        imagePopup.setMaxHeight(width);
+        imagePopup.setMaxWidth(width);
         imagePopup.setHideCloseIcon(true);
         for (int i = 0; i < jsonArray.length(); i++) {
             final String url = jsonArray.getJSONObject(i).getString("mini_image");
@@ -175,5 +181,12 @@ public class SingleReportActivity extends AppCompatActivity implements OnMapRead
     @Override
     public void onBackPressed() {
         openMyReports(SingleReportActivity.this);
+    }
+
+    void getScreenResolution(){
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        width = size.x;
     }
 }

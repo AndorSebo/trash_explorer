@@ -43,7 +43,7 @@
             android:configChanges="orientation|screenSize" />
         <activity
             android:name=".SingleReportActivity"
-            android:configChanges="orientation|screenSize"/>
+            android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

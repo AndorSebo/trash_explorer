@@ -84,10 +84,10 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Report report = send(imgs);
-                if (Global.isNetwork(ctx))
+                if (Global.isNetwork(ctx)) {
+                    Report report = send(imgs);
                     sendData(report);
-                else
+                }else
                     Global.networkNotFound(ctx);
             }
         });
