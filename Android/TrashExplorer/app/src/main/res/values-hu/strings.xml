@@ -12,8 +12,8 @@
     <string name="sign_up_title">Regisztráció</string>
     <string name="cpassword">Jelszó megerősítése</string>
     <string name="sign_in">Már rendelkezik felhasználói fiókkal? <u>Belépés!</u></string>
-    <string name="report">Bejelentés</string>
-    <string name="profile">Profil</string>
+    <string name="report">Új bejelentés</string>
+    <string name="profile">Profilom</string>
     <string name="menu">MENÜ</string>
     <string name="username_tv">Felhasználónév:</string>
     <string name="email_tv">Email:</string>
@@ -26,7 +26,7 @@
     <string name="confirm_new_pw">Új jelszó, újra</string>
     <string name="save">Mentés</string>
     <string name="cancel">Mégse</string>
-    <string name="change_your_password">Változtad meg a jelszavadat!</string>
+    <string name="change_your_password">Jelszó változtatása</string>
     <string name="password_change">Jelszó változtatás</string>
     <string name="my_reports">Bejelentéseim</string>
     <string name="logout">Kilépés</string>
@@ -42,6 +42,7 @@
     <string name="selectMode">Válasszon módot:</string>
     <string name="users">Felhasználók</string>
     <string name="del_report">Biztosan törölni szeretné ezt a bejelentést?</string>
+    <string name="achievement">Trófeáim</string>
 
 
     <!--Dialog text's-->
@@ -53,5 +54,7 @@
     <string name="yes">Igen</string>
     <string name="no_coord">Nem érkeztek koordináták \n ehhez a bejelentéshez.</string>
     <string name="save_data">Belépési adatok mentése</string>
+    <string name="invalid_old_password">Hibás régi jelszó</string>
+    <string name="empty_desc_and_coord">Nem adott meg sem leírást, sem koordinátákat!</string>
 
 </resources>

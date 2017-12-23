@@ -7,4 +7,5 @@
     <color name="background">#FFE0E0E0</color>
     <color name="button_background">#CC000000</color>
     <color name="button_background_alpha">#4433B5E5</color>
+    <color name="menu_bg">#FFF1F1F1</color>
 </resources>

@@ -22,10 +22,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.dd.processbutton.iml.ActionProcessButton;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     EditText pwET;
     EditText emailET;
     SharedPreferences sharedPref;
+    FirebaseAnalytics mFirebaseAnalytics;
 
     void initResponses(){
         successResponse = new Response.Listener<JSONObject>() {
@@ -58,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                         Global.setId(response.getInt("userid"));
                         Global.setToken(response.getJSONObject("user").getString("token"));
                         Global.setPermission(response.getInt("permission"));
+                        logToFireBase(emailET.getText().toString());
                         Global.openProfile(MainActivity.this);
                     }
                 } catch (JSONException e) {
@@ -81,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         ImageView eye = (ImageView) findViewById(R.id.showPassword);
         TextView signUp = (TextView) findViewById(R.id.signUp);
         ActionProcessButton signInButton = (ActionProcessButton) findViewById(R.id.signIn);
@@ -151,6 +157,12 @@ public class MainActivity extends AppCompatActivity {
             reqQueue.start();
             dialogs.showLoadingDialog();
         }
+    }
+
+    void logToFireBase(String email){
+        Bundle bundle = new Bundle();
+        bundle.putString("Email", email);
+        mFirebaseAnalytics.logEvent("Event", bundle);
     }
 
 }

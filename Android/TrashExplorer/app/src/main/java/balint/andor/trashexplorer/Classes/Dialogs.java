@@ -40,7 +40,8 @@ public class Dialogs {
 
     }
     public void hideAlertDialog(){
-        sweetAlertDialog.dismiss();
+        if (sweetAlertDialog != null)
+            sweetAlertDialog.dismiss();
     }
     public void showErrorDialog(String message){
         hideAlertDialog();

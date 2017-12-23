@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg"
+    android:background="@color/menu_bg"
     android:orientation="vertical"
     android:padding="32dp"
     tools:context="balint.andor.trashexplorer.RegActivity">
@@ -34,7 +34,8 @@
                 android:hint="@string/username"
                 android:inputType="text"
                 android:longClickable="false"
-                android:digits="@string/filter"/>
+                android:digits="@string/filter"
+                android:background="@drawable/edit_text_background"/>
             <EditText
                 android:id="@+id/email"
                 android:layout_width="match_parent"
@@ -42,7 +43,8 @@
                 android:layout_marginBottom="16dp"
                 android:hint="@string/email"
                 android:inputType="textEmailAddress"
-                android:longClickable="false"/>
+                android:longClickable="false"
+                android:background="@drawable/edit_text_background"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -56,7 +58,8 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/password"
                     android:inputType="textPassword"
-                    android:longClickable="false"/>
+                    android:longClickable="false"
+                    android:background="@drawable/edit_text_background"/>
 
                 <ImageView
                     android:id="@+id/showPassword"
@@ -64,7 +67,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:contentDescription="@string/show_password"
-                    android:src="@drawable/ic_eye" />
+                    android:src="@drawable/ic_eye"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="5dp"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -79,7 +84,8 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/cpassword"
                     android:inputType="textPassword"
-                    android:longClickable="false"/>
+                    android:longClickable="false"
+                    android:background="@drawable/edit_text_background"/>
 
                 <ImageView
                     android:id="@+id/cshowPassword"
@@ -87,7 +93,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:contentDescription="@string/show_password"
-                    android:src="@drawable/ic_eye" />
+                    android:src="@drawable/ic_eye"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="5dp"/>
             </RelativeLayout>
 
             <com.dd.processbutton.iml.ActionProcessButton

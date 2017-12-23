@@ -5,16 +5,15 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -83,6 +82,7 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
 
         TextView nameTv = (TextView) findViewById(R.id.nameTv);
         TextView emailTv = (TextView) findViewById(R.id.emailTv);
@@ -228,7 +228,11 @@ public class ProfileActivity extends AppCompatActivity {
                     {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            dialogs.showErrorDialog(getString(R.string.wrong));
+                            NetworkResponse networkResponse = error.networkResponse;
+                            if(networkResponse.statusCode == 472)
+                                dialogs.showErrorDialog(getString(R.string.invalid_old_password));
+                            else
+                                dialogs.showErrorDialog(getString(R.string.wrong));
                         }
                     }
             ) {

@@ -86,7 +86,8 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
             public void onClick(View view) {
                 if (Global.isNetwork(ctx)) {
                     Report report = send(imgs);
-                    sendData(report);
+                    if(report != null)
+                        sendData(report);
                 }else
                     Global.networkNotFound(ctx);
             }
@@ -126,16 +127,20 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
 
         }
 
-        if (!description.getText().toString().equals(""))
-            report.setDescription(description.getText().toString());
-        else
-            report.setDescription("Nem érkezett leírás.");
-
-        report.setImages(list);
-        report.setLatitude(latitude);
-        report.setLongitude(longitude);
-        dialogs.showLoadingDialog();
-        return report;
+        if (description.getText().toString().equals("") && latitude == 1 && longitude == 1)
+            dialogs.showErrorDialog(getResources().getString(R.string.empty_desc_and_coord));
+        else{
+            if (description.getText().toString().equals(""))
+                report.setDescription("Nem érkezett leírás");
+            else
+                report.setDescription(description.getText().toString());
+            report.setImages(list);
+            report.setLatitude(latitude);
+            report.setLongitude(longitude);
+            dialogs.showLoadingDialog();
+            return report;
+        }
+        return null;
     }
 
     void locateMe(Context ctx) {

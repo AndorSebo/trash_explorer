@@ -12,8 +12,8 @@
     <string name="sign_up_title">Sign Up</string>
     <string name="cpassword">Confirm Password</string>
     <string name="sign_in">Already have an account? <u>Sign in</u></string>
-    <string name="report">Report</string>
-    <string name="profile">Profile</string>
+    <string name="report">New report</string>
+    <string name="profile">My profile</string>
     <string name="menu">MENU</string>
     <string name="username_tv">Username:</string>
     <string name="email_tv">Email:</string>
@@ -42,7 +42,7 @@
     <string name="selectMode">Select the mode:</string>
     <string name="users">Users</string>
     <string name="del_report">Are you sure you want to delete this item?</string>
-
+    <string name="achievement">My Trophies</string>
 
     <!--Dialog text's-->
     <string name="wait">Please wait…</string>
@@ -53,5 +53,7 @@
     <string name="yes">Yes</string>
     <string name="no_coord">There was no GPS coordinate for the announcement.</string>
     <string name="save_data">Belépési adatok mentése</string>
+    <string name="invalid_old_password">Invalid old password.</string>
+    <string name="empty_desc_and_coord">You did not give any description or coordinates!</string>
 
 </resources>
