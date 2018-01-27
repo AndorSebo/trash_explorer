@@ -1,9 +1,11 @@
 package balint.andor.trashexplorer;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
@@ -46,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
     EditText emailET;
     SharedPreferences sharedPref;
     FirebaseAnalytics mFirebaseAnalytics;
+    Typeface tf;
+
 
     void initResponses(){
         successResponse = new Response.Listener<JSONObject>() {
@@ -78,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         };
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         overridePendingTransition(R.animator.scale_from_corner, R.animator.scale_to_corner);
@@ -86,11 +91,13 @@ public class MainActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        tf = Typeface.createFromAsset(getAssets(), "myfont.ttf");
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         ImageView eye = (ImageView) findViewById(R.id.showPassword);
         TextView signUp = (TextView) findViewById(R.id.signUp);
         ActionProcessButton signInButton = (ActionProcessButton) findViewById(R.id.signIn);
         final Context ctx = MainActivity.this;
+        TextView headerText = (TextView) findViewById(R.id.headerText);
         pwET = (EditText) findViewById(R.id.password);
         emailET = (EditText) findViewById(R.id.email);
         dataCB = (CheckBox) findViewById(R.id.dataCB);
@@ -113,6 +120,13 @@ public class MainActivity extends AppCompatActivity {
                     Global.networkNotFound(ctx);
             }
         });
+        pwET.setTypeface(tf);  //EditText
+        emailET.setTypeface(tf); //EditText
+        dataCB.setTypeface(tf); //Checkbox
+        signUp.setTypeface(tf); //TextView
+        signInButton.setTypeface(tf); //Button
+        headerText.setTypeface(tf); //TextView
+
         eye.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

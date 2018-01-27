@@ -13,7 +13,7 @@
     <string name="cpassword">Jelszó megerősítése</string>
     <string name="sign_in">Már rendelkezik felhasználói fiókkal? <u>Belépés!</u></string>
     <string name="report">Új bejelentés</string>
-    <string name="profile">Profilom</string>
+    <string name="profile">Profil</string>
     <string name="menu">MENÜ</string>
     <string name="username_tv">Felhasználónév:</string>
     <string name="email_tv">Email:</string>
@@ -43,6 +43,10 @@
     <string name="users">Felhasználók</string>
     <string name="del_report">Biztosan törölni szeretné ezt a bejelentést?</string>
     <string name="achievement">Trófeáim</string>
+    <string name="regDate">Csatlakozás:</string>
+    <string name="reportCount">Az Ön bejelentéseinek száma:</string>
+    <string name="drawer_open">Menü nyitva</string>
+    <string name="drawer_close">Menü zárva</string>
 
 
     <!--Dialog text's-->

@@ -13,7 +13,7 @@
     <string name="cpassword">Confirm Password</string>
     <string name="sign_in">Already have an account? <u>Sign in</u></string>
     <string name="report">New report</string>
-    <string name="profile">My profile</string>
+    <string name="profile">Profile</string>
     <string name="menu">MENU</string>
     <string name="username_tv">Username:</string>
     <string name="email_tv">Email:</string>
@@ -43,6 +43,12 @@
     <string name="users">Users</string>
     <string name="del_report">Are you sure you want to delete this item?</string>
     <string name="achievement">My Trophies</string>
+    <string name="regDate">Registered:</string>
+    <string name="reportCount">Count of reports:</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
+
 
     <!--Dialog text's-->
     <string name="wait">Please wait…</string>

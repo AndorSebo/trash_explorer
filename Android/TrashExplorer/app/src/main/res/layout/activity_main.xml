@@ -23,18 +23,18 @@
         android:focusableInTouchMode="true"
         android:padding="32dp">
         <TextView
+            android:id="@+id/headerText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/sign_in_title"
-            android:layout_gravity="center"
-            android:textSize="32sp"
-            android:textStyle="bold"
-            android:textColor="#000000"/>
+            style="@style/HeaderText"/>
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_recycler"
-            android:layout_gravity="center"/>
+            android:layout_marginTop="16sp"
+            android:layout_width="match_parent"
+            android:layout_height="128sp"
+            android:src="@mipmap/ic_launcher"
+            android:layout_gravity="center"
+            android:layout_marginBottom="32sp"/>
         <EditText
             android:id="@+id/email"
             android:layout_width="match_parent"
@@ -70,7 +70,8 @@
             android:id="@+id/dataCB"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/save_data"/>
+            android:text="@string/save_data"
+            android:layout_marginTop="32dp"/>
 
         <com.dd.processbutton.iml.ActionProcessButton
             android:id="@+id/signIn"
@@ -92,7 +93,6 @@
             android:textAlignment="center"
             android:layout_marginTop="80dp"/>
     </LinearLayout>
-        <!--<include layout="@layout/menu"/>-->
     </LinearLayout>
 
 </ScrollView>

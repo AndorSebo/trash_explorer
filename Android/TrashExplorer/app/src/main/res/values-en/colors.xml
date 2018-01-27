@@ -8,4 +8,8 @@
     <color name="button_background">#CC000000</color>
     <color name="button_background_alpha">#4433B5E5</color>
     <color name="menu_bg">#FFF1F1F1</color>
+    <color name="error_red">#F44336</color>
+    <color name="error_border">#D32F2F</color>
+    <color name="header_color">#FF82B5DD</color>
+
 </resources>
