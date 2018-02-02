@@ -3,14 +3,17 @@ package balint.andor.trashexplorer;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -50,6 +53,8 @@ public class ProfileActivity extends AppCompatActivity {
     private Dialogs dialogs;
     private ArrayAdapter<String> mAdapter;
     CustomFont customFont;
+    ImageButton menuButton;
+    DrawerLayout mDrawerLayout;
 
     void initResponses(final TextView nameTv, final TextView emailTv, final TextView dateTv, final TextView reportTv) {
         successResponse = new Response.Listener<JSONObject>() {
@@ -95,6 +100,8 @@ public class ProfileActivity extends AppCompatActivity {
         TextView dateTv = (TextView) findViewById(R.id.dateTv);
         TextView reportTv = (TextView) findViewById(R.id.report_number);
         mDrawerList = (ListView) findViewById(R.id.listView);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        menuButton = (ImageButton) findViewById(R.id.menuButton);
         dialogs = new Dialogs();
 
         User u = Global.getUser();
@@ -110,6 +117,12 @@ public class ProfileActivity extends AppCompatActivity {
             Global.networkNotFound(ctx);
 
         addDrawerItems();
+        menuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDrawerLayout.openDrawer(Gravity.END);
+            }
+        });
     }
 
     private void getProfile(int id, String token) {
@@ -279,6 +292,9 @@ public class ProfileActivity extends AppCompatActivity {
         mDrawerList.setAdapter(mAdapter);
     }
 
+    private void openDrawer(){
+        mDrawerLayout.openDrawer(mDrawerLayout);
+    }
 
     @Override
     public void onBackPressed() {
