@@ -41,6 +41,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import balint.andor.trashexplorer.Classes.CustomFont;
 import balint.andor.trashexplorer.Classes.Dialogs;
 import balint.andor.trashexplorer.Classes.GPStracker;
 import balint.andor.trashexplorer.Classes.Global;
@@ -54,6 +55,7 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
     EditText description;
     RequestQueue reqQueue;
     Dialogs dialogs;
+    CustomFont customFont;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +63,7 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
         setContentView(R.layout.activity_report);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
+        customFont = new CustomFont(ReportActivity.this);
         ActivityCompat.requestPermissions(ReportActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         ActivityCompat.requestPermissions(ReportActivity.this, new String[]{Manifest.permission.CAMERA}, 2);
 
@@ -70,7 +72,7 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
         final ImageView[] imgs = new ImageView[4];
         final Context ctx = ReportActivity.this;
         description = (EditText) findViewById(R.id.description);
-        dialogs = new Dialogs(ReportActivity.this);
+        dialogs = new Dialogs();
 
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         declarateImgs(imgs);
@@ -86,9 +88,9 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
             public void onClick(View view) {
                 if (Global.isNetwork(ctx)) {
                     Report report = send(imgs);
-                    if(report != null)
+                    if (report != null)
                         sendData(report);
-                }else
+                } else
                     Global.networkNotFound(ctx);
             }
         });
@@ -128,8 +130,8 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
         }
 
         if (description.getText().toString().equals("") && latitude == 1 && longitude == 1)
-            dialogs.showErrorDialog(getResources().getString(R.string.empty_desc_and_coord));
-        else{
+            dialogs.showErrorDialog(getResources().getString(R.string.empty_desc_and_coord), getBaseContext());
+        else {
             if (description.getText().toString().equals(""))
                 report.setDescription("Nem érkezett leírás");
             else
@@ -209,7 +211,7 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Response", error.toString());
-                        dialogs.showErrorDialog(getString(R.string.wrong));
+                        dialogs.showErrorDialog(getString(R.string.wrong), getBaseContext());
                     }
                 }
         ) {
@@ -243,7 +245,7 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case 1: {
                 if (grantResults.length > 0

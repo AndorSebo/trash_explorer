@@ -13,16 +13,19 @@
         <item name="android:textStyle">bold</item>
         <item name="android:layout_marginBottom">16dp</item>
     </style>
+
     <style name="HeaderText">
         <item name="android:layout_gravity">center</item>
         <item name="android:textSize">32sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/header_color</item>
     </style>
+
     <style name="ProfileText">
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
     </style>
+
     <style name="nameText">
         <item name="android:textSize">32sp</item>
         <item name="android:textStyle">bold</item>
@@ -34,12 +37,11 @@
         <item name="android:shadowDy">1.0</item>
         <item name="android:shadowRadius">1.5</item>
     </style>
+
     <style name="menu_labels_style">
         <item name="android:background">@drawable/fab_label_background</item>
         <item name="android:textColor">#FFFFFFFF</item>
     </style>
-
-
 
 
 </resources>

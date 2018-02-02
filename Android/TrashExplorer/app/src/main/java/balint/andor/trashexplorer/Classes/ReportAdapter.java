@@ -24,7 +24,6 @@ import java.util.Map;
 
 import balint.andor.trashexplorer.MyReportsActivity;
 import balint.andor.trashexplorer.R;
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * Created by Andor on 2017.11.07..
@@ -51,35 +50,12 @@ public class ReportAdapter extends ArrayAdapter<Report> {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showDeleteDialog(getItem(position).getReport_id());
+
             }
         });
         return reportView;
     }
 
-    void showDeleteDialog(final int reportid) {
-        Context ctx = getContext();
-        final Dialogs dialogs = new Dialogs(ctx);
-        SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(ctx, SweetAlertDialog.WARNING_TYPE);
-        sweetAlertDialog.setTitleText(ctx.getString(R.string.warning))
-                .setContentText(ctx.getString(R.string.del_report))
-                .setConfirmText(ctx.getString(R.string.yes))
-                .setCancelText(ctx.getString(R.string.cancel))
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                        dialogs.showLoadingDialog();
-                        delete(reportid, dialogs);
-                    }
-                })
-                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                    }
-                }).show();
-    }
     void delete(final int reportid, final Dialogs dialogs){
         User u = Global.getUser();
         String url = Global.getBaseUrl()+"/deletereport";
@@ -100,7 +76,7 @@ public class ReportAdapter extends ArrayAdapter<Report> {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Response", error.toString());
-                        dialogs.showErrorDialog(getContext().getString(R.string.wrong));
+                        //Dialogs.showErrorDialog(getContext().getString(R.string.wrong), getBaseContext());
                     }
                 }
         ) {

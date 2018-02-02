@@ -53,12 +53,13 @@
     <string name="wait">Kérem várjon…</string>
     <string name="success">Sikeres folyamat</string>
     <string name="oops">Oops…</string>
-    <string name="wrong">Hiba történt, kérem próbálja újra kérsőbb…</string>
+    <string name="wrong">Hiba történt, kérem próbálja újra később…</string>
     <string name="warning">Figyelem!</string>
     <string name="yes">Igen</string>
     <string name="no_coord">Nem érkeztek koordináták \n ehhez a bejelentéshez.</string>
     <string name="save_data">Belépési adatok mentése</string>
     <string name="invalid_old_password">Hibás régi jelszó</string>
     <string name="empty_desc_and_coord">Nem adott meg sem leírást, sem koordinátákat!</string>
+    <string name="invalidEmailPass">Hibás email cím, vagy jelszó!</string>
 
 </resources>

@@ -2,15 +2,14 @@ package balint.andor.trashexplorer;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -27,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import balint.andor.trashexplorer.Classes.CustomFont;
 import balint.andor.trashexplorer.Classes.Global;
 import balint.andor.trashexplorer.Classes.Report;
 import balint.andor.trashexplorer.Classes.ReportAdapter;
@@ -34,11 +34,12 @@ import balint.andor.trashexplorer.Classes.User;
 
 public class MyReportsActivity extends AppCompatActivity {
 
-     static RequestQueue queue;
-     User u;
-     ListAdapter reportsAdapter;
-     ListView reportList;
-     ArrayList<Report> descriptions;
+    static RequestQueue queue;
+    User u;
+    ListAdapter reportsAdapter;
+    ListView reportList;
+    ArrayList<Report> descriptions;
+    CustomFont customFont;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,7 @@ public class MyReportsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_reports);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        customFont = new CustomFont(MyReportsActivity.this);
         descriptions = new ArrayList<>();
         queue = Volley.newRequestQueue(this);
         u = Global.getUser();
@@ -63,19 +65,19 @@ public class MyReportsActivity extends AppCompatActivity {
             }
         });
     }
-    void getReports(final Context ctx, int userid){
+
+    void getReports(final Context ctx, int userid) {
         String url = Global.getBaseUrl() + "/getuserreports";
-        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url+"?token="+u.getToken()+"&userid="+userid, null,
-                new Response.Listener<JSONObject>()
-                {
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url + "?token=" + u.getToken() + "&userid=" + userid, null,
+                new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            if (response.getBoolean("success")){
+                            if (response.getBoolean("success")) {
                                 JSONArray jsonArray = response.getJSONArray("data");
                                 JSONObject jsonObject;
                                 Report r;
-                                for (int i=0; i< jsonArray.length(); i++){
+                                for (int i = 0; i < jsonArray.length(); i++) {
                                     jsonObject = jsonArray.getJSONObject(i);
                                     r = new Report();
                                     r.setDescription(jsonObject.getString("description"));
@@ -85,10 +87,10 @@ public class MyReportsActivity extends AppCompatActivity {
                                 Collections.sort(descriptions, new Comparator<Report>() {
                                     @Override
                                     public int compare(Report report, Report t1) {
-                                            return report.getDescription().compareTo(t1.getDescription());
+                                        return report.getDescription().compareTo(t1.getDescription());
                                     }
                                 });
-                                reportsAdapter = new ReportAdapter(ctx,descriptions);
+                                reportsAdapter = new ReportAdapter(ctx, descriptions);
                                 reportList.setAdapter(reportsAdapter);
                             }
                         } catch (JSONException e) {
@@ -96,8 +98,7 @@ public class MyReportsActivity extends AppCompatActivity {
                         }
                     }
                 },
-                new Response.ErrorListener()
-                {
+                new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Error.Response", error.toString());
@@ -106,10 +107,11 @@ public class MyReportsActivity extends AppCompatActivity {
         );
         queue.add(getRequest);
     }
-    void openReport(Context ctx, int id){
+
+    void openReport(Context ctx, int id) {
         Intent report = new Intent(ctx, SingleReportActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putInt("id",id);
+        bundle.putInt("id", id);
         report.putExtras(bundle);
         startActivity(report);
         finish();

@@ -1,8 +1,8 @@
 package balint.andor.trashexplorer;
 
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ListAdapter;
@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import balint.andor.trashexplorer.Classes.CustomFont;
 import balint.andor.trashexplorer.Classes.Global;
 import balint.andor.trashexplorer.Classes.User;
 import balint.andor.trashexplorer.Classes.UserAdapter;
@@ -33,6 +34,7 @@ public class UsersActivity extends AppCompatActivity {
     ArrayList<User> users;
     ListAdapter usersAdapter;
     ListView usersListView;
+    CustomFont customFont;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,29 +42,29 @@ public class UsersActivity extends AppCompatActivity {
         setContentView(R.layout.activity_users);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
+        customFont = new CustomFont(UsersActivity.this);
         User u = Global.getUser();
         String token = u.getToken();
         usersListView = (ListView) findViewById(R.id.userListView);
         users = new ArrayList<>();
         getUsers(token, UsersActivity.this);
-        Log.d("User",String.valueOf(users.size()));
+        Log.d("User", String.valueOf(users.size()));
     }
-    void getUsers(String token,final Context ctx){
+
+    void getUsers(String token, final Context ctx) {
         reqQueue = Volley.newRequestQueue(this);
         String url = Global.getBaseUrl() + "/getalluser";
-        String t = "?token="+token;
-        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url+t, null,
-                new Response.Listener<JSONObject>()
-                {
+        String t = "?token=" + token;
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url + t, null,
+                new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            if(response.getBoolean("success")){
+                            if (response.getBoolean("success")) {
                                 JSONArray jsonArray = response.getJSONArray("data");
                                 JSONObject jsonObject;
                                 User u;
-                                for (int i=0; i<jsonArray.length(); i++){
+                                for (int i = 0; i < jsonArray.length(); i++) {
                                     u = new User();
                                     jsonObject = jsonArray.getJSONObject(i);
                                     u.setName(jsonObject.getString("name"));
@@ -75,7 +77,7 @@ public class UsersActivity extends AppCompatActivity {
                                         return user.getName().compareTo(t1.getName());
                                     }
                                 });
-                                usersAdapter = new UserAdapter(ctx,users);
+                                usersAdapter = new UserAdapter(ctx, users);
                                 usersListView.setAdapter(usersAdapter);
                             }
                         } catch (JSONException e) {
@@ -83,8 +85,7 @@ public class UsersActivity extends AppCompatActivity {
                         }
                     }
                 },
-                new Response.ErrorListener()
-                {
+                new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Error.Response", String.valueOf(error));

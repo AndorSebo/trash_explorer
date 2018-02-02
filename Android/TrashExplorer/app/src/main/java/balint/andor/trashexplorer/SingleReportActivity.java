@@ -35,6 +35,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import balint.andor.trashexplorer.Classes.CustomFont;
 import balint.andor.trashexplorer.Classes.Dialogs;
 import balint.andor.trashexplorer.Classes.Global;
 import balint.andor.trashexplorer.Classes.User;
@@ -49,6 +50,7 @@ public class SingleReportActivity extends AppCompatActivity implements OnMapRead
     Dialogs dialogs;
     ArrayList<String> imgUrls;
     int width;
+    CustomFont customFont;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,13 +58,14 @@ public class SingleReportActivity extends AppCompatActivity implements OnMapRead
         setContentView(R.layout.activity_report);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        customFont = new CustomFont(SingleReportActivity.this);
         ActionProcessButton send = (ActionProcessButton) findViewById(R.id.send);
         ActionProcessButton locate = (ActionProcessButton) findViewById(R.id.locate);
         TextView gpsNeed = (TextView) findViewById(R.id.gpsNeed);
         View blackMask = findViewById(R.id.blackMask);
         TextView coordNotFound = (TextView) findViewById(R.id.coordNotFound);
         EditText description = (EditText) findViewById(R.id.description);
-        dialogs = new Dialogs(SingleReportActivity.this);
+        dialogs = new Dialogs();
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         u = Global.getUser();
         ImageView[] imageViews = new ImageView[4];
@@ -120,7 +123,7 @@ public class SingleReportActivity extends AppCompatActivity implements OnMapRead
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Error.Response", String.valueOf(error));
-                        dialogs.showErrorDialog(getResources().getString(R.string.wrong));
+                        dialogs.showErrorDialog(getResources().getString(R.string.wrong), getBaseContext());
                     }
                 }
         );
@@ -146,8 +149,8 @@ public class SingleReportActivity extends AppCompatActivity implements OnMapRead
                 @Override
                 public void onClick(View view) {
                     String[] urlArray = url.split("/");
-                    String normalURL = urlArray[0]+"/normal/"+urlArray[2];
-                    imagePopup.initiatePopupWithPicasso(Global.getBaseUrl()+"/"+normalURL);
+                    String normalURL = urlArray[0] + "/normal/" + urlArray[2];
+                    imagePopup.initiatePopupWithPicasso(Global.getBaseUrl() + "/" + normalURL);
                     imagePopup.viewPopup();
                 }
             });
@@ -183,7 +186,7 @@ public class SingleReportActivity extends AppCompatActivity implements OnMapRead
         openMyReports(SingleReportActivity.this);
     }
 
-    void getScreenResolution(){
+    void getScreenResolution() {
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);

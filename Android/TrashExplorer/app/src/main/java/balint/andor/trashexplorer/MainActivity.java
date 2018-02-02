@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
@@ -29,35 +28,33 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.security.Timestamp;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import balint.andor.trashexplorer.Classes.CustomFont;
 import balint.andor.trashexplorer.Classes.Dialogs;
 import balint.andor.trashexplorer.Classes.Global;
+import me.anwarshahriar.calligrapher.Calligrapher;
 
 public class MainActivity extends AppCompatActivity {
 
     RequestQueue reqQueue;
     Response.Listener successResponse;
     Response.ErrorListener failedResponse;
-    Dialogs dialogs;
     CheckBox dataCB;
     EditText pwET;
     EditText emailET;
     SharedPreferences sharedPref;
     FirebaseAnalytics mFirebaseAnalytics;
-    Typeface tf;
+    CustomFont customFont;
 
-
-    void initResponses(){
+    void initResponses() {
         successResponse = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    if (response.getBoolean("success")){
-                        if (dataCB.isChecked()){
+                    if (response.getBoolean("success")) {
+                        if (dataCB.isChecked()) {
                             SharedPreferences.Editor editor = sharedPref.edit();
                             editor.putString("email", emailET.getText().toString());
                             editor.putString("password", pwET.getText().toString());
@@ -77,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         failedResponse = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                dialogs.showErrorDialog(getString(R.string.wrong));
+                Dialogs.showErrorDialog(getString(R.string.invalidEmailPass), MainActivity.this);
             }
         };
     }
@@ -90,19 +87,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        tf = Typeface.createFromAsset(getAssets(), "myfont.ttf");
+        customFont = new CustomFont(MainActivity.this);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         ImageView eye = (ImageView) findViewById(R.id.showPassword);
         TextView signUp = (TextView) findViewById(R.id.signUp);
         ActionProcessButton signInButton = (ActionProcessButton) findViewById(R.id.signIn);
         final Context ctx = MainActivity.this;
-        TextView headerText = (TextView) findViewById(R.id.headerText);
         pwET = (EditText) findViewById(R.id.password);
         emailET = (EditText) findViewById(R.id.email);
         dataCB = (CheckBox) findViewById(R.id.dataCB);
-        dialogs = new Dialogs(MainActivity.this);
-        sharedPref = ((Activity)ctx).getPreferences(Context.MODE_PRIVATE);
+        sharedPref = ((Activity) ctx).getPreferences(Context.MODE_PRIVATE);
         emailET.setText(sharedPref.getString("email", ""));
         pwET.setText(sharedPref.getString("password", ""));
         signUp.setOnClickListener(new View.OnClickListener() {
@@ -115,17 +109,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (Global.isNetwork(ctx))
-                    logIn(emailET,pwET);
+                    logIn(emailET, pwET);
                 else
                     Global.networkNotFound(ctx);
             }
         });
-        pwET.setTypeface(tf);  //EditText
-        emailET.setTypeface(tf); //EditText
-        dataCB.setTypeface(tf); //Checkbox
-        signUp.setTypeface(tf); //TextView
-        signInButton.setTypeface(tf); //Button
-        headerText.setTypeface(tf); //TextView
 
         eye.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -149,17 +137,17 @@ public class MainActivity extends AppCompatActivity {
         overridePendingTransition(R.animator.scale_from_corner, R.animator.scale_to_corner);
     }
 
-    void logIn(EditText emailET, EditText pwET){
+    void logIn(EditText emailET, EditText pwET) {
         reqQueue = Volley.newRequestQueue(this);
-        String url = Global.getBaseUrl()+"/signin";
+        String url = Global.getBaseUrl() + "/signin";
         Map<String, String> params = new HashMap<>();
-        if(emailET.getText().toString().equals(""))
+        if (emailET.getText().toString().equals(""))
             emailET.setError("Email field is empty!");
         else if (pwET.getText().toString().equals(""))
             pwET.setError("Password filed is empty!");
-        else{
-            params.put("email",emailET.getText().toString());
-            params.put("password",pwET.getText().toString());
+        else {
+            params.put("email", emailET.getText().toString());
+            params.put("password", pwET.getText().toString());
             JSONObject js = new JSONObject(params);
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, js,
                     successResponse, failedResponse);
@@ -169,11 +157,11 @@ public class MainActivity extends AppCompatActivity {
                     DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             reqQueue.add(request);
             reqQueue.start();
-            dialogs.showLoadingDialog();
+            //Dialogs.showLoadingDialog();
         }
     }
 
-    void logToFireBase(String email){
+    void logToFireBase(String email) {
         Bundle bundle = new Bundle();
         bundle.putString("Email", email);
         mFirebaseAnalytics.logEvent("Event", bundle);

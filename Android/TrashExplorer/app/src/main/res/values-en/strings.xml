@@ -49,7 +49,6 @@
     <string name="drawer_close">Close navigation drawer</string>
 
 
-
     <!--Dialog text's-->
     <string name="wait">Please wait…</string>
     <string name="success">Success</string>
@@ -61,5 +60,6 @@
     <string name="save_data">Belépési adatok mentése</string>
     <string name="invalid_old_password">Invalid old password.</string>
     <string name="empty_desc_and_coord">You did not give any description or coordinates!</string>
+    <string name="invalidEmailPass">Invalid email or password!</string>
 
 </resources>

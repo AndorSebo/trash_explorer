@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="80sp"
-    android:gravity="center_vertical">
+    android:gravity="center_vertical"
+    android:orientation="vertical">
+
     <TextView
         android:id="@+id/nameTv"
+        style="@style/ProfileText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/ProfileText"
-        android:text="Lorem ipsum"/>
+        android:text="Lorem ipsum" />
 
 </LinearLayout>

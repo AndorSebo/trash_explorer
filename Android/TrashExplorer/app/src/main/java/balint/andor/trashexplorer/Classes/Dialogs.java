@@ -2,51 +2,56 @@ package balint.andor.trashexplorer.Classes;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 
-import balint.andor.trashexplorer.MyReportsActivity;
+import com.shashank.sony.fancydialoglib.Animation;
+import com.shashank.sony.fancydialoglib.FancyAlertDialog;
+import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
+import com.shashank.sony.fancydialoglib.Icon;
+
 import balint.andor.trashexplorer.R;
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
- * Created by Andor on 2017.11.04..
+ * Created by Andor on 2018.02.01..
  */
 
 public class Dialogs {
-    private Context ctx;
-    private SweetAlertDialog sweetAlertDialog;
-    public Dialogs(Context ctx) {
-        this.ctx = ctx;
+    private static FancyAlertDialog dialog;
+
+    public static void showErrorDialog(String message, final Context context){
+        Activity a = (Activity)context;
+        dialog = new FancyAlertDialog.Builder(a)
+                .setTitle("Hiba!")
+                .setBackgroundColor(Color.parseColor("#F44336"))
+                .setMessage(message)
+                .setNegativeBtnText(a.getResources().getString(R.string.cancel))
+                .setPositiveBtnBackground(Color.parseColor("#F44336"))
+                .setPositiveBtnText("Ok")
+                .setNegativeBtnBackground(Color.parseColor("#FFA9A7A8"))
+                .setAnimation(Animation.POP)
+                .isCancellable(true)
+                .setIcon(R.drawable.ic_report, Icon.Visible)
+                .OnPositiveClicked(new FancyAlertDialogListener() {
+                    @Override
+                    public void OnClick() {
+
+                    }
+                })
+                .OnNegativeClicked(new FancyAlertDialogListener() {
+                    @Override
+                    public void OnClick() {
+
+                    }
+                })
+                .build();
     }
-    public void showLoadingDialog(){
-        sweetAlertDialog = new SweetAlertDialog(ctx, SweetAlertDialog.PROGRESS_TYPE);
-                sweetAlertDialog.setTitleText(ctx.getString(R.string.wait))
-                .getProgressHelper().setBarColor(ctx.getResources().getColor(R.color.blue_normal));
-                sweetAlertDialog.setCancelable(false);
-                sweetAlertDialog.show();
-    }
-    public void showSuccessDialog(){
-        hideAlertDialog();
-        sweetAlertDialog = new SweetAlertDialog(ctx, SweetAlertDialog.SUCCESS_TYPE);
-        sweetAlertDialog.setTitleText(ctx.getString(R.string.success))
-        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                if (ctx.toString().split("@")[0].equals("balint.andor.trashexplorer.ReportActivity"))
-                    ((Activity)ctx).onBackPressed();
-                else
-                    hideAlertDialog();
-            }
-        }).show();
+    public static void showLoadingDialog(){
 
     }
-    public void hideAlertDialog(){
-        if (sweetAlertDialog != null)
-            sweetAlertDialog.dismiss();
-    }
-    public void showErrorDialog(String message){
-        hideAlertDialog();
-        sweetAlertDialog = new SweetAlertDialog(ctx, SweetAlertDialog.ERROR_TYPE);
-        sweetAlertDialog.setTitleText(ctx.getString(R.string.oops)).setContentText(message).show();
-    }
+    public static void showSuccessDialog(){
 
+    }
+    public static void hideAlertDialog(){
+
+    }
 }

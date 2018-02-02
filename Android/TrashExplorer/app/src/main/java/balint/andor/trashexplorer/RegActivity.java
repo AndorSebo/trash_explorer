@@ -23,6 +23,7 @@ import com.dd.processbutton.iml.ActionProcessButton;
 import java.util.HashMap;
 import java.util.Map;
 
+import balint.andor.trashexplorer.Classes.CustomFont;
 import balint.andor.trashexplorer.Classes.Dialogs;
 import balint.andor.trashexplorer.Classes.Global;
 
@@ -30,13 +31,14 @@ public class RegActivity extends AppCompatActivity {
 
     RequestQueue reqQueue;
     Dialogs dialogs;
+    CustomFont customFont;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reg);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
+        customFont = new CustomFont(RegActivity.this);
         TextView login = (TextView) findViewById(R.id.backLogin);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,7 +54,7 @@ public class RegActivity extends AppCompatActivity {
         final EditText username = (EditText) findViewById(R.id.username);
         final EditText email = (EditText) findViewById(R.id.email);
         final Context ctx = RegActivity.this;
-        dialogs = new Dialogs(RegActivity.this);
+        dialogs = new Dialogs();
 
         reqQueue = Volley.newRequestQueue(this);
         reqQueue.start();
@@ -61,11 +63,10 @@ public class RegActivity extends AppCompatActivity {
         regButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Global.isNetwork(ctx)){
+                if (Global.isNetwork(ctx)) {
                     registration(username, email, pwET, cpwET);
                     dialogs.showLoadingDialog();
-                }
-                else{
+                } else {
                     Global.networkNotFound(ctx);
                 }
             }
@@ -109,7 +110,7 @@ public class RegActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Response", error.toString());
-                        dialogs.showErrorDialog(getString(R.string.wrong));
+                        dialogs.showErrorDialog(getString(R.string.wrong), getBaseContext());
                     }
                 }
         ) {
