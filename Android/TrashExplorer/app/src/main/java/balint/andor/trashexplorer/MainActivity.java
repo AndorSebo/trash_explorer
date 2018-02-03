@@ -34,6 +34,7 @@ import java.util.Map;
 import balint.andor.trashexplorer.Classes.CustomFont;
 import balint.andor.trashexplorer.Classes.Dialogs;
 import balint.andor.trashexplorer.Classes.Global;
+import balint.andor.trashexplorer.Classes.User;
 import me.anwarshahriar.calligrapher.Calligrapher;
 
 public class MainActivity extends AppCompatActivity {
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences sharedPref;
     FirebaseAnalytics mFirebaseAnalytics;
     CustomFont customFont;
+    User user;
 
     void initResponses() {
         successResponse = new Response.Listener<JSONObject>() {
@@ -60,9 +62,9 @@ public class MainActivity extends AppCompatActivity {
                             editor.putString("password", pwET.getText().toString());
                             editor.apply();
                         }
-                        Global.setId(response.getInt("userid"));
-                        Global.setToken(response.getJSONObject("user").getString("token"));
-                        Global.setPermission(response.getInt("permission"));
+                        user.setId(response.getInt("userid"));
+                        user.setToken(response.getJSONObject("user").getString("token"));
+                        user.setPermission(response.getInt("permission"));
                         logToFireBase(emailET.getText().toString());
                         Global.openProfile(MainActivity.this);
                     }
@@ -89,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         customFont = new CustomFont(MainActivity.this);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        user = User.getInstance();
         ImageView eye = (ImageView) findViewById(R.id.showPassword);
         TextView signUp = (TextView) findViewById(R.id.signUp);
         ActionProcessButton signInButton = (ActionProcessButton) findViewById(R.id.signIn);

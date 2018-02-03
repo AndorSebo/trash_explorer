@@ -23,7 +23,6 @@ import balint.andor.trashexplorer.R;
  */
 
 public class Global {
-    private static User u = new User();
 
     public static String getBaseUrl() {
         return "http://www.trashexplorer.nhely.hu";
@@ -50,21 +49,10 @@ public class Global {
         Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show();
 
     }
-    public static void setId(int id) {
-        u.setId(id);
-    }
-    public static void setToken(String token) {
-        u.setToken(token);
-    }
-    public static User getUser() { return u;}
-    public static void setReportIds(ArrayList<Integer> reportIds){u.setReportid(reportIds);}
     public static void openProfile(Context ctx){
         Intent profile = new Intent(ctx, ProfileActivity.class);
         ctx.startActivity(profile);
         ((Activity) ctx).finish();
-    }
-    public static void setPermission(int permission){
-        u.setPermission(permission);
     }
 
 }

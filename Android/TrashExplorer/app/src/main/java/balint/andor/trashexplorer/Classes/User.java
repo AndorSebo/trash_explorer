@@ -7,32 +7,17 @@ import java.util.ArrayList;
  */
 
 public class User {
-    int id, permission;
-    String token, name;
-    ArrayList<Integer> reportid;
+    private int id, permission;
+    private String token, name;
+    private ArrayList<Integer> reportid;
+    private static volatile User user = new User();
 
-    public String getName() {
-        return name;
-    }
+    private User() {}
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getPermission() {
-        return permission;
-    }
-
-    public void setPermission(int permission) {
-        this.permission = permission;
-    }
-
-    public ArrayList<Integer> getReportid() {
-        return reportid;
-    }
-
-    public void setReportid(ArrayList<Integer> reportid) {
-        this.reportid = reportid;
+    public static User getInstance(){
+        if (user == null)
+            user = new User();
+        return user;
     }
 
     public int getId() {
@@ -43,11 +28,35 @@ public class User {
         this.id = id;
     }
 
+    public int getPermission() {
+        return permission;
+    }
+
+    public void setPermission(int permission) {
+        this.permission = permission;
+    }
+
     public String getToken() {
         return token;
     }
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public ArrayList<Integer> getReportid() {
+        return reportid;
+    }
+
+    public void setReportIds(ArrayList<Integer> reportid) {
+        this.reportid = reportid;
     }
 }

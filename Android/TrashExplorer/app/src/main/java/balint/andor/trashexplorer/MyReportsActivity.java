@@ -50,7 +50,7 @@ public class MyReportsActivity extends AppCompatActivity {
         customFont = new CustomFont(MyReportsActivity.this);
         descriptions = new ArrayList<>();
         queue = Volley.newRequestQueue(this);
-        u = Global.getUser();
+        u = User.getInstance();
         reportList = (ListView) findViewById(R.id.myReports);
         Context ctx = MyReportsActivity.this;
         if (Global.isNetwork(ctx))

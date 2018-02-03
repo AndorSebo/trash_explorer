@@ -45,7 +45,7 @@ public class SingleReportActivity extends AppCompatActivity implements OnMapRead
 
     MapFragment mapFragment;
     RequestQueue reqQueue;
-    User u;
+    User user;
     double latitude, longitude;
     Dialogs dialogs;
     ArrayList<String> imgUrls;
@@ -67,7 +67,7 @@ public class SingleReportActivity extends AppCompatActivity implements OnMapRead
         EditText description = (EditText) findViewById(R.id.description);
         dialogs = new Dialogs();
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
-        u = Global.getUser();
+        user = User.getInstance();
         ImageView[] imageViews = new ImageView[4];
 
         for (int i = 0; i < imageViews.length; i++) {
@@ -95,7 +95,7 @@ public class SingleReportActivity extends AppCompatActivity implements OnMapRead
         description.setLongClickable(false);
         reqQueue = Volley.newRequestQueue(this);
         String url = Global.getBaseUrl() + "/getreport";
-        String token = "?token=" + u.getToken();
+        String token = "?token=" + user.getToken();
         reportid = "&reportid=" + reportid;
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url + token + reportid, null,
                 new Response.Listener<JSONObject>() {

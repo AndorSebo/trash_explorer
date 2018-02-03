@@ -46,6 +46,7 @@ import balint.andor.trashexplorer.Classes.Dialogs;
 import balint.andor.trashexplorer.Classes.GPStracker;
 import balint.andor.trashexplorer.Classes.Global;
 import balint.andor.trashexplorer.Classes.Report;
+import balint.andor.trashexplorer.Classes.User;
 
 public class ReportActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -56,6 +57,7 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
     RequestQueue reqQueue;
     Dialogs dialogs;
     CustomFont customFont;
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,7 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
         ActivityCompat.requestPermissions(ReportActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         ActivityCompat.requestPermissions(ReportActivity.this, new String[]{Manifest.permission.CAMERA}, 2);
 
+        user = User.getInstance();
         ActionProcessButton locate = (ActionProcessButton) findViewById(R.id.locate);
         ActionProcessButton send = (ActionProcessButton) findViewById(R.id.send);
         final ImageView[] imgs = new ImageView[4];
@@ -130,7 +133,7 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
         }
 
         if (description.getText().toString().equals("") && latitude == 1 && longitude == 1)
-            dialogs.showErrorDialog(getResources().getString(R.string.empty_desc_and_coord), getBaseContext());
+            Dialogs.showErrorDialog(getResources().getString(R.string.empty_desc_and_coord), getBaseContext());
         else {
             if (description.getText().toString().equals(""))
                 report.setDescription("Nem érkezett leírás");
@@ -139,7 +142,7 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
             report.setImages(list);
             report.setLatitude(latitude);
             report.setLongitude(longitude);
-            dialogs.showLoadingDialog();
+            Dialogs.showLoadingDialog();
             return report;
         }
         return null;
@@ -198,20 +201,20 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
 
     void sendData(final Report report) {
         String url = Global.getBaseUrl() + "/newreport";
-        String token = Global.getUser().getToken();
+        String token = user.getToken();
         StringRequest postRequest = new StringRequest(Request.Method.POST, url + "?token=" + token,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         Log.d("Response", response);
-                        dialogs.showSuccessDialog();
+                        Dialogs.showSuccessDialog();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Response", error.toString());
-                        dialogs.showErrorDialog(getString(R.string.wrong), getBaseContext());
+                        Dialogs.showErrorDialog(getString(R.string.wrong), getBaseContext());
                     }
                 }
         ) {

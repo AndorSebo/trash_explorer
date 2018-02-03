@@ -43,8 +43,8 @@ public class UsersActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         customFont = new CustomFont(UsersActivity.this);
-        User u = Global.getUser();
-        String token = u.getToken();
+        User user = User.getInstance();
+        String token = user.getToken();
         usersListView = (ListView) findViewById(R.id.userListView);
         users = new ArrayList<>();
         getUsers(token, UsersActivity.this);
@@ -63,9 +63,8 @@ public class UsersActivity extends AppCompatActivity {
                             if (response.getBoolean("success")) {
                                 JSONArray jsonArray = response.getJSONArray("data");
                                 JSONObject jsonObject;
-                                User u;
+                                User u = User.getInstance();
                                 for (int i = 0; i < jsonArray.length(); i++) {
-                                    u = new User();
                                     jsonObject = jsonArray.getJSONObject(i);
                                     u.setName(jsonObject.getString("name"));
                                     u.setId(jsonObject.getInt("user_id"));

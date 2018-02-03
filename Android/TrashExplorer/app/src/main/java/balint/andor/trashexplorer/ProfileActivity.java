@@ -1,5 +1,6 @@
 package balint.andor.trashexplorer;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -33,11 +35,13 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import balint.andor.trashexplorer.Classes.CustomFont;
 import balint.andor.trashexplorer.Classes.Dialogs;
 import balint.andor.trashexplorer.Classes.Global;
+import balint.andor.trashexplorer.Classes.MenuItems;
 import balint.andor.trashexplorer.Classes.User;
 import balint.andor.trashexplorer.Classes.myToast;
 
@@ -55,6 +59,8 @@ public class ProfileActivity extends AppCompatActivity {
     CustomFont customFont;
     ImageButton menuButton;
     DrawerLayout mDrawerLayout;
+    private User user;
+    private ArrayList<Activity> activities;
 
     void initResponses(final TextView nameTv, final TextView emailTv, final TextView dateTv, final TextView reportTv) {
         successResponse = new Response.Listener<JSONObject>() {
@@ -72,7 +78,7 @@ public class ProfileActivity extends AppCompatActivity {
                         reportTv.setText(jsonObject.getString("report_number"));
                         for (int i = 0; i < jsonArray.length(); i++)
                             reportIds.add(jsonArray.getJSONObject(i).getInt("report_id"));
-                        Global.setReportIds(reportIds);
+                        user.setReportIds(reportIds);
                         //dialogs.hideAlertDialog();
                     }
                 } catch (JSONException e) {
@@ -102,12 +108,12 @@ public class ProfileActivity extends AppCompatActivity {
         mDrawerList = (ListView) findViewById(R.id.listView);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         menuButton = (ImageButton) findViewById(R.id.menuButton);
+        MenuItems menuItems = new MenuItems(ProfileActivity.this);
         dialogs = new Dialogs();
 
-        User u = Global.getUser();
-        int id = u.getId();
-        token = u.getToken();
-        int permission = u.getPermission();
+        user = User.getInstance();
+        int id = user.getId();
+        token = user.getToken();
         initResponses(nameTv, emailTv, dateTv, reportTv);
         Context ctx = ProfileActivity.this;
 
@@ -116,11 +122,19 @@ public class ProfileActivity extends AppCompatActivity {
         else
             Global.networkNotFound(ctx);
 
-        addDrawerItems();
+        activities = menuItems.getActivities();
+        mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, menuItems.getItems());
+        mDrawerList.setAdapter(mAdapter);
         menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mDrawerLayout.openDrawer(Gravity.END);
+            }
+        });
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                menu(i);
             }
         });
     }
@@ -256,24 +270,6 @@ public class ProfileActivity extends AppCompatActivity {
         reqQueue.add(postRequest);
     }
 
-    private void report(Context ctx) {
-        Intent report = new Intent(ctx, ReportActivity.class);
-        startActivity(report);
-        finish();
-    }
-
-    private void myReports(Context ctx) {
-        Intent myReports = new Intent(ctx, MyReportsActivity.class);
-        startActivity(myReports);
-        finish();
-    }
-
-    private void users(Context ctx) {
-        Intent users = new Intent(ctx, UsersActivity.class);
-        startActivity(users);
-        finish();
-    }
-
     private String regDate(String s) {
         char[] c = s.toCharArray();
         StringBuilder sBuilder = new StringBuilder();
@@ -286,14 +282,14 @@ public class ProfileActivity extends AppCompatActivity {
         return s;
     }
 
-    private void addDrawerItems() {
-        String[] Array = {"Bejelentés", "Bejelentéseim", "Jelszó változtatás", "Kilépés"};
-        mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, Array);
-        mDrawerList.setAdapter(mAdapter);
-    }
+    private void menu(int i){
+        if (i<activities.size()) {
+            Intent intent = new Intent(ProfileActivity.this, activities.get(i).getClass());
+            startActivity(intent);
+            finish();
+        }else
+            logout(ProfileActivity.this);
 
-    private void openDrawer(){
-        mDrawerLayout.openDrawer(mDrawerLayout);
     }
 
     @Override

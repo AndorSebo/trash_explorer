@@ -57,7 +57,7 @@ public class ReportAdapter extends ArrayAdapter<Report> {
     }
 
     void delete(final int reportid, final Dialogs dialogs){
-        User u = Global.getUser();
+        User u = User.getInstance();
         String url = Global.getBaseUrl()+"/deletereport";
         String token = "?token="+u.getToken();
         StringRequest postRequest = new StringRequest(Request.Method.POST, url+token,
