@@ -109,7 +109,7 @@ public class ProfileActivity extends AppCompatActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         menuButton = (ImageButton) findViewById(R.id.menuButton);
         MenuItems menuItems = new MenuItems(ProfileActivity.this);
-        dialogs = new Dialogs();
+        dialogs = Dialogs.getInstance();
 
         user = User.getInstance();
         int id = user.getId();

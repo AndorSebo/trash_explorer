@@ -1,13 +1,13 @@
 package balint.andor.trashexplorer.Classes;
 
-import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
+import android.graphics.Typeface;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.shashank.sony.fancydialoglib.Animation;
-import com.shashank.sony.fancydialoglib.FancyAlertDialog;
-import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
-import com.shashank.sony.fancydialoglib.Icon;
+import com.dd.processbutton.iml.ActionProcessButton;
 
 import balint.andor.trashexplorer.R;
 
@@ -16,34 +16,30 @@ import balint.andor.trashexplorer.R;
  */
 
 public class Dialogs {
-    private static FancyAlertDialog dialog;
 
-    public static void showErrorDialog(String message, final Context context){
-        Activity a = (Activity)context;
-        dialog = new FancyAlertDialog.Builder(a)
-                .setTitle("Hiba!")
-                .setBackgroundColor(Color.parseColor("#F44336"))
-                .setMessage(message)
-                .setNegativeBtnText(a.getResources().getString(R.string.cancel))
-                .setPositiveBtnBackground(Color.parseColor("#F44336"))
-                .setPositiveBtnText("Ok")
-                .setNegativeBtnBackground(Color.parseColor("#FFA9A7A8"))
-                .setAnimation(Animation.POP)
-                .isCancellable(true)
-                .setIcon(R.drawable.ic_report, Icon.Visible)
-                .OnPositiveClicked(new FancyAlertDialogListener() {
-                    @Override
-                    public void OnClick() {
+    private static Typeface face;
 
-                    }
-                })
-                .OnNegativeClicked(new FancyAlertDialogListener() {
-                    @Override
-                    public void OnClick() {
+    private Dialogs() {}
 
-                    }
-                })
-                .build();
+    private static volatile Dialogs dialogs = new Dialogs();
+
+    public static Dialogs getInstance(){
+        if (dialogs == null)
+            dialogs = new Dialogs();
+        return dialogs;
+    }
+
+    public static Dialog showErrorDialog(String message, Context context){
+        Dialog dialog = initDialog(context);
+        TextView headerText = dialog.findViewById(R.id.headerText);
+        TextView messageTV = dialog.findViewById(R.id.message);
+        ImageView icon = dialog.findViewById(R.id.icon);
+        headerText.setTypeface(face);
+        messageTV.setTypeface(face);
+        icon.setBackgroundResource(R.drawable.ic_error);
+        headerText.setText(context.getResources().getString(R.string.oops));
+        messageTV.setText(message);
+        return dialog;
     }
     public static void showLoadingDialog(){
 
@@ -54,4 +50,20 @@ public class Dialogs {
     public static void hideAlertDialog(){
 
     }
+    private static Dialog initDialog(final Context context){
+        face = Typeface.createFromAsset(context.getAssets(),
+                "caverndreams.ttf");
+        final Dialog dialog = new Dialog(context);
+        dialog.setContentView(R.layout.my_dialog);
+        ActionProcessButton ok = dialog.findViewById(R.id.ok);
+        ok.setTypeface(face);
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        return dialog;
+    }
+
 }

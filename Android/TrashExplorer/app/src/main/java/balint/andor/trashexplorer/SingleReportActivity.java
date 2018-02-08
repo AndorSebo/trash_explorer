@@ -65,7 +65,7 @@ public class SingleReportActivity extends AppCompatActivity implements OnMapRead
         View blackMask = findViewById(R.id.blackMask);
         TextView coordNotFound = (TextView) findViewById(R.id.coordNotFound);
         EditText description = (EditText) findViewById(R.id.description);
-        dialogs = new Dialogs();
+        dialogs = Dialogs.getInstance();
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         user = User.getInstance();
         ImageView[] imageViews = new ImageView[4];

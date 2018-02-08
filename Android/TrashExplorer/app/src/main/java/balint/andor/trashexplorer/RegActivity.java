@@ -54,7 +54,7 @@ public class RegActivity extends AppCompatActivity {
         final EditText username = (EditText) findViewById(R.id.username);
         final EditText email = (EditText) findViewById(R.id.email);
         final Context ctx = RegActivity.this;
-        dialogs = new Dialogs();
+        dialogs = Dialogs.getInstance();
 
         reqQueue = Volley.newRequestQueue(this);
         reqQueue.start();

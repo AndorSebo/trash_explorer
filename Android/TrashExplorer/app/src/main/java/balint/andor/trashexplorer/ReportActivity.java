@@ -75,7 +75,7 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
         final ImageView[] imgs = new ImageView[4];
         final Context ctx = ReportActivity.this;
         description = (EditText) findViewById(R.id.description);
-        dialogs = new Dialogs();
+        dialogs = Dialogs.getInstance();
 
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         declarateImgs(imgs);

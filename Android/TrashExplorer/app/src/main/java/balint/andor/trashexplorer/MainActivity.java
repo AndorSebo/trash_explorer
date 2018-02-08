@@ -2,6 +2,7 @@ package balint.andor.trashexplorer;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         failedResponse = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Dialogs.showErrorDialog(getString(R.string.invalidEmailPass), MainActivity.this);
+                Dialogs.showErrorDialog(getString(R.string.invalidEmailPass), MainActivity.this).show();
             }
         };
     }

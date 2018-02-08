@@ -63,5 +63,7 @@
     <string name="report">New Report</string>
     <string name="my_reports">My Reports</string>
     <string name="logout">Sign out</string>
+    <string name="ok">Ok</string>
+    <string name="missing_icon">Missing icon</string>
 
 </resources>

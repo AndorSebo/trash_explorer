@@ -63,5 +63,6 @@
     <string name="report">Új bejelentés</string>
     <string name="my_reports">Bejelentéseim</string>
     <string name="logout">Kilépés</string>
+    <string name="ok">Oké</string>
 
 </resources>
