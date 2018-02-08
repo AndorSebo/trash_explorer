@@ -18,6 +18,7 @@ $api->version('v1', ['middleware' => 'api.auth', 'providers' => 'jwt'], function
     //$api->get('/index', 'App\Http\Controllers\BackendController@index');
     $api->get('/profile', 'App\Http\Controllers\AuthenticateController@getUser');
     $api->post('/passwordchange', 'App\Http\Controllers\AuthenticateController@passwordChange');
+    $api->post('/avatarchange', 'App\Http\Controllers\AuthenticateController@avatarChange');
     $api->post('/newreport', 'App\Http\Controllers\ReportController@newReport');
     $api->get('/getalluser', 'App\Http\Controllers\AuthenticateController@getAllUser');
     $api->get('/getreport', 'App\Http\Controllers\ReportController@getReport');

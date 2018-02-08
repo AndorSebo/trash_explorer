@@ -15,6 +15,7 @@ class CreateApiSubscribersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->increments('user_id');
             $table->string('name');
+            $table->string('avatar', 255);
             $table->string('email', 255);
             $table->string('password', 255);
             $table->integer('report_number');

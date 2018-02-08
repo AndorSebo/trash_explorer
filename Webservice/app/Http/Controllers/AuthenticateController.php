@@ -6,6 +6,7 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use App\Models\ApiSubscriber;
 use App\Models\Report;
 use Illuminate\Support\Facades\Hash;
+use Intervention\Image\ImageManagerStatic as IMG;
 
 class AuthenticateController extends Controller
 {
@@ -33,8 +34,10 @@ class AuthenticateController extends Controller
 
         // all good so return the token
         $userid = $this->auth->user()->user_id;
+        $useravatar = ApiSubscriber::where('user_id', $userid)->select('avatar')->get();
+        $avatar = $useravatar[0];
         $permission = ApiSubscriber::select('permission')->where('user_id', $userid)->get();
-        return $this->LoginDatareturn(true, 200, compact('token'), $userid, $permission[0]->permission, "success_signin");
+        return $this->LoginDatareturn(true, 200, compact('token'), $userid, $avatar, $permission[0]->permission, "success_signin");
     }
 
     public function logout(Request $request){
@@ -52,6 +55,7 @@ class AuthenticateController extends Controller
 
     public function signUp(Request $request){
       $name = $request->name;
+      $avatar = $request->avatar;
       $email = $request->email;
       $password = $request->password;
       $repassword = $request->repassword;
@@ -89,9 +93,32 @@ class AuthenticateController extends Controller
       if($repassword != $password){
         return $this->Datareturn(false, 470, [], "password_and_repassword_are_not_match");
       }
+      if(!isset($avatar) || $avatar == null){
+          $avatar = 'images/avatar/default.png';
+      }
+      else{
+          $avatar = base64_decode($avatar);
+          $chars = array(
+              "á"=>"a","é"=>"e","í"=>"i",
+              "ü"=>"u","ű"=>"u","ú"=>"u",
+              "ő"=>"o","ö"=>"o","ó"=>"o",
+              "Á"=>"A","É"=>"E","Í"=>"I",
+              "Ü"=>"U","Ű"=>"U","Ú"=>"U",
+              "Ő"=>"O","Ö"=>"O","Ó"=>"O"," "=>"_",
+          );
+          $avatarName = str_replace(array_keys($chars), $chars, $request->name);
+          $file = fopen('images/avatar/'. $avatarName .'.jpg',"wb");
+          fwrite($file, $avatar);
+          fclose($file);
+          $avatar = 'images/avatar/' . $avatarName . '.jpg';
+
+          $img = IMG::make($avatar);
+          $img->save($avatar);
+      }
 
       ApiSubscriber::create([
           'name' => $name,
+          'avatar' => $avatar,
           'email' => $email,
           'password' => $password,
           'report_number' => 0,
@@ -122,6 +149,7 @@ class AuthenticateController extends Controller
                    $result = [
                            'user_id' => $u->user_id,
                            'name' => $u->name,
+                           'avatar' => $u->avatar,
                            'email' => $u->email,
                            'report_number' => $u->report_number,
                            'created_at' => $u->created_at,
@@ -190,6 +218,38 @@ class AuthenticateController extends Controller
           ApiSubscriber::where('user_id', $this->auth->user()->user_id)->update(['password' => Hash::make($new)]);
           return $this->Datareturn(true, 200, [], 'success_password_change');
 
+        } catch (TokenExpiredException $e) {
+            return $this->Datareturn(false, 490, '', 'something_bad');
+        }
+
+    }
+
+    public function avatarChange(Request $request){
+        try {
+          $avatar = $request->avatar;
+          if ($avatar != null){
+            $avatar = base64_decode($avatar);
+            $chars = array(
+                "á"=>"a","é"=>"e","í"=>"i",
+                "ü"=>"u","ű"=>"u","ú"=>"u",
+                "ő"=>"o","ö"=>"o","ó"=>"o",
+                "Á"=>"A","É"=>"E","Í"=>"I",
+                "Ü"=>"U","Ű"=>"U","Ú"=>"U",
+                "Ő"=>"O","Ö"=>"O","Ó"=>"O"," "=>"_",
+            );
+            $avatarName = str_replace(array_keys($chars), $chars, $this->auth->user()->name);
+            $file = fopen('images/avatar/'. $avatarName . '.jpg',"wb");
+            fwrite($file, $avatar);
+            fclose($file);
+            $avatar = 'images/avatar/' . $avatarName . '.jpg';
+
+            $img = IMG::make($avatar);
+            $img->save($avatar);
+            ApiSubscriber::where('user_id', $this->auth->user()->user_id)->update(['avatar' => $avatar]);
+
+            return $this->Datareturn(true, 200, [], 'success_avatar_change');
+          }
+          return $this->Datareturn(false, 474, [], 'avatar_is_null');
         } catch (TokenExpiredException $e) {
             return $this->Datareturn(false, 490, '', 'something_bad');
         }
