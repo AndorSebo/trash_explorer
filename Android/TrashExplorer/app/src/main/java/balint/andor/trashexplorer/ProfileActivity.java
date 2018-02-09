@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -16,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -28,6 +30,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,8 +64,11 @@ public class ProfileActivity extends AppCompatActivity {
     DrawerLayout mDrawerLayout;
     private User user;
     private ArrayList<Activity> activities;
+    private ImageView avatar;
+    private TextView nameTv, emailTv, dateTv, reportTv;
 
-    void initResponses(final TextView nameTv, final TextView emailTv, final TextView dateTv, final TextView reportTv) {
+
+    void initResponses() {
         successResponse = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -79,7 +85,10 @@ public class ProfileActivity extends AppCompatActivity {
                         for (int i = 0; i < jsonArray.length(); i++)
                             reportIds.add(jsonArray.getJSONObject(i).getInt("report_id"));
                         user.setReportIds(reportIds);
-                        //dialogs.hideAlertDialog();
+                        if (!"images/avatar/default.png".equals(user.getAvatar())){
+                            Picasso.with(ProfileActivity.this).load(Global.getBaseUrl()+"/"+user.getAvatar()).into(avatar);
+                        }
+                        Dialogs.hideAlertDialog();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -101,20 +110,21 @@ public class ProfileActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         customFont = new CustomFont(ProfileActivity.this);
-        TextView nameTv = (TextView) findViewById(R.id.nameTv);
-        TextView emailTv = (TextView) findViewById(R.id.emailTv);
-        TextView dateTv = (TextView) findViewById(R.id.dateTv);
-        TextView reportTv = (TextView) findViewById(R.id.report_number);
+        nameTv = (TextView) findViewById(R.id.nameTv);
+        emailTv = (TextView) findViewById(R.id.emailTv);
+        dateTv = (TextView) findViewById(R.id.dateTv);
+        reportTv = (TextView) findViewById(R.id.report_number);
         mDrawerList = (ListView) findViewById(R.id.listView);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         menuButton = (ImageButton) findViewById(R.id.menuButton);
         MenuItems menuItems = new MenuItems(ProfileActivity.this);
         dialogs = Dialogs.getInstance();
+        avatar = (ImageView) findViewById(R.id.avatar);
 
         user = User.getInstance();
         int id = user.getId();
         token = user.getToken();
-        initResponses(nameTv, emailTv, dateTv, reportTv);
+        initResponses();
         Context ctx = ProfileActivity.this;
 
         if (Global.isNetwork(ctx))
@@ -210,13 +220,12 @@ public class ProfileActivity extends AppCompatActivity {
         else if (!pass2.equals(pass3))
             myToast.Error("Nem egyezik a megerősítő jelszó, és az új jelszó.", ProfileActivity.this);
         else {
-            dialogs.showLoadingDialog();
+            Dialogs.showLoadingDialog();
             StringRequest postRequest = new StringRequest(Request.Method.POST, url + "?token=" + token,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            dialog.dismiss();
-                            dialogs.showSuccessDialog();
+                            Dialogs.showSuccessDialog(ProfileActivity.this).show();
                         }
                     },
                     new Response.ErrorListener() {
@@ -224,9 +233,9 @@ public class ProfileActivity extends AppCompatActivity {
                         public void onErrorResponse(VolleyError error) {
                             NetworkResponse networkResponse = error.networkResponse;
                             if (networkResponse.statusCode == 472)
-                                dialogs.showErrorDialog(getString(R.string.invalid_old_password), getBaseContext());
+                                Dialogs.showErrorDialog(getString(R.string.invalid_old_password), getBaseContext());
                             else
-                                dialogs.showErrorDialog(getString(R.string.wrong), getBaseContext());
+                                Dialogs.showErrorDialog(getString(R.string.wrong), getBaseContext());
                         }
                     }
             ) {

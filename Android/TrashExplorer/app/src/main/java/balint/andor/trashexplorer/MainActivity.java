@@ -64,7 +64,8 @@ public class MainActivity extends AppCompatActivity {
                             editor.apply();
                         }
                         user.setId(response.getInt("userid"));
-                        user.setToken(response.getJSONObject("user").getString("token"));
+                        user.setToken(response.getJSONArray("user").getJSONObject(0).getString("token"));
+                        user.setAvatar(response.getJSONArray("user").getJSONObject(1).getString("avatar"));
                         user.setPermission(response.getInt("permission"));
                         logToFireBase(emailET.getText().toString());
                         Global.openProfile(MainActivity.this);

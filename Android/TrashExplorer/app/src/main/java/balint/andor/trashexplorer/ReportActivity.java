@@ -207,7 +207,7 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
                     @Override
                     public void onResponse(String response) {
                         Log.d("Response", response);
-                        Dialogs.showSuccessDialog();
+                        Dialogs.showSuccessDialog(ReportActivity.this).show();
                     }
                 },
                 new Response.ErrorListener() {

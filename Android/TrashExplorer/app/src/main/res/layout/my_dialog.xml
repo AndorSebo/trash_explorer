@@ -8,8 +8,8 @@
     android:padding="32dp">
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="32sp"
-        android:layout_height="32sp"
+        android:layout_width="64sp"
+        android:layout_height="64sp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:contentDescription="@string/missing_icon"

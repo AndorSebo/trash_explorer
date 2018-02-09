@@ -7,7 +7,6 @@ import balint.andor.trashexplorer.MyReportsActivity;
 import balint.andor.trashexplorer.ProfileActivity;
 import balint.andor.trashexplorer.R;
 import balint.andor.trashexplorer.ReportActivity;
-import balint.andor.trashexplorer.UsersActivity;
 
 /**
  * Created by Andor on 2018.02.03..

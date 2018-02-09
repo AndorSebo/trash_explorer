@@ -39,9 +39,6 @@
             android:name=".MyReportsActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name=".UsersActivity"
-            android:configChanges="orientation|screenSize" />
-        <activity
             android:name=".SingleReportActivity"
             android:screenOrientation="portrait" />
 

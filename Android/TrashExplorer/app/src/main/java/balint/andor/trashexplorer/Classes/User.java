@@ -8,8 +8,8 @@ import java.util.ArrayList;
 
 public class User {
     private int id, permission;
-    private String token, name;
-    private ArrayList<Integer> reportid;
+    private String token, name, avatar;
+    private ArrayList<Integer> reportIds;
     private static volatile User user = new User();
 
     private User() {}
@@ -18,6 +18,14 @@ public class User {
         if (user == null)
             user = new User();
         return user;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public int getId() {
@@ -52,11 +60,11 @@ public class User {
         this.name = name;
     }
 
-    public ArrayList<Integer> getReportid() {
-        return reportid;
+    public ArrayList<Integer> getReportIds() {
+        return reportIds;
     }
 
     public void setReportIds(ArrayList<Integer> reportid) {
-        this.reportid = reportid;
+        this.reportIds = reportid;
     }
 }

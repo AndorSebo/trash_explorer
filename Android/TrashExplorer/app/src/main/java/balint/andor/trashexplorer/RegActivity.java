@@ -103,14 +103,14 @@ public class RegActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         Log.d("Response", response);
-                        dialogs.showSuccessDialog();
+                        Dialogs.showSuccessDialog(RegActivity.this).show();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Response", error.toString());
-                        dialogs.showErrorDialog(getString(R.string.wrong), getBaseContext());
+                        Dialogs.showErrorDialog(getString(R.string.wrong), getBaseContext());
                     }
                 }
         ) {
