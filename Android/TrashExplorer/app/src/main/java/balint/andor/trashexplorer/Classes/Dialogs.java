@@ -55,8 +55,7 @@ public class Dialogs {
 
     }
     private static Dialog initDialog(final Context context){
-        face = Typeface.createFromAsset(context.getAssets(),
-                "caverndreams.ttf");
+        face = Typeface.createFromAsset(context.getAssets(),"caverndreams.ttf");
         final Dialog dialog = new Dialog(context);
         dialog.setContentView(R.layout.my_dialog);
         headerText = dialog.findViewById(R.id.headerText);
@@ -72,6 +71,14 @@ public class Dialogs {
                 dialog.dismiss();
             }
         });
+        return dialog;
+    }
+    public static Dialog showImageDialog(Context context){
+        face = Typeface.createFromAsset(context.getAssets(),"caverndreams.ttf");
+        final Dialog dialog = new Dialog(context);
+        dialog.setContentView(R.layout.image_dialog);
+        TextView headerText = dialog.findViewById(R.id.headerText);
+        headerText.setTypeface(face);
         return dialog;
     }
 

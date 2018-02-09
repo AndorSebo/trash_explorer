@@ -42,6 +42,9 @@
     <string name="reportCount">Az Ön bejelentéseinek száma:</string>
     <string name="drawer_open">Menü nyitva</string>
     <string name="drawer_close">Menü zárva</string>
+    <string name="select_mode">Válasszon opciót:</string>
+    <string name="logout">Kilépés</string>
+    <string name="ok">Oké</string>
 
 
     <!--Dialog text's-->
@@ -62,7 +65,5 @@
     <string name="profile">Profil</string>
     <string name="report">Új bejelentés</string>
     <string name="my_reports">Bejelentéseim</string>
-    <string name="logout">Kilépés</string>
-    <string name="ok">Oké</string>
 
 </resources>

@@ -227,7 +227,7 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
                 params.put("description", report.getDescription());
                 params.put("picnumber", String.valueOf(picnumber));
                 for (int i = 0; i < picnumber; i++) {
-                    params.put("picture" + (i + 1), convertToBase64(((BitmapDrawable) report.getImages().get(i).getDrawable()).getBitmap()));
+                    params.put("picture" + (i + 1), Global.convertToBase64(((BitmapDrawable) report.getImages().get(i).getDrawable()).getBitmap()));
                 }
                 return params;
             }
@@ -240,12 +240,7 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
         reqQueue.add(postRequest);
     }
 
-    String convertToBase64(Bitmap bitmap) {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
-        byte[] byteArray = byteArrayOutputStream.toByteArray();
-        return Base64.encodeToString(byteArray, Base64.DEFAULT);
-    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
