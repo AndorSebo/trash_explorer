@@ -26,6 +26,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".RegActivity"
             android:configChanges="orientation|screenSize" />
@@ -41,10 +42,13 @@
         <activity
             android:name=".SingleReportActivity"
             android:screenOrientation="portrait" />
-
+        <activity
+            android:name=".SettingsActivity"
+            android:configChanges="orientation|screenSize"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+
 
     </application>
 

@@ -7,6 +7,7 @@ import balint.andor.trashexplorer.MyReportsActivity;
 import balint.andor.trashexplorer.ProfileActivity;
 import balint.andor.trashexplorer.R;
 import balint.andor.trashexplorer.ReportActivity;
+import balint.andor.trashexplorer.SettingsActivity;
 
 /**
  * Created by Andor on 2018.02.03..
@@ -29,9 +30,11 @@ public class MenuItems {
         activities.add(new ProfileActivity());
         activities.add(new ReportActivity());
         activities.add(new MyReportsActivity());
+        activities.add(new SettingsActivity());
         Array.add(a.getResources().getString(R.string.profile));
         Array.add(a.getResources().getString(R.string.report));
         Array.add(a.getResources().getString(R.string.my_reports));
+        Array.add(a.getResources().getString(R.string.settings));
         Array.add(a.getResources().getString(R.string.logout));
     }
     public ArrayList<String> getItems(){
