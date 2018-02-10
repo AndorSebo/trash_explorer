@@ -160,7 +160,7 @@ public class ProfileActivity extends AppCompatActivity {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         reqQueue.add(request);
         reqQueue.start();
-        //dialogs.showLoadingDialog();
+        Dialogs.showLoadingDialog(ProfileActivity.this).show();
     }
 
     private void pwDialog(final String token) {
@@ -220,12 +220,12 @@ public class ProfileActivity extends AppCompatActivity {
         else if (!pass2.equals(pass3))
             myToast.Error("Nem egyezik a megerősítő jelszó, és az új jelszó.", ProfileActivity.this);
         else {
-            Dialogs.showLoadingDialog();
+            Dialogs.showLoadingDialog(ProfileActivity.this).show();
             StringRequest postRequest = new StringRequest(Request.Method.POST, url + "?token=" + token,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            Dialogs.showSuccessDialog(ProfileActivity.this).show();
+                            Dialogs.showSuccessDialog(getResources().getString(R.string.success_password),ProfileActivity.this).show();
                         }
                     },
                     new Response.ErrorListener() {
@@ -261,7 +261,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void serverLogout() {
         String url = Global.getBaseUrl() + "/logout";
-        dialogs.showLoadingDialog();
+        Dialogs.showLoadingDialog(ProfileActivity.this).show();
         StringRequest postRequest = new StringRequest(Request.Method.GET, url + "?token=" + token,
                 new Response.Listener<String>() {
                     @Override
@@ -272,7 +272,7 @@ public class ProfileActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        dialogs.showErrorDialog(getString(R.string.wrong), getBaseContext());
+                        Dialogs.showErrorDialog(getString(R.string.wrong), getBaseContext()).show();
                     }
                 }
         );
@@ -297,7 +297,7 @@ public class ProfileActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }else
-            logout(ProfileActivity.this);
+            serverLogout();
 
     }
 

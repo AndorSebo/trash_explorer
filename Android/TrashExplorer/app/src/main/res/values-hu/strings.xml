@@ -5,14 +5,12 @@
     <string name="password">Jelszó</string>
     <string name="show_password">Jelszó mutatása</string>
     <string name="sign_in_title">Bejelentkezés</string>
-    <string name="Success">Sikeres folyamat</string>
     <string name="Loading">Betöltés…</string>
     <string name="sign_up">Még nincs fiókja? <u>Regisztráció!</u></string>
     <string name="network_error">Nem található hálózat, ellenőrizze az internet kapcsolatát!</string>
     <string name="sign_up_title">Regisztráció</string>
     <string name="cpassword">Jelszó megerősítése</string>
     <string name="sign_in">Már rendelkezik felhasználói fiókkal? <u>Belépés!</u></string>
-    <string name="menu">MENÜ</string>
     <string name="username_tv">Felhasználónév:</string>
     <string name="email_tv">Email:</string>
     <string name="register_date">Regisztráció dátuma:</string>
@@ -39,7 +37,7 @@
     <string name="del_report">Biztosan törölni szeretné ezt a bejelentést?</string>
     <string name="achievement">Trófeáim</string>
     <string name="regDate">Csatlakozás:</string>
-    <string name="reportCount">Az Ön bejelentéseinek száma:</string>
+    <string name="reportCount">Bejelentéseinek száma:</string>
     <string name="drawer_open">Menü nyitva</string>
     <string name="drawer_close">Menü zárva</string>
     <string name="select_mode">Válasszon opciót:</string>
@@ -59,11 +57,15 @@
     <string name="invalid_old_password">Hibás régi jelszó</string>
     <string name="empty_desc_and_coord">Nem adott meg sem leírást, sem koordinátákat!</string>
     <string name="invalidEmailPass">Hibás email cím, vagy jelszó!</string>
+    <string name="success_register">Sikeres regisztráció</string>
+    <string name="success_password">Sikeres jelszóváltoztatás</string>
+    <string name="success_report">Jelentése sikeresen megérkezett, köszönjük a bejelentést</string>
 
     <!--Menu item's-->
     <string name="users">Felhasználók</string>
     <string name="profile">Profil</string>
     <string name="report">Új bejelentés</string>
+    <string name="settings">Beállítások</string>
     <string name="my_reports">Bejelentéseim</string>
 
 </resources>

@@ -45,6 +45,7 @@ public class RegActivity extends AppCompatActivity {
     private ImageView avatar;
     private int PICK_IMAGE = 1;
     private int requestCode = 0;
+    private boolean changedAvatar;
 
 
     @Override
@@ -70,6 +71,7 @@ public class RegActivity extends AppCompatActivity {
         avatar = (ImageView) findViewById(R.id.avatar);
         final Context ctx = RegActivity.this;
         dialogs = Dialogs.getInstance();
+        changedAvatar = false;
 
         reqQueue = Volley.newRequestQueue(this);
         reqQueue.start();
@@ -80,7 +82,7 @@ public class RegActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (Global.isNetwork(ctx)) {
                     registration();
-                    dialogs.showLoadingDialog();
+                    Dialogs.showLoadingDialog(RegActivity.this).show();
                 } else {
                     Global.networkNotFound(ctx);
                 }
@@ -126,7 +128,8 @@ public class RegActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         Log.d("Response", response);
-                        Dialogs.showSuccessDialog(RegActivity.this).show();
+                        Dialogs.showSuccessDialog(getResources().getString(R.string.success_register),RegActivity.this).show();
+
                     }
                 },
                 new Response.ErrorListener() {
@@ -144,7 +147,7 @@ public class RegActivity extends AppCompatActivity {
                 params.put("email", email.getText().toString());
                 params.put("password", password.getText().toString());
                 params.put("repassword", repassword.getText().toString());
-                if(avatar.getDrawable()!= getResources().getDrawable(R.drawable.add_avatar))
+                if(changedAvatar)
                     params.put("avatar",Global.convertToBase64(((BitmapDrawable)avatar.getDrawable()).getBitmap()));
                 else
                     params.put("avatar","");
@@ -190,15 +193,14 @@ public class RegActivity extends AppCompatActivity {
         if(this.requestCode == requestCode && resultCode == RESULT_OK){
             Bitmap bitmap = (Bitmap)data.getExtras().get("data");
             avatar.setImageBitmap(bitmap);
+            changedAvatar = true;
         }
         if (resultCode == RESULT_OK) {
             if (requestCode == PICK_IMAGE) {
                 Uri selectedImageURI = data.getData();
                 Picasso.with(RegActivity.this).load(selectedImageURI).into(avatar);
+                changedAvatar = true;
             }
         }
     }
-
-
-
 }

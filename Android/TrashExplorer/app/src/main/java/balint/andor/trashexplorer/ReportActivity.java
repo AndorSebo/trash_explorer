@@ -142,7 +142,7 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
             report.setImages(list);
             report.setLatitude(latitude);
             report.setLongitude(longitude);
-            Dialogs.showLoadingDialog();
+            Dialogs.showLoadingDialog(ReportActivity.this).show();
             return report;
         }
         return null;
@@ -207,7 +207,7 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
                     @Override
                     public void onResponse(String response) {
                         Log.d("Response", response);
-                        Dialogs.showSuccessDialog(ReportActivity.this).show();
+                        Dialogs.showSuccessDialog(getResources().getString(R.string.success_report),ReportActivity.this).show();
                     }
                 },
                 new Response.ErrorListener() {

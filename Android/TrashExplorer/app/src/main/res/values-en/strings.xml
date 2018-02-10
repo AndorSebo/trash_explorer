@@ -5,14 +5,12 @@
     <string name="password">Password</string>
     <string name="show_password">show password</string>
     <string name="sign_in_title">Sign in</string>
-    <string name="Success">Success</string>
     <string name="Loading">Loading</string>
     <string name="sign_up">Don\'t have an account? <u>Sign up</u></string>
     <string name="network_error">Network not found! Please check your connection</string>
     <string name="sign_up_title">Sign Up</string>
     <string name="cpassword">Confirm Password</string>
     <string name="sign_in">Already have an account? <u>Sign in</u></string>
-    <string name="menu">MENU</string>
     <string name="username_tv">Username:</string>
     <string name="email_tv">Email:</string>
     <string name="register_date">Register date:</string>
@@ -55,16 +53,20 @@
     <string name="warning">Attention!</string>
     <string name="yes">Yes</string>
     <string name="no_coord">There was no GPS coordinate for the announcement.</string>
-    <string name="save_data">Belépési adatok mentése</string>
+    <string name="save_data">Remember the email and password</string>
     <string name="invalid_old_password">Invalid old password.</string>
     <string name="empty_desc_and_coord">You did not give any description or coordinates!</string>
     <string name="invalidEmailPass">Invalid email or password!</string>
+    <string name="success_register">Successful registration</string>
+    <string name="success_password">Your Password has been changed</string>
+    <string name="success_report">Your report was sent, thanks for helping</string>
 
     <!--Menu item's-->
     <string name="users">Users</string>
     <string name="profile">Profile</string>
     <string name="report">New Report</string>
     <string name="my_reports">My Reports</string>
+    <string name="settings">Settings</string>
     <string name="logout">Sign out</string>
 
 

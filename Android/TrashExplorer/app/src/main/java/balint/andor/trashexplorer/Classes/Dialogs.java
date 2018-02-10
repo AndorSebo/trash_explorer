@@ -22,6 +22,8 @@ public class Dialogs {
     private static TextView headerText;
     private static TextView messageTV;
     private static ImageView icon;
+    private static ActionProcessButton ok;
+    private static Dialog dialog;
 
     private Dialogs() {}
 
@@ -34,34 +36,14 @@ public class Dialogs {
         return dialogs;
     }
 
-    public static Dialog showErrorDialog(String message, Context context){
-        Dialog dialog = initDialog(context);
-        icon.setBackgroundResource(R.drawable.ic_error);
-        headerText.setText(context.getResources().getString(R.string.oops));
-        messageTV.setText(message);
-        return dialog;
-    }
-    public static void showLoadingDialog(){
-
-    }
-    public static Dialog showSuccessDialog(Context context){
-        Dialog dialog = initDialog(context);
-        icon.setBackgroundResource(R.drawable.ic_success);
-        headerText.setText(context.getResources().getString(R.string.oops));
-        messageTV.setText("");
-        return dialog;
-    }
-    public static void hideAlertDialog(){
-
-    }
     private static Dialog initDialog(final Context context){
         face = Typeface.createFromAsset(context.getAssets(),"caverndreams.ttf");
-        final Dialog dialog = new Dialog(context);
+        dialog = new Dialog(context);
         dialog.setContentView(R.layout.my_dialog);
         headerText = dialog.findViewById(R.id.headerText);
         messageTV = dialog.findViewById(R.id.message);
         icon = dialog.findViewById(R.id.icon);
-        ActionProcessButton ok = dialog.findViewById(R.id.ok);
+        ok = dialog.findViewById(R.id.ok);
         headerText.setTypeface(face);
         messageTV.setTypeface(face);
         ok.setTypeface(face);
@@ -73,9 +55,37 @@ public class Dialogs {
         });
         return dialog;
     }
+
+    public static Dialog showErrorDialog(String message, Context context){
+        dialog.dismiss();
+        dialog = initDialog(context);
+        icon.setBackgroundResource(R.drawable.ic_error);
+        headerText.setText(context.getResources().getString(R.string.oops));
+        messageTV.setText(message);
+        return dialog;
+    }
+    public static Dialog showLoadingDialog(Context context){
+        dialog = initDialog(context);
+        dialog.setCancelable(false);
+        ok.setVisibility(View.GONE);
+        icon.setBackgroundResource(R.drawable.ic_loading);
+        headerText.setText(context.getResources().getString(R.string.Loading));
+        return dialog;
+    }
+    public static Dialog showSuccessDialog(String message, Context context){
+        dialog.dismiss();
+        dialog = initDialog(context);
+        icon.setBackgroundResource(R.drawable.ic_success);
+        headerText.setText(context.getResources().getString(R.string.success));
+        messageTV.setText(message);
+        return dialog;
+    }
+    public static void hideAlertDialog(){
+        dialog.dismiss();
+    }
     public static Dialog showImageDialog(Context context){
         face = Typeface.createFromAsset(context.getAssets(),"caverndreams.ttf");
-        final Dialog dialog = new Dialog(context);
+        dialog = new Dialog(context);
         dialog.setContentView(R.layout.image_dialog);
         TextView headerText = dialog.findViewById(R.id.headerText);
         headerText.setTypeface(face);

@@ -89,7 +89,7 @@ public class SingleReportActivity extends AppCompatActivity implements OnMapRead
 
     void getReport(final View blackMask, final TextView coordNotFound,
                    String reportid, final EditText description, final ImageView[] imageViews) {
-        dialogs.showLoadingDialog();
+        Dialogs.showLoadingDialog(SingleReportActivity.this).show();
         description.setFocusable(false);
         description.setClickable(true);
         description.setLongClickable(false);

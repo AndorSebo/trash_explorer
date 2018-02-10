@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
                     DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             reqQueue.add(request);
             reqQueue.start();
-            //Dialogs.showLoadingDialog();
+            Dialogs.showLoadingDialog(MainActivity.this).show();
         }
     }
 
