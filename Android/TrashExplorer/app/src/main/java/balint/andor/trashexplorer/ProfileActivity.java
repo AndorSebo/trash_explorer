@@ -30,6 +30,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -86,7 +88,10 @@ public class ProfileActivity extends AppCompatActivity {
                             reportIds.add(jsonArray.getJSONObject(i).getInt("report_id"));
                         user.setReportIds(reportIds);
                         if (!"images/avatar/default.png".equals(user.getAvatar())){
-                            Picasso.with(ProfileActivity.this).load(Global.getBaseUrl()+"/"+user.getAvatar()).into(avatar);
+                            Picasso.with(ProfileActivity.this).load(Global.getBaseUrl()+"/"+user.getAvatar())
+                                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                                    .networkPolicy(NetworkPolicy.NO_CACHE)
+                                    .into(avatar);
                         }
                         Dialogs.hideAlertDialog();
                     }

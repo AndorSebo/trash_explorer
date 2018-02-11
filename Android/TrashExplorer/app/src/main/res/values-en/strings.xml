@@ -61,6 +61,8 @@
     <string name="success_register">Successful registration</string>
     <string name="success_password">Your Password has been changed</string>
     <string name="success_report">Your report was sent, thanks for helping</string>
+    <string name="avatar_fail">Profile picture change was failed.</string>
+    <string name="avatar_success">Profile picture change was successfully.</string>
 
     <!--Menu item's-->
     <string name="users">Users</string>

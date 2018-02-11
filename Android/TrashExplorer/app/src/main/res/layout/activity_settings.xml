@@ -73,6 +73,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="32dp"/>
                 <include
+                    android:id="@+id/change"
                     layout="@layout/password_change"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

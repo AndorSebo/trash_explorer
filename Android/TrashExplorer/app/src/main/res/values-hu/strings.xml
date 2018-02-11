@@ -61,6 +61,8 @@
     <string name="success_register">Sikeres regisztráció</string>
     <string name="success_password">Sikeres jelszóváltoztatás</string>
     <string name="success_report">Jelentése sikeresen megérkezett, köszönjük a bejelentést</string>
+    <string name="avatar_fail">Sikertelen profilkép változtatás, próbálja újra később</string>
+    <string name="avatar_success">Sikeres profilkép változtatás</string>
 
     <!--Menu item's-->
     <string name="users">Felhasználók</string>
