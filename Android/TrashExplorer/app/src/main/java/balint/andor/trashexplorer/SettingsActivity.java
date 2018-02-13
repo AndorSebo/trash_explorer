@@ -42,12 +42,13 @@ public class SettingsActivity extends AppCompatActivity {
 
     private Context context;
     private ImageView avatar;
-    private ActionProcessButton changeAvatar, save;
     private int PICK_IMAGE = 1;
     private int requestCode = 0;
+    private boolean changeAll;
     private boolean changedAvatar;
     private EditText oldPw,newPw,newPw2;
     private RequestQueue queue;
+    private User u;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,16 +58,16 @@ public class SettingsActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         context = SettingsActivity.this;
         CustomFont customFont = new CustomFont(context);
+        u = User.getInstance();
         changedAvatar = false;
+        changeAll = false;
         avatar = (ImageView) findViewById(R.id.avatar);
-        changeAvatar = (ActionProcessButton) findViewById(R.id.changeAvatar);
-        save = (ActionProcessButton) findViewById(R.id.save);
+        ActionProcessButton changeAvatar = (ActionProcessButton) findViewById(R.id.changeAvatar);
+        ActionProcessButton save = (ActionProcessButton) findViewById(R.id.save);
         queue = Volley.newRequestQueue(context);
         oldPw  = (EditText) findViewById(R.id.oldPw);
         newPw  = (EditText) findViewById(R.id.newPw);
         newPw2 = (EditText) findViewById(R.id.cPw);
-
-
         changeAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,7 +77,7 @@ public class SettingsActivity extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                save(avatar);
+                save();
             }
         });
     }
@@ -110,30 +111,63 @@ public class SettingsActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void save(ImageView avatar){
+    private void save(){
         //Ha csak profil képet akarunk állítani
         if ("".equals(oldPw.getText().toString()) && "".equals(newPw.getText().toString()) &&
-                "".equals(newPw2.getText().toString()) && changedAvatar){
+                "".equals(newPw2.getText().toString()) && changedAvatar)
             saveAvatar();
+        //Ha nem töltötte ki a jelszó mezőket
+        else if("".equals(oldPw.getText().toString()) || "".equals(newPw.getText().toString()) ||
+                "".equals(newPw2.getText().toString()))
+            Dialogs.showErrorDialog(getResources().getString(R.string.change_pass_error1),context).show();
+        //Ha csak jelszót szeretnénk változtatni
+        else if(!"".equals(oldPw.getText().toString()) && !"".equals(newPw.getText().toString()) &&
+                !"".equals(newPw2.getText().toString()) && !changedAvatar)
+            savePassword();
+        //Ha mindkettőt szeretnénk változtatni
+        else if(!"".equals(oldPw.getText().toString()) && !"".equals(newPw.getText().toString()) &&
+                !"".equals(newPw2.getText().toString()) && changedAvatar){
+            changeAll = true;
+            saveAvatar();
+            savePassword();
         }
+
     }
 
     private void saveAvatar(){
-        User u = User.getInstance();
-        String url = Global.getBaseUrl()+"/avatarchange";
+        connect(Global.getBaseUrl()+"/avatarchange");
+    }
+    private void savePassword(){
+        if (!newPw.getText().toString().equals(newPw2.getText().toString()))
+            Dialogs.showErrorDialog(getResources().getString(R.string.change_pass_error0),context).show();
+        else if(newPw.getText().length()<6)
+            Dialogs.showErrorDialog(getResources().getString(R.string.change_pass_error2),context).show();
+        else{
+            connect(Global.getBaseUrl()+"/passwordchange");
+        }
+    }
+
+    private void connect(final String url){
         final String avatar64 = Global.convertToBase64(((BitmapDrawable) avatar.getDrawable()).getBitmap());
         StringRequest postRequest = new StringRequest(Request.Method.POST, url+"?token="+u.getToken(),
                 new Response.Listener<String>()
                 {
                     @Override
                     public void onResponse(String response) {
-                        Dialog dialog = Dialogs.showSuccessDialog(getResources()
-                                .getString(R.string.avatar_success),context);
+                        String message;
+                        if ("avatarchange".equals(url.split("/")[url.split("/").length-1]))
+                            message = getResources()
+                                    .getString(R.string.avatar_success);
+                        else
+                            message = getResources().getString(R.string.success_password);
+                        final Dialog dialog = Dialogs.showSuccessDialog(message,context);
                         ActionProcessButton ok = dialog.findViewById(R.id.ok);
                         ok.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                Global.openProfile(context);
+                                if (!changeAll)
+                                    Global.openProfile(context);
+                                dialog.dismiss();
                             }
                         });
                         dialog.show();
@@ -143,7 +177,12 @@ public class SettingsActivity extends AppCompatActivity {
                 {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Dialogs.showErrorDialog(getResources().getString(R.string.avatar_fail),context).show();
+                        String message;
+                        if ("avatarchange".equals(url.split("/")[url.split("/").length-1]))
+                            message = getResources().getString(R.string.avatar_fail);
+                        else
+                            message = getResources().getString(R.string.failed_password);
+                        Dialogs.showErrorDialog(message,context).show();
                     }
                 }
         ) {
@@ -151,7 +190,13 @@ public class SettingsActivity extends AppCompatActivity {
             protected Map<String, String> getParams()
             {
                 Map<String, String>  params = new HashMap<>();
-                params.put("avatar",avatar64);
+                if ("avatarchange".equals(url.split("/")[url.split("/").length-1]))
+                    params.put("avatar",avatar64);
+                else{
+                    params.put("old",oldPw.getText().toString());
+                    params.put("new",newPw.getText().toString());
+                    params.put("confirm_new",newPw2.getText().toString());
+                }
                 return params;
             }
         };

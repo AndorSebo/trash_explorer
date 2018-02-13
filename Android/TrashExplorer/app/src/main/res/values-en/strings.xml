@@ -53,6 +53,7 @@
     <string name="wrong">Sorry, something went wrong! \n Please try again later…</string>
     <string name="warning">Attention!</string>
     <string name="yes">Yes</string>
+    <string name="no">No</string>
     <string name="no_coord">There was no GPS coordinate for the announcement.</string>
     <string name="save_data">Remember the email and password</string>
     <string name="invalid_old_password">Invalid old password.</string>

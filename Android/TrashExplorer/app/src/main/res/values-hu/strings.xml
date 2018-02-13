@@ -35,7 +35,6 @@
     <string name="check_the_gps_connection">Kérem ellenőrizze a GPS kapcsolatát</string>
     <string name="selectMode">Válasszon módot:</string>
     <string name="del_report">Biztosan törölni szeretné ezt a bejelentést?</string>
-    <string name="achievement">Trófeáim</string>
     <string name="regDate">Csatlakozás:</string>
     <string name="reportCount">Bejelentéseinek száma:</string>
     <string name="drawer_open">Menü nyitva</string>
@@ -53,16 +52,21 @@
     <string name="wrong">Hiba történt, kérem próbálja újra később…</string>
     <string name="warning">Figyelem!</string>
     <string name="yes">Igen</string>
+    <string name="no">Nem</string>
     <string name="no_coord">Nem érkeztek koordináták \n ehhez a bejelentéshez.</string>
     <string name="save_data">Belépési adatok mentése</string>
     <string name="invalid_old_password">Hibás régi jelszó</string>
     <string name="empty_desc_and_coord">Nem adott meg sem leírást, sem koordinátákat!</string>
     <string name="invalidEmailPass">Hibás email cím, vagy jelszó!</string>
     <string name="success_register">Sikeres regisztráció</string>
+    <string name="failed_password">Sikertelen jelszóváltoztatás</string>
     <string name="success_password">Sikeres jelszóváltoztatás</string>
     <string name="success_report">Jelentése sikeresen megérkezett, köszönjük a bejelentést</string>
     <string name="avatar_fail">Sikertelen profilkép változtatás, próbálja újra később</string>
     <string name="avatar_success">Sikeres profilkép változtatás</string>
+    <string name="change_pass_error0">Nem egyezik az új és a megerősítő jelszó</string>
+    <string name="change_pass_error1">Nem töltött ki minden mezőt</string>
+    <string name="change_pass_error2">Az új jelszónak minimum 6 karakterből kell állnia</string>
 
     <!--Menu item's-->
     <string name="users">Felhasználók</string>

@@ -91,5 +91,14 @@ public class Dialogs {
         headerText.setTypeface(face);
         return dialog;
     }
+    public static  Dialog showDeleteDialog(Context context,String message){
+        face = Typeface.createFromAsset(context.getAssets(),"caverndreams.ttf");
+        dialog = new Dialog(context);
+        dialog.setContentView(R.layout.delete_dialog);
+        TextView messageTV = dialog.findViewById(R.id.message);
+        messageTV.setText(message);
+        messageTV.setTypeface(face);
+        return dialog;
+    }
 
 }

@@ -1,6 +1,7 @@
 package balint.andor.trashexplorer.Classes;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -17,6 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.dd.processbutton.iml.ActionProcessButton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +32,9 @@ import balint.andor.trashexplorer.R;
  */
 
 public class ReportAdapter extends ArrayAdapter<Report> {
-    RequestQueue queue;
+    private RequestQueue queue;
+    private Dialog dialog;
+    private ActionProcessButton yes,no;
 
     public ReportAdapter(Context context, ArrayList<Report> descriptions) {
         super(context, R.layout.report_item, descriptions);
@@ -50,13 +54,31 @@ public class ReportAdapter extends ArrayAdapter<Report> {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dialog = Dialogs.showDeleteDialog(getContext(),getContext().getResources().getString(R.string.del_report));
+                no = dialog.findViewById(R.id.no);
+                yes = dialog.findViewById(R.id.yes);
+
+                no.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+                yes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        delete(getItem(position).getReport_id());
+                        Log.d("DELETE",getItem(position).getDescription());
+                    }
+                });
+                dialog.show();
 
             }
         });
         return reportView;
     }
 
-    void delete(final int reportid, final Dialogs dialogs){
+    void delete(final int reportid){
         User u = User.getInstance();
         String url = Global.getBaseUrl()+"/deletereport";
         String token = "?token="+u.getToken();
@@ -76,7 +98,7 @@ public class ReportAdapter extends ArrayAdapter<Report> {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Response", error.toString());
-                        //Dialogs.showErrorDialog(getContext().getString(R.string.wrong), getBaseContext());
+                       Dialogs.showErrorDialog(getContext().getString(R.string.wrong),getContext());
                     }
                 }
         ) {
