@@ -15,9 +15,18 @@ import android.view.MotionEvent;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
+import balint.andor.trashexplorer.MainActivity;
 import balint.andor.trashexplorer.ProfileActivity;
 import balint.andor.trashexplorer.R;
 
@@ -59,9 +68,46 @@ public class Global {
     }
     public static String convertToBase64(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 45, byteArrayOutputStream);
         byte[] byteArray = byteArrayOutputStream.toByteArray();
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
+    }
+    public static void logout(final Context ctx){
+        RequestQueue reqQueue = Volley.newRequestQueue(ctx);
+        String token = User.getInstance().getToken();
+        String url = Global.getBaseUrl() + "/logout";
+        Dialogs.showLoadingDialog(ctx).show();
+        StringRequest postRequest = new StringRequest(Request.Method.GET, url + "?token=" + token,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Intent logout = new Intent(ctx, MainActivity.class);
+                        ctx.startActivity(logout);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("Whoops",error.toString());
+                        Dialogs.showErrorDialog(ctx.getResources().getString(R.string.wrong), ctx).show();
+                    }
+                }
+        );
+        postRequest.setRetryPolicy(new DefaultRetryPolicy(
+                60000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        reqQueue.add(postRequest);
+    }
+    public static void menu(int i, Context ctx){
+        ArrayList<Activity> activities;
+        MenuItems menuItems = new MenuItems((Activity)ctx);
+        activities = menuItems.getActivities();
+        if (i<activities.size()) {
+            Intent intent = new Intent(ctx, activities.get(i).getClass());
+            ctx.startActivity(intent);
+        }else
+            logout(ctx);
     }
 
 }

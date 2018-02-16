@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="balint.andor.trashexplorer.SettingsActivity"
-    android:background="@color/menu_bg">
+    android:background="@color/menu_bg"
+    android:id="@+id/drawerLayout">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -52,7 +53,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/changeAvatar"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"/>
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/menu_bg"/>
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"

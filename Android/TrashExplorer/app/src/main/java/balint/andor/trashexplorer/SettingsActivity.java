@@ -1,5 +1,6 @@
 package balint.andor.trashexplorer;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -12,13 +13,19 @@ import android.os.Build;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -36,6 +43,7 @@ import java.util.Map;
 import balint.andor.trashexplorer.Classes.CustomFont;
 import balint.andor.trashexplorer.Classes.Dialogs;
 import balint.andor.trashexplorer.Classes.Global;
+import balint.andor.trashexplorer.Classes.MenuItems;
 import balint.andor.trashexplorer.Classes.User;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -49,6 +57,10 @@ public class SettingsActivity extends AppCompatActivity {
     private EditText oldPw,newPw,newPw2;
     private RequestQueue queue;
     private User u;
+    private ListView mDrawerList;
+    private DrawerLayout mDrawerLayout;
+    private ArrayAdapter<String> mAdapter;
+    private ImageButton menuButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +76,13 @@ public class SettingsActivity extends AppCompatActivity {
         avatar = (ImageView) findViewById(R.id.avatar);
         ActionProcessButton changeAvatar = (ActionProcessButton) findViewById(R.id.changeAvatar);
         ActionProcessButton save = (ActionProcessButton) findViewById(R.id.save);
+        ImageView eye0 = (ImageView) findViewById(R.id.soldPassword);
+        ImageView eye1 = (ImageView) findViewById(R.id.snewPassword);
+        ImageView eye2 = (ImageView) findViewById(R.id.scPassword);
+        mDrawerList = (ListView) findViewById(R.id.listView);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        menuButton = (ImageButton) findViewById(R.id.menuButton);
+        MenuItems menuItems = new MenuItems((Activity) context);
         queue = Volley.newRequestQueue(context);
         oldPw  = (EditText) findViewById(R.id.oldPw);
         newPw  = (EditText) findViewById(R.id.newPw);
@@ -80,6 +99,42 @@ public class SettingsActivity extends AppCompatActivity {
                 save();
             }
         });
+        eye0.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Global.showPassword(motionEvent,oldPw);
+                return true;
+            }
+        });
+        eye1.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Global.showPassword(motionEvent,newPw);
+                return true;
+            }
+        });
+        eye2.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Global.showPassword(motionEvent,newPw2);
+                return true;
+            }
+        });
+        mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, menuItems.getItems());
+        mDrawerList.setAdapter(mAdapter);
+        menuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDrawerLayout.openDrawer(Gravity.END);
+            }
+        });
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Global.menu(i,context);
+            }
+        });
+
     }
 
     private void changeAvatar(){
@@ -146,7 +201,6 @@ public class SettingsActivity extends AppCompatActivity {
             connect(Global.getBaseUrl()+"/passwordchange");
         }
     }
-
     private void connect(final String url){
         final String avatar64 = Global.convertToBase64(((BitmapDrawable) avatar.getDrawable()).getBitmap());
         StringRequest postRequest = new StringRequest(Request.Method.POST, url+"?token="+u.getToken(),
@@ -225,6 +279,7 @@ public class SettingsActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == PICK_IMAGE) {
                 Uri selectedImageURI = data.getData();
+                
                 Picasso.with(context).load(selectedImageURI).into(avatar);
                 changedAvatar = true;
             }

@@ -9,13 +9,19 @@ import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -45,19 +51,24 @@ import balint.andor.trashexplorer.Classes.CustomFont;
 import balint.andor.trashexplorer.Classes.Dialogs;
 import balint.andor.trashexplorer.Classes.GPStracker;
 import balint.andor.trashexplorer.Classes.Global;
+import balint.andor.trashexplorer.Classes.MenuItems;
 import balint.andor.trashexplorer.Classes.Report;
 import balint.andor.trashexplorer.Classes.User;
 
 public class ReportActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    MapFragment mapFragment;
-    double latitude = 1.00, longitude = 1.00;
-    ImageView selectedImageView;
-    EditText description;
-    RequestQueue reqQueue;
-    Dialogs dialogs;
-    CustomFont customFont;
-    User user;
+    private MapFragment mapFragment;
+    private double latitude = 1.00, longitude = 1.00;
+    private ImageView selectedImageView;
+    private EditText description;
+    private RequestQueue reqQueue;
+    private Dialogs dialogs;
+    private CustomFont customFont;
+    private User user;
+    private ListView mDrawerList;
+    private DrawerLayout mDrawerLayout;
+    private ArrayAdapter<String> mAdapter;
+    private ImageButton menuButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +79,11 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
         customFont = new CustomFont(ReportActivity.this);
         ActivityCompat.requestPermissions(ReportActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         ActivityCompat.requestPermissions(ReportActivity.this, new String[]{Manifest.permission.CAMERA}, 2);
+
+        mDrawerList = (ListView) findViewById(R.id.listView);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        menuButton = (ImageButton) findViewById(R.id.menuButton);
+        MenuItems menuItems = new MenuItems(ReportActivity.this);
 
         user = User.getInstance();
         ActionProcessButton locate = (ActionProcessButton) findViewById(R.id.locate);
@@ -99,6 +115,20 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
         });
         reqQueue = Volley.newRequestQueue(this);
         reqQueue.start();
+        mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, menuItems.getItems());
+        mDrawerList.setAdapter(mAdapter);
+        menuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDrawerLayout.openDrawer(Gravity.END);
+            }
+        });
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Global.menu(i,ReportActivity.this);
+            }
+        });
     }
 
     void makePicture(ImageView img) {
@@ -239,8 +269,6 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
 
         reqQueue.add(postRequest);
     }
-
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {

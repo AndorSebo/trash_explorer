@@ -8,6 +8,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -52,9 +53,9 @@ public class ProfileActivity extends AppCompatActivity {
     private AlertDialog dialog;
     private Dialogs dialogs;
     private ArrayAdapter<String> mAdapter;
-    CustomFont customFont;
-    ImageButton menuButton;
-    DrawerLayout mDrawerLayout;
+    private CustomFont customFont;
+    private ImageButton menuButton;
+    private DrawerLayout mDrawerLayout;
     private User user;
     private ArrayList<Activity> activities;
     private ImageView avatar;
@@ -116,7 +117,6 @@ public class ProfileActivity extends AppCompatActivity {
         MenuItems menuItems = new MenuItems(ProfileActivity.this);
         dialogs = Dialogs.getInstance();
         avatar = (ImageView) findViewById(R.id.avatar);
-
         user = User.getInstance();
         int id = user.getId();
         token = user.getToken();
@@ -128,7 +128,6 @@ public class ProfileActivity extends AppCompatActivity {
         else
             Global.networkNotFound(ctx);
 
-        activities = menuItems.getActivities();
         mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, menuItems.getItems());
         mDrawerList.setAdapter(mAdapter);
         menuButton.setOnClickListener(new View.OnClickListener() {
@@ -140,9 +139,10 @@ public class ProfileActivity extends AppCompatActivity {
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                menu(i);
+                Global.menu(i,ProfileActivity.this);
             }
         });
+        //mDrawerList.addHeaderView(getLayoutInflater().inflate(R.layout.menu_header,null, false));
     }
 
     private void getProfile(int id, String token) {
@@ -159,32 +159,6 @@ public class ProfileActivity extends AppCompatActivity {
         Dialogs.showLoadingDialog(ProfileActivity.this).show();
     }
 
-    private void logout(Context ctx) {
-        Intent logout = new Intent(ctx, MainActivity.class);
-        startActivity(logout);
-        finish();
-    }
-
-    private void serverLogout() {
-        String url = Global.getBaseUrl() + "/logout";
-        Dialogs.showLoadingDialog(ProfileActivity.this).show();
-        StringRequest postRequest = new StringRequest(Request.Method.GET, url + "?token=" + token,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        logout(ProfileActivity.this);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Dialogs.showErrorDialog(getString(R.string.wrong), getBaseContext()).show();
-                    }
-                }
-        );
-        reqQueue.add(postRequest);
-    }
-
     private String regDate(String s) {
         char[] c = s.toCharArray();
         StringBuilder sBuilder = new StringBuilder();
@@ -196,23 +170,9 @@ public class ProfileActivity extends AppCompatActivity {
         s = sBuilder.toString();
         return s;
     }
-
-    private void menu(int i){
-        if (i<activities.size()) {
-            Intent intent = new Intent(ProfileActivity.this, activities.get(i).getClass());
-            startActivity(intent);
-            finish();
-        }else
-            serverLogout();
-
-    }
-
     @Override
     public void onBackPressed() {
-        if (dialog != null && dialog.isShowing())
-            dialog.dismiss();
-        else
-            serverLogout();
+            Global.logout(ProfileActivity.this);
     }
 
     @Override
