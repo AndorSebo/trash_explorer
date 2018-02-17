@@ -36,6 +36,16 @@
                 android:layout_below="@id/menuButton"/>
         </RelativeLayout>
 
+        <TextView
+            android:id="@+id/no_reports"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/no_reports"
+            android:textAlignment="center"
+            style="@style/nameText"
+            android:gravity="center"
+            android:visibility="gone"/>
+
         <ListView
             android:id="@+id/myReports"
             android:layout_width="match_parent"

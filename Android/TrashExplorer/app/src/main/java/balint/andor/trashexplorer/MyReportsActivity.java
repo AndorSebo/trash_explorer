@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -45,11 +46,11 @@ public class MyReportsActivity extends AppCompatActivity {
     private ListAdapter reportsAdapter;
     private ListView reportList;
     private ArrayList<Report> descriptions;
-    private CustomFont customFont;
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
     private ArrayAdapter<String> mAdapter;
     private ImageButton menuButton;
+    private TextView noReports;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,7 @@ public class MyReportsActivity extends AppCompatActivity {
         mDrawerList = (ListView) findViewById(R.id.listView);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         menuButton = (ImageButton) findViewById(R.id.menuButton);
+        noReports = (TextView) findViewById(R.id.no_reports);
         MenuItems menuItems = new MenuItems(MyReportsActivity.this);
         queue = Volley.newRequestQueue(this);
         u = User.getInstance();
@@ -120,7 +122,12 @@ public class MyReportsActivity extends AppCompatActivity {
                                     }
                                 });
                                 reportsAdapter = new ReportAdapter(ctx, descriptions);
-                                reportList.setAdapter(reportsAdapter);
+                                if (descriptions.size() != 0)
+                                    reportList.setAdapter(reportsAdapter);
+                                else{
+                                    reportList.setVisibility(View.GONE);
+                                    noReports.setVisibility(View.VISIBLE);
+                                }
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

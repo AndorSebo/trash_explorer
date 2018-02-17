@@ -74,7 +74,9 @@ public class Global {
     }
     public static void logout(final Context ctx){
         RequestQueue reqQueue = Volley.newRequestQueue(ctx);
-        String token = User.getInstance().getToken();
+        User user = User.getInstance();
+        user.setName("");
+        String token = user.getToken();
         String url = Global.getBaseUrl() + "/logout";
         Dialogs.showLoadingDialog(ctx).show();
         StringRequest postRequest = new StringRequest(Request.Method.GET, url + "?token=" + token,
