@@ -32,6 +32,7 @@ import java.util.Comparator;
 
 import balint.andor.trashexplorer.Classes.CustomFont;
 import balint.andor.trashexplorer.Classes.Global;
+import balint.andor.trashexplorer.Classes.MenuHeader;
 import balint.andor.trashexplorer.Classes.MenuItems;
 import balint.andor.trashexplorer.Classes.Report;
 import balint.andor.trashexplorer.Classes.ReportAdapter;
@@ -56,7 +57,7 @@ public class MyReportsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_reports);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        customFont = new CustomFont(MyReportsActivity.this);
+       CustomFont.getInstance().init(MyReportsActivity.this);
         descriptions = new ArrayList<>();
         mDrawerList = (ListView) findViewById(R.id.listView);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -91,6 +92,7 @@ public class MyReportsActivity extends AppCompatActivity {
                 Global.menu(i,MyReportsActivity.this);
             }
         });
+        mDrawerList.addHeaderView(MenuHeader.getInstance().init(MyReportsActivity.this));
     }
 
     void getReports(final Context ctx, int userid) {

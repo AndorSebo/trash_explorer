@@ -1,14 +1,20 @@
 package balint.andor.trashexplorer;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
@@ -39,6 +45,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mvc.imagepicker.ImagePicker;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -51,6 +58,7 @@ import balint.andor.trashexplorer.Classes.CustomFont;
 import balint.andor.trashexplorer.Classes.Dialogs;
 import balint.andor.trashexplorer.Classes.GPStracker;
 import balint.andor.trashexplorer.Classes.Global;
+import balint.andor.trashexplorer.Classes.MenuHeader;
 import balint.andor.trashexplorer.Classes.MenuItems;
 import balint.andor.trashexplorer.Classes.Report;
 import balint.andor.trashexplorer.Classes.User;
@@ -69,6 +77,8 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
     private DrawerLayout mDrawerLayout;
     private ArrayAdapter<String> mAdapter;
     private ImageButton menuButton;
+    private int requestCode = 0, PICK_IMAGE = 1;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,41 +86,40 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
         setContentView(R.layout.activity_report);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        customFont = new CustomFont(ReportActivity.this);
-        ActivityCompat.requestPermissions(ReportActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        ActivityCompat.requestPermissions(ReportActivity.this, new String[]{Manifest.permission.CAMERA}, 2);
-
+        context = ReportActivity.this;
+        CustomFont.getInstance().init(context);
+        ActivityCompat.requestPermissions((Activity)context, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        ActivityCompat.requestPermissions((Activity)context, new String[]{Manifest.permission.CAMERA}, 2);
         mDrawerList = (ListView) findViewById(R.id.listView);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         menuButton = (ImageButton) findViewById(R.id.menuButton);
-        MenuItems menuItems = new MenuItems(ReportActivity.this);
-
+        MenuItems menuItems = new MenuItems((Activity)context);
         user = User.getInstance();
         ActionProcessButton locate = (ActionProcessButton) findViewById(R.id.locate);
         ActionProcessButton send = (ActionProcessButton) findViewById(R.id.send);
         final ImageView[] imgs = new ImageView[4];
-        final Context ctx = ReportActivity.this;
         description = (EditText) findViewById(R.id.description);
         dialogs = Dialogs.getInstance();
 
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
         declarateImgs(imgs);
 
         locate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                locateMe(ReportActivity.this);
+                locateMe(context);
             }
         });
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Global.isNetwork(ctx)) {
+                if (Global.isNetwork(context)) {
                     Report report = send(imgs);
                     if (report != null)
                         sendData(report);
                 } else
-                    Global.networkNotFound(ctx);
+                    Global.networkNotFound(context);
             }
         });
         reqQueue = Volley.newRequestQueue(this);
@@ -126,14 +135,40 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Global.menu(i,ReportActivity.this);
+                Global.menu(i,context);
             }
         });
+        mDrawerList.addHeaderView(MenuHeader.getInstance().init(context));
     }
 
     void makePicture(ImageView img) {
-        ImagePicker.pickImage(ReportActivity.this, getResources().getString(R.string.selectMode));
         selectedImageView = img;
+        final Dialog dialog = Dialogs.showImageDialog(context);
+        ImageView camera = dialog.findViewById(R.id.camera);
+        ImageView gallery = dialog.findViewById(R.id.gallery);
+        camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(Build.VERSION.SDK_INT >=23 && ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions((Activity)context, new String[]{
+                            android.Manifest.permission.CAMERA}, 0);
+                }
+                Intent photoCaptureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(photoCaptureIntent, requestCode);
+                dialog.dismiss();
+            }
+        });
+        gallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.changeAvatar)), PICK_IMAGE);
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
     void declarateImgs(final ImageView[] imgs) {
@@ -172,7 +207,7 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
             report.setImages(list);
             report.setLatitude(latitude);
             report.setLongitude(longitude);
-            Dialogs.showLoadingDialog(ReportActivity.this).show();
+            Dialogs.showLoadingDialog(context).show();
             return report;
         }
         return null;
@@ -209,7 +244,7 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
 
     @Override
     public void onBackPressed() {
-        Global.openProfile(ReportActivity.this);
+        Global.openProfile(context);
     }
 
     @Override
@@ -222,11 +257,16 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Bitmap bitmap = ImagePicker.getImageFromResult(this, requestCode, resultCode, data);
-        if (bitmap != null) {
+        if(this.requestCode == requestCode && resultCode == RESULT_OK){
+            Bitmap bitmap = (Bitmap)data.getExtras().get("data");
             selectedImageView.setImageBitmap(bitmap);
         }
-        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == PICK_IMAGE) {
+                Uri selectedImageURI = data.getData();
+                Picasso.with(context).load(selectedImageURI).into(selectedImageView);
+            }
+        }
     }
 
     void sendData(final Report report) {
@@ -237,7 +277,7 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
                     @Override
                     public void onResponse(String response) {
                         Log.d("Response", response);
-                        Dialogs.showSuccessDialog(getResources().getString(R.string.success_report),ReportActivity.this).show();
+                        Dialogs.showSuccessDialog(getResources().getString(R.string.success_report),context).show();
                     }
                 },
                 new Response.ErrorListener() {
@@ -271,13 +311,18 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case 1: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 } else {
-                    Toast.makeText(ReportActivity.this, "Nincs engedélyezve a GPS használata az eszközön.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Nincs engedélyezve a GPS használata az eszközön.", Toast.LENGTH_SHORT).show();
                 }
                 break;
             }

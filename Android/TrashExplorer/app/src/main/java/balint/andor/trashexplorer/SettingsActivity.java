@@ -1,6 +1,5 @@
 package balint.andor.trashexplorer;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -43,6 +42,7 @@ import java.util.Map;
 import balint.andor.trashexplorer.Classes.CustomFont;
 import balint.andor.trashexplorer.Classes.Dialogs;
 import balint.andor.trashexplorer.Classes.Global;
+import balint.andor.trashexplorer.Classes.MenuHeader;
 import balint.andor.trashexplorer.Classes.MenuItems;
 import balint.andor.trashexplorer.Classes.User;
 
@@ -50,9 +50,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private Context context;
     private ImageView avatar;
-    private int PICK_IMAGE = 1;
-    private int requestCode = 0;
-    private boolean changeAll;
+    private int requestCode = 0, PICK_IMAGE = 1, change = 0;
     private boolean changedAvatar;
     private EditText oldPw,newPw,newPw2;
     private RequestQueue queue;
@@ -69,10 +67,9 @@ public class SettingsActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         context = SettingsActivity.this;
-        CustomFont customFont = new CustomFont(context);
+        CustomFont.getInstance().init(context);
         u = User.getInstance();
         changedAvatar = false;
-        changeAll = false;
         avatar = (ImageView) findViewById(R.id.avatar);
         ActionProcessButton changeAvatar = (ActionProcessButton) findViewById(R.id.changeAvatar);
         ActionProcessButton save = (ActionProcessButton) findViewById(R.id.save);
@@ -134,7 +131,7 @@ public class SettingsActivity extends AppCompatActivity {
                 Global.menu(i,context);
             }
         });
-
+        mDrawerList.addHeaderView(MenuHeader.getInstance().init(SettingsActivity.this));
     }
 
     private void changeAvatar(){
@@ -169,20 +166,22 @@ public class SettingsActivity extends AppCompatActivity {
     private void save(){
         //Ha csak profil képet akarunk állítani
         if ("".equals(oldPw.getText().toString()) && "".equals(newPw.getText().toString()) &&
-                "".equals(newPw2.getText().toString()) && changedAvatar)
+                "".equals(newPw2.getText().toString()) && changedAvatar) {
             saveAvatar();
-        //Ha nem töltötte ki a jelszó mezőket
-        else if("".equals(oldPw.getText().toString()) || "".equals(newPw.getText().toString()) ||
+            change = 1;
+            //Ha nem töltötte ki a jelszó mezőket
+        }else if("".equals(oldPw.getText().toString()) || "".equals(newPw.getText().toString()) ||
                 "".equals(newPw2.getText().toString()))
             Dialogs.showErrorDialog(getResources().getString(R.string.change_pass_error1),context).show();
         //Ha csak jelszót szeretnénk változtatni
         else if(!"".equals(oldPw.getText().toString()) && !"".equals(newPw.getText().toString()) &&
-                !"".equals(newPw2.getText().toString()) && !changedAvatar)
+                !"".equals(newPw2.getText().toString()) && !changedAvatar) {
             savePassword();
-        //Ha mindkettőt szeretnénk változtatni
-        else if(!"".equals(oldPw.getText().toString()) && !"".equals(newPw.getText().toString()) &&
+            change = 1;
+            //Ha mindkettőt szeretnénk változtatni
+        }else if(!"".equals(oldPw.getText().toString()) && !"".equals(newPw.getText().toString()) &&
                 !"".equals(newPw2.getText().toString()) && changedAvatar){
-            changeAll = true;
+            change = 2;
             saveAvatar();
             savePassword();
         }
@@ -208,19 +207,23 @@ public class SettingsActivity extends AppCompatActivity {
                 {
                     @Override
                     public void onResponse(String response) {
+                        final Dialog dialog;
                         String message;
-                        if ("avatarchange".equals(url.split("/")[url.split("/").length-1]))
-                            message = getResources()
-                                    .getString(R.string.avatar_success);
+                        if(change == 1)
+                            if ("avatarchange".equals(url.split("/")[url.split("/").length - 1]))
+                                message = getResources()
+                                        .getString(R.string.avatar_success);
+                            else
+                                message = getResources().getString(R.string.success_password);
                         else
-                            message = getResources().getString(R.string.success_password);
-                        final Dialog dialog = Dialogs.showSuccessDialog(message,context);
+                            message = getResources().getString(R.string.success_all);
+
+                        dialog = Dialogs.showSuccessDialog(message,context);
                         ActionProcessButton ok = dialog.findViewById(R.id.ok);
                         ok.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                if (!changeAll)
-                                    Global.openProfile(context);
+                                Global.openProfile(context);
                                 dialog.dismiss();
                             }
                         });
@@ -232,10 +235,13 @@ public class SettingsActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         String message;
-                        if ("avatarchange".equals(url.split("/")[url.split("/").length-1]))
-                            message = getResources().getString(R.string.avatar_fail);
+                        if(change == 1)
+                            if ("avatarchange".equals(url.split("/")[url.split("/").length-1]))
+                                message = getResources().getString(R.string.avatar_fail);
+                            else
+                                message = getResources().getString(R.string.failed_password);
                         else
-                            message = getResources().getString(R.string.failed_password);
+                            message = getResources().getString(R.string.failed_all);
                         Dialogs.showErrorDialog(message,context).show();
                     }
                 }

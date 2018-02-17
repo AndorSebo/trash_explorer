@@ -53,7 +53,7 @@ public class RegActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reg);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        CustomFont customFont = new CustomFont(RegActivity.this);
+        CustomFont.getInstance().init(RegActivity.this);
         TextView login = (TextView) findViewById(R.id.backLogin);
         login.setOnClickListener(new View.OnClickListener() {
             @Override

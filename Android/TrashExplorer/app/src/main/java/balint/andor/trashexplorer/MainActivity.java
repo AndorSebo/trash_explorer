@@ -6,7 +6,11 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -40,16 +44,15 @@ import me.anwarshahriar.calligrapher.Calligrapher;
 
 public class MainActivity extends AppCompatActivity {
 
-    RequestQueue reqQueue;
-    Response.Listener successResponse;
-    Response.ErrorListener failedResponse;
-    CheckBox dataCB;
-    EditText pwET;
-    EditText emailET;
-    SharedPreferences sharedPref;
-    FirebaseAnalytics mFirebaseAnalytics;
-    CustomFont customFont;
-    User user;
+    private RequestQueue reqQueue;
+    private Response.Listener successResponse;
+    private Response.ErrorListener failedResponse;
+    private CheckBox dataCB;
+    private EditText pwET;
+    private EditText emailET;
+    private SharedPreferences sharedPref;
+    private FirebaseAnalytics mFirebaseAnalytics;
+    private User user;
 
     void initResponses() {
         successResponse = new Response.Listener<JSONObject>() {
@@ -66,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
                         user.setId(response.getInt("userid"));
                         user.setToken(response.getJSONArray("user").getJSONObject(0).getString("token"));
                         user.setAvatar(response.getJSONArray("user").getJSONObject(1).getString("avatar"));
-                        user.setPermission(response.getInt("permission"));
                         logToFireBase(emailET.getText().toString());
                         Global.openProfile(MainActivity.this);
                     }
@@ -91,9 +93,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        customFont = new CustomFont(MainActivity.this);
+        CustomFont.getInstance().init(MainActivity.this);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         user = User.getInstance();
+        getCameraPermission();
         ImageView eye = (ImageView) findViewById(R.id.showPassword);
         TextView signUp = (TextView) findViewById(R.id.signUp);
         ActionProcessButton signInButton = (ActionProcessButton) findViewById(R.id.signIn);
@@ -134,6 +137,13 @@ public class MainActivity extends AppCompatActivity {
         Intent registration = new Intent(MainActivity.this, RegActivity.class);
         startActivity(registration);
         finish();
+    }
+
+    private void getCameraPermission(){
+        if(Build.VERSION.SDK_INT >=23 && ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{
+                    android.Manifest.permission.CAMERA}, 0);
+        }
     }
 
     @Override

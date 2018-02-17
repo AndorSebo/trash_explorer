@@ -1,34 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="128sp"
-    android:background="#33B5E5"
+    android:background="@drawable/header"
     android:padding="16sp">
     <ImageView
         android:id="@+id/avatar"
         android:layout_width="100sp"
         android:layout_height="100sp"
         android:layout_alignParentEnd="true"
-        android:src="@drawable/profile"/>
+        android:src="@drawable/profile"
+        android:contentDescription="@string/missing_icon"/>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_centerVertical="true">
+        android:layout_centerVertical="true"
+        tools:ignore="RelativeOverlap">
     <TextView
         android:id="@+id/nameTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Lorem ipsum"
         android:textSize="16sp"
         android:textStyle="bold"/>
     <TextView
         android:id="@+id/emailTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="lorem@ipsum.com"
-        android:textSize="16sp"
+        android:textSize="12sp"
         android:textStyle="bold"/>
     </LinearLayout>
 </RelativeLayout>

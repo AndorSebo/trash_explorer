@@ -31,7 +31,6 @@ public class MenuItems {
         activities.add(new ReportActivity());
         activities.add(new MyReportsActivity());
         activities.add(new SettingsActivity());
-        Array.add(a.getResources().getString(R.string.profile));
         Array.add(a.getResources().getString(R.string.report));
         Array.add(a.getResources().getString(R.string.my_reports));
         Array.add(a.getResources().getString(R.string.settings));

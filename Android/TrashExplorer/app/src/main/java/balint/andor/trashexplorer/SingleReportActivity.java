@@ -1,16 +1,23 @@
 package balint.andor.trashexplorer;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -38,19 +45,25 @@ import java.util.ArrayList;
 import balint.andor.trashexplorer.Classes.CustomFont;
 import balint.andor.trashexplorer.Classes.Dialogs;
 import balint.andor.trashexplorer.Classes.Global;
+import balint.andor.trashexplorer.Classes.MenuHeader;
+import balint.andor.trashexplorer.Classes.MenuItems;
 import balint.andor.trashexplorer.Classes.User;
 
 public class SingleReportActivity extends AppCompatActivity implements OnMapReadyCallback {
 
 
-    MapFragment mapFragment;
-    RequestQueue reqQueue;
-    User user;
-    double latitude, longitude;
-    Dialogs dialogs;
-    ArrayList<String> imgUrls;
-    int width;
-    CustomFont customFont;
+    private MapFragment mapFragment;
+    private RequestQueue reqQueue;
+    private User user;
+    private double latitude, longitude;
+    private Dialogs dialogs;
+    private ArrayList<String> imgUrls;
+    private int width;
+    private ListView mDrawerList;
+    private DrawerLayout mDrawerLayout;
+    private ArrayAdapter<String> mAdapter;
+    private ImageButton menuButton;
+    private TextView headerTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,13 +71,19 @@ public class SingleReportActivity extends AppCompatActivity implements OnMapRead
         setContentView(R.layout.activity_report);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        customFont = new CustomFont(SingleReportActivity.this);
+        final Context ctx = SingleReportActivity.this;
+        CustomFont.getInstance().init(ctx);
         ActionProcessButton send = (ActionProcessButton) findViewById(R.id.send);
         ActionProcessButton locate = (ActionProcessButton) findViewById(R.id.locate);
         TextView gpsNeed = (TextView) findViewById(R.id.gpsNeed);
         View blackMask = findViewById(R.id.blackMask);
         TextView coordNotFound = (TextView) findViewById(R.id.coordNotFound);
         EditText description = (EditText) findViewById(R.id.description);
+        mDrawerList = (ListView) findViewById(R.id.listView);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        menuButton = (ImageButton) findViewById(R.id.menuButton);
+        headerTv = (TextView) findViewById(R.id.headerText);
+        MenuItems menuItems = new MenuItems((Activity)ctx);
         dialogs = Dialogs.getInstance();
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         user = User.getInstance();
@@ -75,7 +94,8 @@ public class SingleReportActivity extends AppCompatActivity implements OnMapRead
             imageViews[i] = (ImageView) findViewById(resID);
             imageViews[i].setImageResource(R.drawable.image_nf);
         }
-        Context ctx = SingleReportActivity.this;
+
+        headerTv.setText(getResources().getString(R.string.my_reports));
 
         if (Global.isNetwork(ctx))
             getReport(blackMask, coordNotFound, String.valueOf(getIntent().getExtras().getInt("id")), description, imageViews);
@@ -85,6 +105,21 @@ public class SingleReportActivity extends AppCompatActivity implements OnMapRead
         send.setVisibility(View.GONE);
         locate.setVisibility(View.GONE);
         gpsNeed.setVisibility(View.GONE);
+        mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, menuItems.getItems());
+        mDrawerList.setAdapter(mAdapter);
+        menuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDrawerLayout.openDrawer(Gravity.END);
+            }
+        });
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Global.menu(i,ctx);
+            }
+        });
+        mDrawerList.addHeaderView(MenuHeader.getInstance().init(ctx));
     }
 
     void getReport(final View blackMask, final TextView coordNotFound,

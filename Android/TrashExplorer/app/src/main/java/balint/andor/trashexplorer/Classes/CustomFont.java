@@ -10,7 +10,18 @@ import me.anwarshahriar.calligrapher.Calligrapher;
  */
 
 public class CustomFont {
-    public CustomFont(Context context) {
+
+    private static volatile CustomFont customFont = new CustomFont();
+
+    private CustomFont(){}
+
+    public static CustomFont getInstance(){
+        if (customFont == null)
+            customFont = new CustomFont();
+        return customFont;
+    }
+
+    public void init(Context context) {
         Calligrapher calligrapher = new Calligrapher(context);
         calligrapher.setFont((Activity)context,"caverndreams.ttf",true);
     }

@@ -7,8 +7,8 @@ import java.util.ArrayList;
  */
 
 public class User {
-    private int id, permission;
-    private String token, name, avatar;
+    private int id;
+    private String reports, token, name, avatar, email, date;
     private ArrayList<Integer> reportIds;
     private static volatile User user = new User();
 
@@ -18,6 +18,30 @@ public class User {
         if (user == null)
             user = new User();
         return user;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getReports() {
+        return reports;
+    }
+
+    public void setReports(String reports) {
+        this.reports = reports;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getAvatar() {
@@ -34,14 +58,6 @@ public class User {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getPermission() {
-        return permission;
-    }
-
-    public void setPermission(int permission) {
-        this.permission = permission;
     }
 
     public String getToken() {

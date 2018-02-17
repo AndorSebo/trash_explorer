@@ -1,14 +1,10 @@
 package balint.andor.trashexplorer;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -24,7 +20,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
@@ -39,6 +34,7 @@ import java.util.ArrayList;
 import balint.andor.trashexplorer.Classes.CustomFont;
 import balint.andor.trashexplorer.Classes.Dialogs;
 import balint.andor.trashexplorer.Classes.Global;
+import balint.andor.trashexplorer.Classes.MenuHeader;
 import balint.andor.trashexplorer.Classes.MenuItems;
 import balint.andor.trashexplorer.Classes.User;
 
@@ -50,14 +46,10 @@ public class ProfileActivity extends AppCompatActivity {
     private Response.Listener successResponse;
     private Response.ErrorListener failedResponse;
     private String token;
-    private AlertDialog dialog;
     private Dialogs dialogs;
     private ArrayAdapter<String> mAdapter;
-    private CustomFont customFont;
-    private ImageButton menuButton;
     private DrawerLayout mDrawerLayout;
     private User user;
-    private ArrayList<Activity> activities;
     private ImageView avatar;
     private TextView nameTv, emailTv, dateTv, reportTv;
 
@@ -72,20 +64,22 @@ public class ProfileActivity extends AppCompatActivity {
                         ArrayList<Integer> reportIds = new ArrayList<>();
                         JSONArray jsonArray = jsonObject.getJSONArray("reports");
                         String regDateString = jsonObject.getJSONObject("created_at").getString("date").substring(0, 10);
-                        nameTv.setText(jsonObject.getString("name"));
-                        emailTv.setText(jsonObject.getString("email"));
-                        dateTv.setText(regDate(regDateString));
-                        reportTv.setText(jsonObject.getString("report_number"));
+                        user.setName(jsonObject.getString("name"));
+                        nameTv.setText(user.getName());
+                        user.setEmail(jsonObject.getString("email"));
+                        emailTv.setText(user.getEmail());
+                        user.setDate(regDate(regDateString));
+                        dateTv.setText(user.getDate());
+                        user.setReports(jsonObject.getString("report_number"));
+                        reportTv.setText(user.getReports());
                         for (int i = 0; i < jsonArray.length(); i++)
                             reportIds.add(jsonArray.getJSONObject(i).getInt("report_id"));
                         user.setReportIds(reportIds);
                         if (!"images/avatar/default.png".equals(user.getAvatar())){
-                            Picasso.with(ProfileActivity.this).load(Global.getBaseUrl()+"/"+user.getAvatar())
-                                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-                                    .networkPolicy(NetworkPolicy.NO_CACHE)
-                                    .into(avatar);
+                            loadAvatar();
                         }
                         Dialogs.hideAlertDialog();
+                        mDrawerList.addHeaderView(MenuHeader.getInstance().init(ProfileActivity.this));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -106,14 +100,14 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        customFont = new CustomFont(ProfileActivity.this);
+        CustomFont.getInstance().init(ProfileActivity.this);
         nameTv = (TextView) findViewById(R.id.nameTv);
         emailTv = (TextView) findViewById(R.id.emailTv);
         dateTv = (TextView) findViewById(R.id.dateTv);
         reportTv = (TextView) findViewById(R.id.report_number);
         mDrawerList = (ListView) findViewById(R.id.listView);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-        menuButton = (ImageButton) findViewById(R.id.menuButton);
+        ImageButton menuButton = (ImageButton) findViewById(R.id.menuButton);
         MenuItems menuItems = new MenuItems(ProfileActivity.this);
         dialogs = Dialogs.getInstance();
         avatar = (ImageView) findViewById(R.id.avatar);
@@ -123,10 +117,18 @@ public class ProfileActivity extends AppCompatActivity {
         initResponses();
         Context ctx = ProfileActivity.this;
 
-        if (Global.isNetwork(ctx))
+        if (Global.isNetwork(ctx) && ("".equals(user.getName()) || user.getName() == null))
             getProfile(id, token);
-        else
+        else if(!Global.isNetwork(ctx))
             Global.networkNotFound(ctx);
+        else{
+            nameTv.setText(user.getName());
+            emailTv.setText(user.getEmail());
+            reportTv.setText(user.getReports());
+            dateTv.setText(user.getDate());
+            loadAvatar();
+            mDrawerList.addHeaderView(MenuHeader.getInstance().init(ProfileActivity.this));
+        }
 
         mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, menuItems.getItems());
         mDrawerList.setAdapter(mAdapter);
@@ -142,7 +144,15 @@ public class ProfileActivity extends AppCompatActivity {
                 Global.menu(i,ProfileActivity.this);
             }
         });
-        //mDrawerList.addHeaderView(getLayoutInflater().inflate(R.layout.menu_header,null, false));
+
+
+    }
+
+    private void loadAvatar(){
+        Picasso.with(ProfileActivity.this).load(Global.getBaseUrl()+"/"+user.getAvatar())
+                .memoryPolicy(MemoryPolicy.NO_CACHE)
+                .networkPolicy(NetworkPolicy.NO_CACHE)
+                .into(avatar);
     }
 
     private void getProfile(int id, String token) {
