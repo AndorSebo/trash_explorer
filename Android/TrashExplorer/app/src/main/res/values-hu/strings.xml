@@ -68,9 +68,11 @@
     <string name="change_pass_error0">Nem egyezik az új és a megerősítő jelszó</string>
     <string name="change_pass_error1">Nem töltött ki minden mezőt</string>
     <string name="change_pass_error2">Az új jelszónak minimum 6 karakterből kell állnia</string>
+    <string name="change_pass_error3">A régi és az új jelszó megegyezik</string>
     <string name="success_all">A jelszó és a profilkép is sikeresen megváltozott!</string>
     <string name="failed_all">Nem sikerült sem a jelszót sem a profilképet megváltoztatni, \n kérjük próbálja újra később!</string>
-
+    <string name="empty_email">Az email mező nem lett kitöltve</string>
+    <string name="empty_password">A jelszó mező nem lett kitöltve</string>
     <!--Menu item's-->
     <string name="users">Felhasználók</string>
     <string name="profile">Profil</string>

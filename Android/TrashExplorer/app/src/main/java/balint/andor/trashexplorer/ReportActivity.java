@@ -17,8 +17,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -44,10 +42,8 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.mvc.imagepicker.ImagePicker;
 import com.squareup.picasso.Picasso;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -276,14 +272,22 @@ public class ReportActivity extends AppCompatActivity implements OnMapReadyCallb
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d("Response", response);
-                        Dialogs.showSuccessDialog(getResources().getString(R.string.success_report),context).show();
+                        Dialog dialog = Dialogs.showSuccessDialog(getResources().getString(R.string.success_report),context);
+                        ActionProcessButton ok = dialog.findViewById(R.id.ok);
+                        ok.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent myreports = new Intent(context,MyReportsActivity.class);
+                                startActivity(myreports);
+                                finish();
+                            }
+                        });
+                        dialog.show();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d("Response", error.toString());
                         Dialogs.showErrorDialog(getString(R.string.wrong), getBaseContext());
                     }
                 }

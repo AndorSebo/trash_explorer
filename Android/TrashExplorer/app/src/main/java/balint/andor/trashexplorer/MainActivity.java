@@ -2,7 +2,6 @@ package balint.andor.trashexplorer;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -40,7 +39,6 @@ import balint.andor.trashexplorer.Classes.CustomFont;
 import balint.andor.trashexplorer.Classes.Dialogs;
 import balint.andor.trashexplorer.Classes.Global;
 import balint.andor.trashexplorer.Classes.User;
-import me.anwarshahriar.calligrapher.Calligrapher;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -156,10 +154,10 @@ public class MainActivity extends AppCompatActivity {
         reqQueue = Volley.newRequestQueue(this);
         String url = Global.getBaseUrl() + "/signin";
         Map<String, String> params = new HashMap<>();
-        if (emailET.getText().toString().equals(""))
-            emailET.setError("Email field is empty!");
-        else if (pwET.getText().toString().equals(""))
-            pwET.setError("Password filed is empty!");
+        if ("".equals(emailET.getText().toString()))
+           Dialogs.showErrorDialog(getString(R.string.empty_email),MainActivity.this);
+        else if ("".equals(pwET.getText().toString()))
+            Dialogs.showErrorDialog(getString(R.string.empty_password),MainActivity.this);
         else {
             params.put("email", emailET.getText().toString());
             params.put("password", pwET.getText().toString());

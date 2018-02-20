@@ -6,11 +6,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Handler;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Base64;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -90,7 +88,6 @@ public class Global {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d("Whoops",error.toString());
                         Dialogs.showErrorDialog(ctx.getResources().getString(R.string.wrong), ctx).show();
                     }
                 }

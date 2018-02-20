@@ -7,7 +7,6 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
@@ -157,7 +156,6 @@ public class SingleReportActivity extends AppCompatActivity implements OnMapRead
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d("Error.Response", String.valueOf(error));
                         dialogs.showErrorDialog(getResources().getString(R.string.wrong), getBaseContext());
                     }
                 }

@@ -196,6 +196,8 @@ public class SettingsActivity extends AppCompatActivity {
             Dialogs.showErrorDialog(getResources().getString(R.string.change_pass_error0),context).show();
         else if(newPw.getText().length()<6)
             Dialogs.showErrorDialog(getResources().getString(R.string.change_pass_error2),context).show();
+        else if(newPw.getText().toString().equals(oldPw.getText().toString()))
+            Dialogs.showErrorDialog(getResources().getString(R.string.change_pass_error3),context).show();
         else{
             connect(Global.getBaseUrl()+"/passwordchange");
         }

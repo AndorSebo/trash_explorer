@@ -13,7 +13,6 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -40,7 +39,6 @@ import balint.andor.trashexplorer.Classes.Global;
 public class RegActivity extends AppCompatActivity {
 
     private RequestQueue reqQueue;
-    private Dialogs dialogs;
     private EditText username, email, password,repassword;
     private ImageView avatar;
     private int PICK_IMAGE = 1;
@@ -49,7 +47,7 @@ public class RegActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reg);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -70,7 +68,7 @@ public class RegActivity extends AppCompatActivity {
         email = (EditText) findViewById(R.id.email);
         avatar = (ImageView) findViewById(R.id.avatar);
         final Context ctx = RegActivity.this;
-        dialogs = Dialogs.getInstance();
+        Dialogs dialogs = Dialogs.getInstance();
         changedAvatar = false;
 
         reqQueue = Volley.newRequestQueue(this);
@@ -81,8 +79,10 @@ public class RegActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (Global.isNetwork(ctx)) {
-                    registration();
-                    Dialogs.showLoadingDialog(RegActivity.this).show();
+                    if (checkInput()) {
+                        registration();
+                        Dialogs.showLoadingDialog(RegActivity.this).show();
+                    }
                 } else {
                     Global.networkNotFound(ctx);
                 }
@@ -127,16 +127,38 @@ public class RegActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d("Response", response);
-                        Dialogs.showSuccessDialog(getResources().getString(R.string.success_register),RegActivity.this).show();
-
+                        Dialog dialog = Dialogs.showSuccessDialog(getResources().getString(R.string.success_register),RegActivity.this);
+                        ActionProcessButton ok = dialog.findViewById(R.id.ok);
+                        ok.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent login = new Intent(RegActivity.this, MainActivity.class);
+                                startActivity(login);
+                                finish();
+                            }
+                        });
+                        dialog.show();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d("Response", error.toString());
-                        Dialogs.showErrorDialog(getString(R.string.wrong), getBaseContext());
+                        String message;
+                        switch (error.networkResponse.statusCode){
+                             case 464:
+                                 message = "Foglalt emailcím";
+                                 break;
+                             case 467:
+                                 message= "Nem email formátum";
+                                 break;
+                            case 461:
+                                message= "A felhasználónév már foglalt";
+                                break;
+                            default:
+                                message= "Váratlan hiba történt, kérjük próbálja újra később.";
+                                break;
+                        }
+                         Dialogs.showErrorDialog(message, RegActivity.this).show();
                     }
                 }
         ) {
@@ -184,6 +206,20 @@ public class RegActivity extends AppCompatActivity {
             }
         });
         dialog.show();
+    }
+
+    private boolean checkInput(){
+        if ("".equals(password.getText().toString()) || "".equals(repassword.getText().toString())){
+            Dialogs.showErrorDialog(getString(R.string.empty_password),RegActivity.this).show();
+            return false;
+        }else if("".equals(email.getText().toString())){
+            Dialogs.showErrorDialog(getString(R.string.empty_email),RegActivity.this).show();
+            return false;
+        }else if("".equals(username.getText().toString())){
+            Dialogs.showErrorDialog("Nem adott meg felhasználónevet",RegActivity.this).show();
+            return false;
+        }
+        return true;
     }
 
     @Override

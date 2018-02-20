@@ -35,7 +35,6 @@ public class Dialogs {
             dialogs = new Dialogs();
         return dialogs;
     }
-
     private static Dialog initDialog(final Context context){
         face = Typeface.createFromAsset(context.getAssets(),"caverndreams.ttf");
         dialog = new Dialog(context);
@@ -55,9 +54,9 @@ public class Dialogs {
         });
         return dialog;
     }
-
     public static Dialog showErrorDialog(String message, Context context){
-        dialog.dismiss();
+        if (dialog != null)
+            dialog.dismiss();
         dialog = initDialog(context);
         icon.setBackgroundResource(R.drawable.ic_error);
         headerText.setText(context.getResources().getString(R.string.oops));
